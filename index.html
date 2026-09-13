@@ -3,130 +3,43 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#070b12">
-<title>HASH CATS — GPU Mining on BNB Chain</title>
-<meta name="description" content="HASH CATS — real browser GPU Proof-of-Work mining on BNB Smart Chain. Mine it. Don't mint it.">
+<meta name="theme-color" content="#071019">
+<title>HASH CATS — Real WebGPU Mining</title>
+<meta name="description" content="HASH CATS — real browser GPU Proof-of-Work mining on BNB Smart Chain.">
 <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.5/dist/ethers.umd.min.js"></script>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg?v=3">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png?v=3">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png?v=3">
 <style>
-:root{
-  --bg:#05070b;--panel:#0b111b;--panel2:#0d1624;--line:#1b2a3b;
-  --text:#edf7f3;--muted:#7d918d;--green:#55ff9b;--cyan:#45dfff;
-  --yellow:#ffc857;--red:#ff6577;--shadow:0 18px 70px rgba(0,0,0,.40);
-}
-*{box-sizing:border-box}
-html,body{margin:0;background:#05070b;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-body{min-height:100vh;overflow-x:hidden}
-body:before{
-  content:"";position:fixed;inset:0;pointer-events:none;
-  background:
-   radial-gradient(circle at 18% 5%,rgba(85,255,155,.10),transparent 28%),
-   radial-gradient(circle at 85% 12%,rgba(69,223,255,.08),transparent 25%),
-   linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
-   linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
-  background-size:auto,auto,34px 34px,34px 34px;
-}
-a{color:inherit;text-decoration:none}
-button{font:inherit}
-.wrap{width:min(1320px,calc(100% - 28px));margin:auto;padding:14px 0 70px;position:relative}
-.nav{
-  position:sticky;top:10px;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:14px;
-  padding:12px 14px;border:1px solid rgba(255,255,255,.075);border-radius:18px;
-  background:rgba(6,10,16,.85);backdrop-filter:blur(18px);box-shadow:var(--shadow)
-}
-.brand{display:flex;align-items:center;gap:11px;min-width:0}
-.logo{
-  width:43px;height:43px;border-radius:13px;display:grid;place-items:center;position:relative;overflow:hidden;
-  background:radial-gradient(circle at 50% 45%,#132f2b,#09141b 66%);
-  border:1px solid rgba(85,255,155,.35);box-shadow:inset 0 0 22px rgba(85,255,155,.08),0 0 28px rgba(85,255,155,.10)
-}
-.catmark{font-size:24px;filter:drop-shadow(0 0 8px rgba(85,255,155,.5))}
-.brand-name{font-weight:950;letter-spacing:.08em;font-size:15px}
-.brand-sub{font:11px ui-monospace,monospace;color:var(--muted);margin-top:2px}
-.nav-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-.badge{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);border-radius:999px;padding:8px 11px;color:#a6bab5;font-size:12px}
-.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:6px;box-shadow:0 0 10px var(--green)}
-.btn{border:0;border-radius:12px;padding:11px 14px;font-weight:850;cursor:pointer;transition:.18s;white-space:nowrap}
-.btn:hover{transform:translateY(-1px)}
-.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
-.btn-primary{background:linear-gradient(135deg,#55ff9b,#9dffd0);color:#06120c;box-shadow:0 8px 28px rgba(85,255,155,.15)}
-.btn-dark{background:#111c2b;border:1px solid rgba(255,255,255,.075);color:#e9f7f2}
-.btn-stop{background:rgba(255,101,119,.12);border:1px solid rgba(255,101,119,.24);color:#ff8997}
-.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:16px;margin-top:16px}
-.panel{
-  border:1px solid rgba(255,255,255,.075);background:linear-gradient(180deg,rgba(13,21,34,.93),rgba(7,12,20,.93));
-  border-radius:22px;box-shadow:var(--shadow);overflow:hidden
-}
-.hero-copy{padding:30px;min-height:430px;display:flex;flex-direction:column;justify-content:center;position:relative}
-.hero-copy:after{content:"#";position:absolute;right:25px;bottom:-35px;font-size:220px;font-weight:1000;color:rgba(85,255,155,.025);line-height:1}
-.kicker{display:inline-flex;width:max-content;align-items:center;gap:8px;padding:8px 11px;border-radius:999px;border:1px solid rgba(85,255,155,.16);background:rgba(85,255,155,.055);color:var(--green);font-size:11px;font-weight:900;letter-spacing:.12em}
-h1{font-size:clamp(43px,6vw,77px);line-height:.91;margin:19px 0 16px;letter-spacing:-.055em}
-h1 em{font-style:normal;color:var(--green);text-shadow:0 0 30px rgba(85,255,155,.16)}
-.lead{max-width:650px;color:#9cafaa;font-size:15px;line-height:1.72;margin:0 0 21px}
-.hero-actions{display:flex;gap:9px;flex-wrap:wrap}
-.micro{display:flex;gap:18px;flex-wrap:wrap;margin-top:26px;font:12px ui-monospace,monospace;color:#819490}
-.micro b{color:#d9e9e5}
-.miner{
-  min-height:430px;padding:18px;display:flex;flex-direction:column;position:relative;
-  background:radial-gradient(circle at 50% 37%,rgba(85,255,155,.09),transparent 34%),linear-gradient(180deg,#09111d,#060b12)
-}
-.miner-visual{flex:1;min-height:255px;position:relative;display:grid;place-items:center;overflow:hidden;border:1px solid rgba(255,255,255,.055);border-radius:18px;background:#060b12}
-.ring{position:absolute;border-radius:50%;border:1px solid rgba(85,255,155,.14);animation:spin linear infinite}
-.ring:after{content:"";position:absolute;width:7px;height:7px;border-radius:50%;background:var(--green);top:-4px;left:50%;box-shadow:0 0 13px var(--green)}
-.r1{width:240px;height:240px;animation-duration:13s}.r2{width:185px;height:185px;animation-duration:8s;animation-direction:reverse}.r3{width:128px;height:128px;animation-duration:5s}
-.core{
-  width:100px;height:100px;border-radius:26px;display:grid;place-items:center;z-index:2;font-size:43px;
-  background:radial-gradient(circle at 30% 22%,rgba(85,255,155,.19),transparent 35%),#0c1922;
-  border:1px solid rgba(85,255,155,.22);box-shadow:0 0 45px rgba(85,255,155,.10),inset 0 0 28px rgba(85,255,155,.06)
-}
-.mining .ring{animation-duration:.6s}.mining .r2{animation-duration:.42s}.mining .r3{animation-duration:.3s}
-.mining .core{animation:pulse .75s ease-in-out infinite}
-@keyframes spin{to{transform:rotate(360deg)}}@keyframes pulse{50%{transform:scale(1.07);box-shadow:0 0 65px rgba(85,255,155,.25)}}
-.hash-stream{position:absolute;inset:0;overflow:hidden;pointer-events:none;opacity:.45}
-.hash-stream span{position:absolute;font:10px ui-monospace,monospace;color:#48eaaa;white-space:nowrap;animation:drift linear forwards}
-@keyframes drift{from{transform:translateX(-130%);opacity:0}15%{opacity:.7}85%{opacity:.7}to{transform:translateX(120vw);opacity:0}}
-.miner-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
-.metric{padding:11px;border:1px solid rgba(255,255,255,.055);border-radius:13px;background:rgba(255,255,255,.025)}
-.metric small{display:block;color:#667e79;text-transform:uppercase;letter-spacing:.09em;font-size:9px;margin-bottom:6px}
-.metric strong{font:700 14px ui-monospace,monospace}
-.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:10px}
-.stat{padding:15px;border:1px solid rgba(255,255,255,.065);border-radius:16px;background:rgba(10,16,25,.86)}
-.stat small{display:block;color:#728883;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px}
-.stat strong{font-size:18px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.stat .tiny{font:10px ui-monospace,monospace;color:#68807a;margin-top:5px}
-.content{display:grid;grid-template-columns:1.08fr .92fr;gap:16px;margin-top:16px}
-.box{padding:18px}
-.box-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
-.box h2{font-size:16px;margin:0;letter-spacing:.01em}
-.terminal{height:330px;border:1px solid rgba(255,255,255,.055);background:#04080d;border-radius:15px;padding:13px;overflow:auto;font:11px/1.6 ui-monospace,monospace;color:#78daa9}
-.terminal .bad{color:#ff7d8c}.terminal .good{color:#76ffad}.terminal .warn{color:#ffd36b}.terminal .muted{color:#637871}
-.terminal::-webkit-scrollbar{width:7px}.terminal::-webkit-scrollbar-thumb{background:#152536;border-radius:20px}
-.controls{display:grid;gap:10px}
-.control{
-  padding:13px;border:1px solid rgba(255,255,255,.06);border-radius:14px;background:rgba(255,255,255,.025)
-}
-.control-row{display:flex;justify-content:space-between;gap:15px;align-items:center}
-.control-label{color:#798d88;font-size:11px}.control-value{font:700 12px ui-monospace,monospace;text-align:right;word-break:break-all}
-.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:1px}
-.progress{height:8px;border-radius:999px;background:#071019;overflow:hidden;border:1px solid rgba(255,255,255,.04);margin-top:9px}
-.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--cyan));transition:width .2s}
-.notice{padding:12px 13px;border-radius:13px;border:1px solid rgba(255,200,87,.13);background:rgba(255,200,87,.045);color:#c8b683;font-size:11px;line-height:1.55}
-.footer{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-top:18px;color:#5e736e;font-size:11px;padding:0 5px}
-.live{color:var(--green)}.yellow{color:var(--yellow)}.red{color:var(--red)}
+:root{--bg:#05070b;--panel:#0b111b;--panel2:#0d1624;--line:#1b2a3b;--text:#edf7f3;--muted:#7d918d;--green:#55ff9b;--cyan:#45dfff;--yellow:#ffc857;--red:#ff6577;--shadow:0 18px 70px rgba(0,0,0,.40)}
+*{box-sizing:border-box}html,body{margin:0;background:#05070b;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}body{min-height:100vh;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 18% 5%,rgba(85,255,155,.10),transparent 28%),radial-gradient(circle at 85% 12%,rgba(69,223,255,.08),transparent 25%),linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:auto,auto,34px 34px,34px 34px}
+a{color:inherit;text-decoration:none}button{font:inherit}.wrap{width:min(1320px,calc(100% - 28px));margin:auto;padding:14px 0 70px;position:relative}
+.nav{position:sticky;top:10px;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 14px;border:1px solid rgba(255,255,255,.075);border-radius:18px;background:rgba(6,10,16,.85);backdrop-filter:blur(18px);box-shadow:var(--shadow)}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}.brand img{height:44px;width:auto;max-width:235px;display:block}.brand-name{font-weight:950;letter-spacing:.08em;font-size:15px}.brand-sub{font:11px ui-monospace,monospace;color:var(--muted);margin-top:2px}.nav-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.badge{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);border-radius:999px;padding:8px 11px;color:#a6bab5;font-size:12px}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:6px;box-shadow:0 0 10px var(--green)}
+.btn{border:0;border-radius:12px;padding:11px 14px;font-weight:850;cursor:pointer;transition:.18s;white-space:nowrap}.btn:hover{transform:translateY(-1px)}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}.btn-primary{background:linear-gradient(135deg,#55ff9b,#9dffd0);color:#06120c;box-shadow:0 8px 28px rgba(85,255,155,.15)}.btn-dark{background:#111c2b;border:1px solid rgba(255,255,255,.075);color:#e9f7f2}.btn-stop{background:rgba(255,101,119,.12);border:1px solid rgba(255,101,119,.24);color:#ff8997}
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:16px;margin-top:16px}.panel{border:1px solid rgba(255,255,255,.075);background:linear-gradient(180deg,rgba(13,21,34,.93),rgba(7,12,20,.93));border-radius:22px;box-shadow:var(--shadow);overflow:hidden}
+.hero-copy{padding:30px;min-height:430px;display:flex;flex-direction:column;justify-content:center;position:relative}.hero-copy:after{content:"#";position:absolute;right:25px;bottom:-35px;font-size:220px;font-weight:1000;color:rgba(85,255,155,.025);line-height:1}.kicker{display:inline-flex;width:max-content;align-items:center;gap:8px;padding:8px 11px;border-radius:999px;border:1px solid rgba(85,255,155,.16);background:rgba(85,255,155,.055);color:var(--green);font-size:11px;font-weight:900;letter-spacing:.12em}
+h1{font-size:clamp(43px,6vw,77px);line-height:.91;margin:19px 0 16px;letter-spacing:-.055em}h1 em{font-style:normal;color:var(--green);text-shadow:0 0 30px rgba(85,255,155,.16)}.lead{max-width:650px;color:#9cafaa;font-size:15px;line-height:1.72;margin:0 0 21px}.hero-actions{display:flex;gap:9px;flex-wrap:wrap}.micro{display:flex;gap:18px;flex-wrap:wrap;margin-top:26px;font:12px ui-monospace,monospace;color:#819490}.micro b{color:#d9e9e5}
+.banner{margin-top:18px;padding:18px 20px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:linear-gradient(90deg,rgba(85,255,155,.08),rgba(69,223,255,.04),rgba(255,255,255,.02));display:flex;justify-content:space-between;gap:18px;align-items:center;flex-wrap:wrap}.banner-title{font-size:22px;font-weight:900;letter-spacing:.02em}.banner-sub{color:#92a5a0;font-size:13px;margin-top:6px}
+.miner{min-height:430px;padding:18px;display:flex;flex-direction:column;position:relative;background:radial-gradient(circle at 50% 37%,rgba(85,255,155,.09),transparent 34%),linear-gradient(180deg,#09111d,#060b12)}.miner-visual{flex:1;min-height:255px;position:relative;display:grid;place-items:center;overflow:hidden;border:1px solid rgba(255,255,255,.055);border-radius:18px;background:#060b12}.ring{position:absolute;border-radius:50%;border:1px solid rgba(85,255,155,.14);animation:spin linear infinite}.ring:after{content:"";position:absolute;width:7px;height:7px;border-radius:50%;background:var(--green);top:-4px;left:50%;box-shadow:0 0 13px var(--green)}.r1{width:240px;height:240px;animation-duration:13s}.r2{width:185px;height:185px;animation-duration:8s;animation-direction:reverse}.r3{width:128px;height:128px;animation-duration:5s}
+.core{width:104px;height:104px;border-radius:28px;display:grid;place-items:center;z-index:2;background:radial-gradient(circle at 30% 22%,rgba(85,255,155,.19),transparent 35%),#0c1922;border:1px solid rgba(85,255,155,.22);box-shadow:0 0 45px rgba(85,255,155,.10),inset 0 0 28px rgba(85,255,155,.06)}.core svg{width:56px;height:56px}
+.mining .ring{animation-duration:.6s}.mining .r2{animation-duration:.42s}.mining .r3{animation-duration:.3s}.mining .core{animation:pulse .75s ease-in-out infinite}@keyframes spin{to{transform:rotate(360deg)}}@keyframes pulse{50%{transform:scale(1.07);box-shadow:0 0 65px rgba(85,255,155,.25)}}
+.hash-stream{position:absolute;inset:0;overflow:hidden;pointer-events:none;opacity:.45}.hash-stream span{position:absolute;font:10px ui-monospace,monospace;color:#48eaaa;white-space:nowrap;animation:drift linear forwards}@keyframes drift{from{transform:translateX(-130%);opacity:0}15%{opacity:.7}85%{opacity:.7}to{transform:translateX(120vw);opacity:0}}
+.miner-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.metric{padding:11px;border:1px solid rgba(255,255,255,.055);border-radius:13px;background:rgba(255,255,255,.025)}.metric small{display:block;color:#667e79;text-transform:uppercase;letter-spacing:.09em;font-size:9px;margin-bottom:6px}.metric strong{font:700 14px ui-monospace,monospace}
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:10px}.stat{padding:15px;border:1px solid rgba(255,255,255,.065);border-radius:16px;background:rgba(10,16,25,.86)}.stat small{display:block;color:#728883;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px}.stat strong{font-size:18px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.stat .tiny{font:10px ui-monospace,monospace;color:#68807a;margin-top:5px}
+.content{display:grid;grid-template-columns:1.08fr .92fr;gap:16px;margin-top:16px}.box{padding:18px}.box-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.box h2{font-size:16px;margin:0;letter-spacing:.01em}.terminal{height:330px;border:1px solid rgba(255,255,255,.055);background:#04080d;border-radius:15px;padding:13px;overflow:auto;font:11px/1.6 ui-monospace,monospace;color:#78daa9}.terminal .bad{color:#ff7d8c}.terminal .good{color:#76ffad}.terminal .warn{color:#ffd36b}.terminal .muted{color:#637871}.terminal::-webkit-scrollbar{width:7px}.terminal::-webkit-scrollbar-thumb{background:#152536;border-radius:20px}
+.controls{display:grid;gap:10px}.control{padding:13px;border:1px solid rgba(255,255,255,.06);border-radius:14px;background:rgba(255,255,255,.025)}.control-row{display:flex;justify-content:space-between;gap:15px;align-items:center}.control-label{color:#798d88;font-size:11px}.control-value{font:700 12px ui-monospace,monospace;text-align:right;word-break:break-all}.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:1px}.progress{height:8px;border-radius:999px;background:#071019;overflow:hidden;border:1px solid rgba(255,255,255,.04);margin-top:9px}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--cyan));transition:width .2s}.notice{padding:12px 13px;border-radius:13px;border:1px solid rgba(255,200,87,.13);background:rgba(255,200,87,.045);color:#c8b683;font-size:11px;line-height:1.55}.footer{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-top:18px;color:#5e736e;font-size:11px;padding:0 5px}.live{color:var(--green)}.yellow{color:var(--yellow)}.red{color:var(--red)}
 @media(max-width:1050px){.hero,.content{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:700px){
- .wrap{width:min(100% - 18px,1320px)}.nav{align-items:flex-start}.brand-sub{display:none}.nav-right .badge{display:none}
- .hero-copy{padding:22px;min-height:auto}.miner{min-height:405px}.stats{grid-template-columns:1fr 1fr}
- .miner-cards{grid-template-columns:1fr}.action-grid{grid-template-columns:1fr}
- h1{font-size:46px}
-}
+@media(max-width:700px){.wrap{width:min(100% - 18px,1320px)}.nav{align-items:flex-start}.brand-sub{display:none}.nav-right .badge{display:none}.hero-copy{padding:22px;min-height:auto}.miner{min-height:405px}.stats{grid-template-columns:1fr 1fr}.miner-cards{grid-template-columns:1fr}.action-grid{grid-template-columns:1fr}h1{font-size:46px}.banner{padding:15px}}
 </style>
 </head>
 <body>
 <div class="wrap">
 <nav class="nav">
   <div class="brand">
-    <div class="logo"><span class="catmark">🐱</span></div>
-    <div><div class="brand-name">HASH CATS</div><div class="brand-sub">minehashcats.xyz · BNB CHAIN</div></div>
+    <img src="./logo.svg?v=3" alt="HASH CATS" style="width:220px;max-width:42vw;height:auto;display:block">
   </div>
   <div class="nav-right">
     <span class="badge"><span class="dot"></span>MAINNET</span>
@@ -145,13 +58,27 @@ h1 em{font-style:normal;color:var(--green);text-shadow:0 0 30px rgba(85,255,155,
       <a class="btn btn-dark" target="_blank" rel="noopener" href="https://bscscan.com/address/0x971a63cc74d28210a09aa0914483c6116473e6b3">BscScan</a>
     </div>
     <div class="micro"><span>REWARD <b>237,500 HASHCATS</b></span><span>WINNER FEE <b>0.000341 BNB</b></span><span>MAX <b>50 WINS / WALLET</b></span></div>
+    <div class="banner">
+      <div>
+        <div class="banner-title">HASH CATS GPU MINING</div>
+        <div class="banner-sub">Real local GPU proof-of-work on BNB Chain. No mining fee unless a valid proof is found.</div>
+      </div>
+      <div class="badge">Contract 0x971a63…e6b3</div>
+    </div>
   </div>
 
   <div class="panel miner" id="minerPanel">
     <div class="miner-visual">
       <div class="hash-stream" id="hashStream"></div>
       <div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div>
-      <div class="core">🐱</div>
+      <div class="core">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <path d="M18 24l7-8 7 7 7-7 7 8v16c0 4.4-3.6 8-8 8H26c-4.4 0-8-3.6-8-8V24z" fill="none" stroke="#55ff9b" stroke-width="3.5" stroke-linejoin="round"/>
+          <circle cx="27" cy="33" r="2.6" fill="#55ff9b"/>
+          <circle cx="37" cy="33" r="2.6" fill="#55ff9b"/>
+          <path d="M28 40c2.2 2 5.8 2 8 0" fill="none" stroke="#55ff9b" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
     </div>
     <div class="miner-cards">
       <div class="metric"><small>REAL HASHRATE</small><strong id="hashrate">0 H/s</strong></div>
@@ -192,31 +119,26 @@ h1 em{font-style:normal;color:var(--green);text-shadow:0 0 30px rgba(85,255,155,
         <button class="btn btn-dark" id="activateBtn" disabled>Activate Mining</button>
         <button class="btn btn-dark" id="refreshBtn">Refresh Chain</button>
       </div>
-      <div class="notice">
-        WebGPU requires HTTPS and a supported browser/GPU. Mining work happens locally. When a valid nonce is found, the browser verifies it again with ethers before opening your wallet. Non-winners send no mining transaction and pay no protocol fee.
-      </div>
+      <div class="notice">WebGPU requires HTTPS and a supported browser/GPU. Mining work happens locally. When a valid nonce is found, the browser verifies it again with ethers before opening your wallet. Non-winners send no mining transaction and pay no protocol fee.</div>
     </div>
   </div>
 </section>
 
-<div class="footer"><span>HASH CATS · minehashcats.xyz</span><span>Contract 0x971a63cc74d28210a09aa0914483c6116473e6b3</span></div>
+<div class="footer"><span>HASH CATS · minehashcats.xyz · BUILD 3.0</span><span>Contract 0x971a63cc74d28210a09aa0914483c6116473e6b3</span></div>
 </div>
 
 <script>
 "use strict";
-
-const CONTRACT = "0x971a63cc74d28210a09aa0914483c6116473e6b3";
-const CHAIN_ID_HEX = "0x38";
-const FEE = 341000000000000n;
-const WORKGROUP = 64;
-const BATCH_TARGET_MS = 140;
-const MIN_BATCH = 4096;
-const MAX_BATCH = 1048576;
-
-const ABI = [
+const CONTRACT="0x971a63cc74d28210a09aa0914483c6116473e6b3";
+const CHAIN_ID_HEX="0x38";
+const FEE=341000000000000n;
+const WORKGROUP=64;
+const BATCH_TARGET_MS=140;
+const MIN_BATCH=4096;
+const MAX_BATCH=1048576;
+const ABI=[
  "function miningActivated() view returns(bool)",
  "function currentChallenge() view returns(bytes32)",
- "function target() view returns(uint256)",
  "function miningBlocksMined() view returns(uint256)",
  "function miningBlocksRemaining() view returns(uint256)",
  "function miningPoolRemaining() view returns(uint256)",
@@ -225,148 +147,34 @@ const ABI = [
  "function activateMining()",
  "function mine(uint256 nonce) payable returns(bytes32)"
 ];
-
-let provider, signer, readContract, writeContract, wallet;
-let gpu = null;
-let mining = false;
-let submitting = false;
-let hashesTested = 0n;
-let nonceCursor = 0n;
-let batchSize = 32768;
-let currentChallenge = null;
-let currentTarget = null;
-let lastChainCheck = 0;
-
-const el = id => document.getElementById(id);
-const sleep = ms => new Promise(r=>setTimeout(r,ms));
-const fmt = n => new Intl.NumberFormat("en-US").format(n);
-const short = s => s ? s.slice(0,8)+"…"+s.slice(-6) : "—";
-
-function log(msg, cls=""){
-  const d=document.createElement("div");
-  d.className=cls;
-  d.textContent=`[${new Date().toLocaleTimeString()}] ${msg}`;
-  el("terminal").appendChild(d);
-  el("terminal").scrollTop=el("terminal").scrollHeight;
-  while(el("terminal").children.length>180) el("terminal").firstChild.remove();
+const TARGET_IFACE=new ethers.Interface(["function target() view returns(uint256)"]);
+async function readPowTarget(){
+  const data=TARGET_IFACE.encodeFunctionData("target",[]);
+  const raw=await provider.call({to:CONTRACT,data});
+  const [value]=TARGET_IFACE.decodeFunctionResult("target",raw);
+  return value;
 }
-function formatRate(v){
-  if(v>=1e9)return (v/1e9).toFixed(2)+" GH/s";
-  if(v>=1e6)return (v/1e6).toFixed(2)+" MH/s";
-  if(v>=1e3)return (v/1e3).toFixed(2)+" KH/s";
-  return v.toFixed(0)+" H/s";
-}
-function rand64(){
-  const a=new Uint32Array(2); crypto.getRandomValues(a);
-  return (BigInt(a[1])<<32n)|BigInt(a[0]);
-}
-function hexBytes(hex){
-  return ethers.getBytes(hex);
-}
-function packRateBlock(challenge,address){
-  const bytes=new Uint8Array(136);
-  bytes.set(hexBytes(challenge),0);
-  bytes.set(hexBytes(address),32);
-  // indices 52..75 = high 24 bytes of uint256 nonce = 0
-  // indices 76..83 = low 64-bit nonce, supplied by shader.
-  bytes[84]=0x01;          // Ethereum Keccak padding suffix
-  bytes[135]|=0x80;
-  const words=new Uint32Array(34);
-  for(let i=0;i<34;i++){
-    const p=i*4;
-    words[i]=(bytes[p]|(bytes[p+1]<<8)|(bytes[p+2]<<16)|(bytes[p+3]<<24))>>>0;
-  }
-  return words;
-}
-function targetWords(target){
-  const h=target.toString(16).padStart(64,"0");
-  const out=new Uint32Array(8);
-  for(let i=0;i<8;i++) out[i]=parseInt(h.slice(i*8,i*8+8),16)>>>0;
-  return out;
-}
-function u64parts(n){
-  return {lo:Number(n&0xffffffffn)>>>0,hi:Number((n>>32n)&0xffffffffn)>>>0};
-}
-function hashWordsToHex(words){
-  return "0x"+Array.from(words).map(x=>(x>>>0).toString(16).padStart(8,"0")).join("");
-}
-
-async function initProvider(){
-  if(window.ethereum) provider=new ethers.BrowserProvider(window.ethereum);
-  else provider=new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
-  readContract=new ethers.Contract(CONTRACT,ABI,provider);
-}
-async function switchBSC(){
-  if(!window.ethereum) throw new Error("No EVM wallet detected.");
-  try{
-    await window.ethereum.request({method:"wallet_switchEthereumChain",params:[{chainId:CHAIN_ID_HEX}]});
-  }catch(e){
-    if(e.code!==4902) throw e;
-    await window.ethereum.request({method:"wallet_addEthereumChain",params:[{
-      chainId:CHAIN_ID_HEX,chainName:"BNB Smart Chain",
-      nativeCurrency:{name:"BNB",symbol:"BNB",decimals:18},
-      rpcUrls:["https://bsc-dataseed.binance.org/"],blockExplorerUrls:["https://bscscan.com"]
-    }]});
-  }
-}
-async function connect(){
-  try{
-    await switchBSC();
-    await window.ethereum.request({method:"eth_requestAccounts"});
-    provider=new ethers.BrowserProvider(window.ethereum);
-    signer=await provider.getSigner();
-    wallet=await signer.getAddress();
-    readContract=new ethers.Contract(CONTRACT,ABI,provider);
-    writeContract=new ethers.Contract(CONTRACT,ABI,signer);
-    el("connectBtn").textContent=short(wallet);
-    el("heroConnect").textContent="Wallet Connected";
-    el("walletShort").textContent=short(wallet);
-    log("Wallet connected: "+wallet,"good");
-    el("activateBtn").disabled=false;
-    await refreshChain();
-    if(gpu) el("startBtn").disabled=false;
-  }catch(e){ log(e.shortMessage||e.message,"bad"); }
-}
-async function refreshChain(silent=false){
-  try{
-    if(!readContract)await initProvider();
-    const calls=[
-      readContract.miningActivated(),readContract.currentChallenge(),readContract.target(),
-      readContract.miningBlocksMined(),readContract.miningPoolRemaining(),readContract.currentDifficulty(),
-      provider.getBlockNumber()
-    ];
-    if(wallet)calls.push(readContract.remainingWinsFor(wallet));
-    const r=await Promise.all(calls);
-    const activated=r[0],challenge=r[1],target=r[2],mined=r[3],pool=r[4],diff=r[5],bn=r[6];
-    currentChallenge=challenge; currentTarget=target;
-    el("activated").textContent=activated?"LIVE":"NOT ACTIVE";
-    el("activated").className=activated?"live":"yellow";
-    el("minedBlocks").textContent=fmt(Number(mined));
-    el("poolLeft").textContent=(Number(ethers.formatUnits(pool,18))/1e9).toFixed(3)+"B";
-    el("difficulty").textContent=Number(diff)>=1e9?(Number(diff)/1e9).toFixed(2)+"B":fmt(Number(diff));
-    el("bscBlock").textContent=fmt(bn);
-    el("challenge").textContent=short(challenge);
-    el("targetView").textContent=short("0x"+target.toString(16).padStart(64,"0"));
-    if(wallet)el("winsLeft").textContent=fmt(Number(r[7]));
-    if(!silent)log("Chain state refreshed.");
-    return {activated,challenge,target,mined};
-  }catch(e){ if(!silent)log("Chain read failed: "+(e.shortMessage||e.message),"bad"); throw e; }
-}
-async function activate(){
-  if(!writeContract)return log("Connect wallet first.","warn");
-  try{
-    el("activateBtn").disabled=true;
-    log("Submitting activateMining()…","warn");
-    const tx=await writeContract.activateMining();
-    log("Activation tx: "+tx.hash);
-    await tx.wait();
-    log("Mining activated on-chain.","good");
-    await refreshChain();
-  }catch(e){log("Activation failed: "+(e.shortMessage||e.message),"bad")}
-  finally{el("activateBtn").disabled=false}
-}
-
-/* ========= REAL WEBGPU KECCAK-256 ========= */
+let provider,signer,readContract,writeContract,wallet;
+let gpu=null,mining=false,submitting=false;
+let hashesTested=0n,nonceCursor=0n,batchSize=32768,currentChallenge=null,currentTarget=null,lastChainCheck=0;
+const $=id=>document.getElementById(id);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const fmt=n=>new Intl.NumberFormat("en-US").format(n);
+const short=s=>s?s.slice(0,8)+"…"+s.slice(-6):"—";
+function log(msg,cls=""){const d=document.createElement("div");d.className=cls;d.textContent=`[${new Date().toLocaleTimeString()}] ${msg}`;$("terminal").appendChild(d);$("terminal").scrollTop=$("terminal").scrollHeight;while($("terminal").children.length>180)$("terminal").firstChild.remove();}
+function formatRate(v){if(v>=1e9)return(v/1e9).toFixed(2)+" GH/s";if(v>=1e6)return(v/1e6).toFixed(2)+" MH/s";if(v>=1e3)return(v/1e3).toFixed(2)+" KH/s";return v.toFixed(0)+" H/s"}
+function rand64(){const a=new Uint32Array(2);crypto.getRandomValues(a);return(BigInt(a[1])<<32n)|BigInt(a[0]);}
+function hexBytes(hex){return ethers.getBytes(hex)}
+function packRateBlock(challenge,address){const bytes=new Uint8Array(136);bytes.set(hexBytes(challenge),0);bytes.set(hexBytes(address),32);bytes[84]=0x01;bytes[135]|=0x80;const words=new Uint32Array(34);for(let i=0;i<34;i++){const p=i*4;words[i]=(bytes[p]|(bytes[p+1]<<8)|(bytes[p+2]<<16)|(bytes[p+3]<<24))>>>0;}return words;}
+function targetWords(target){const h=target.toString(16).padStart(64,"0");const out=new Uint32Array(8);for(let i=0;i<8;i++)out[i]=parseInt(h.slice(i*8,i*8+8),16)>>>0;return out;}
+function u64parts(n){return{lo:Number(n&0xffffffffn)>>>0,hi:Number((n>>32n)&0xffffffffn)>>>0}}
+function hashWordsToHex(words){return"0x"+Array.from(words).map(x=>(x>>>0).toString(16).padStart(8,"0")).join("")}
+function decodeRevert(err){try{const raw=err?.data?.data||err?.data||err?.info?.error?.data||err?.error?.data; if(!raw||!readContract)return err?.shortMessage||err?.message||"Transaction reverted"; const parsed=readContract.interface.parseError(raw); if(!parsed)return err?.shortMessage||err?.message||"Transaction reverted"; return parsed.name+(parsed.args?.length?` (${parsed.args.map(x=>x.toString()).join(", ")})`:"");}catch{return err?.shortMessage||err?.message||"Transaction reverted";}}
+async function initProvider(){if(window.ethereum)provider=new ethers.BrowserProvider(window.ethereum);else provider=new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");readContract=new ethers.Contract(CONTRACT,ABI,provider);}
+async function switchBSC(){if(!window.ethereum)throw new Error("No EVM wallet detected.");try{await window.ethereum.request({method:"wallet_switchEthereumChain",params:[{chainId:CHAIN_ID_HEX}]});}catch(e){if(e.code!==4902)throw e;await window.ethereum.request({method:"wallet_addEthereumChain",params:[{chainId:CHAIN_ID_HEX,chainName:"BNB Smart Chain",nativeCurrency:{name:"BNB",symbol:"BNB",decimals:18},rpcUrls:["https://bsc-dataseed.binance.org/"],blockExplorerUrls:["https://bscscan.com"]}]});}}
+async function connect(){try{await switchBSC();await window.ethereum.request({method:"eth_requestAccounts"});provider=new ethers.BrowserProvider(window.ethereum);signer=await provider.getSigner();wallet=await signer.getAddress();readContract=new ethers.Contract(CONTRACT,ABI,provider);writeContract=new ethers.Contract(CONTRACT,ABI,signer);$("connectBtn").textContent=short(wallet);$("heroConnect").textContent="Wallet Connected";$("walletShort").textContent=short(wallet);log("Wallet connected: "+wallet,"good");$("activateBtn").disabled=false;await refreshChain();if(gpu)$("startBtn").disabled=false;}catch(e){log(e.shortMessage||e.message,"bad");}}
+async function refreshChain(silent=false){try{if(!readContract)await initProvider();const calls=[readContract.miningActivated(),readContract.currentChallenge(),readPowTarget(),readContract.miningBlocksMined(),readContract.miningPoolRemaining(),readContract.currentDifficulty(),provider.getBlockNumber()];if(wallet)calls.push(readContract.remainingWinsFor(wallet));const r=await Promise.all(calls);const activated=r[0],challenge=r[1],target=r[2],mined=r[3],pool=r[4],diff=r[5],bn=r[6];currentChallenge=challenge;currentTarget=target;$("activated").textContent=activated?"LIVE":"NOT ACTIVE";$("activated").className=activated?"live":"yellow"; if($("activateBtn")){ $("activateBtn").disabled=!!activated || !wallet; $("activateBtn").textContent=activated?"Mining Active":"Activate Mining"; }$("minedBlocks").textContent=fmt(Number(mined));$("poolLeft").textContent=(Number(ethers.formatUnits(pool,18))/1e9).toFixed(3)+"B";$("difficulty").textContent=Number(diff)>=1e9?(Number(diff)/1e9).toFixed(2)+"B":fmt(Number(diff));$("bscBlock").textContent=fmt(bn);$("challenge").textContent=short(challenge);$("targetView").textContent=short("0x"+target.toString(16).padStart(64,"0"));if(wallet)$("winsLeft").textContent=fmt(Number(r[7]));if(!silent)log("Chain state refreshed.");return{activated,challenge,target,mined};}catch(e){if(!silent)log("Chain read failed: "+(e.shortMessage||e.message),"bad");throw e;}}
+async function activate(){if(!writeContract)return log("Connect wallet first.","warn");try{$("activateBtn").disabled=true;log("Submitting activateMining()…","warn");const tx=await writeContract.activateMining();log("Activation tx: "+tx.hash);await tx.wait();log("Mining activated on-chain.","good");await refreshChain();}catch(e){log("Activation failed: "+decodeRevert(e),"bad")}finally{$("activateBtn").disabled=false}}
 const SHADER=String.raw`
 struct Params { startLo:u32, startHi:u32, count:u32, pad:u32 }
 struct Result {
@@ -375,323 +183,26 @@ struct Result {
   h0:u32,h1:u32,h2:u32,h3:u32,h4:u32,h5:u32,h6:u32,h7:u32
 }
 @group(0) @binding(0) var<storage,read> baseWords: array<u32>;
-@group(0) @binding(1) var<storage,read> target: array<u32>;
+@group(0) @binding(1) var<storage,read> powTarget: array<u32>;
 @group(0) @binding(2) var<uniform> params: Params;
 @group(0) @binding(3) var<storage,read_write> result: Result;
-
-const RHO:array<u32,25>=array<u32,25>(
-  0u,1u,62u,28u,27u,
-  36u,44u,6u,55u,20u,
-  3u,10u,43u,25u,39u,
-  41u,45u,15u,21u,8u,
-  18u,2u,61u,56u,14u
-);
-const RC:array<vec2<u32>,24>=array<vec2<u32>,24>(
- vec2<u32>(0x00000001u,0x00000000u),vec2<u32>(0x00008082u,0x00000000u),
- vec2<u32>(0x0000808au,0x80000000u),vec2<u32>(0x80008000u,0x80000000u),
- vec2<u32>(0x0000808bu,0x00000000u),vec2<u32>(0x80000001u,0x00000000u),
- vec2<u32>(0x80008081u,0x80000000u),vec2<u32>(0x00008009u,0x80000000u),
- vec2<u32>(0x0000008au,0x00000000u),vec2<u32>(0x00000088u,0x00000000u),
- vec2<u32>(0x80008009u,0x00000000u),vec2<u32>(0x8000000au,0x00000000u),
- vec2<u32>(0x8000808bu,0x00000000u),vec2<u32>(0x0000008bu,0x80000000u),
- vec2<u32>(0x00008089u,0x80000000u),vec2<u32>(0x00008003u,0x80000000u),
- vec2<u32>(0x00008002u,0x80000000u),vec2<u32>(0x00000080u,0x80000000u),
- vec2<u32>(0x0000800au,0x00000000u),vec2<u32>(0x8000000au,0x80000000u),
- vec2<u32>(0x80008081u,0x80000000u),vec2<u32>(0x00008080u,0x80000000u),
- vec2<u32>(0x80000001u,0x00000000u),vec2<u32>(0x80008008u,0x80000000u)
-);
-fn rol(v:vec2<u32>,n:u32)->vec2<u32>{
- if(n==0u){return v;}
- if(n<32u){return vec2<u32>((v.x<<n)|(v.y>>(32u-n)),(v.y<<n)|(v.x>>(32u-n)));}
- if(n==32u){return vec2<u32>(v.y,v.x);}
- let m=n-32u;
- return vec2<u32>((v.y<<m)|(v.x>>(32u-m)),(v.x<<m)|(v.y>>(32u-m)));
-}
-fn bswap(x:u32)->u32{
- return ((x&0x000000ffu)<<24u)|((x&0x0000ff00u)<<8u)|((x&0x00ff0000u)>>8u)|((x&0xff000000u)>>24u);
-}
-fn keccakf(s:ptr<function,array<vec2<u32>,25>>){
- for(var rnd:u32=0u;rnd<24u;rnd++){
-  var c:array<vec2<u32>,5>;
-  var d:array<vec2<u32>,5>;
-  var b:array<vec2<u32>,25>;
-  for(var x:u32=0u;x<5u;x++){
-   var q=(*s)[x];
-   q=vec2<u32>(q.x^(*s)[x+5u].x,q.y^(*s)[x+5u].y);
-   q=vec2<u32>(q.x^(*s)[x+10u].x,q.y^(*s)[x+10u].y);
-   q=vec2<u32>(q.x^(*s)[x+15u].x,q.y^(*s)[x+15u].y);
-   q=vec2<u32>(q.x^(*s)[x+20u].x,q.y^(*s)[x+20u].y);
-   c[x]=q;
-  }
-  for(var x:u32=0u;x<5u;x++){
-   let p=c[(x+4u)%5u]; let r=rol(c[(x+1u)%5u],1u);
-   d[x]=vec2<u32>(p.x^r.x,p.y^r.y);
-  }
-  for(var y:u32=0u;y<5u;y++){
-   for(var x:u32=0u;x<5u;x++){
-    let i=x+5u*y; (*s)[i]=vec2<u32>((*s)[i].x^d[x].x,(*s)[i].y^d[x].y);
-   }
-  }
-  for(var y:u32=0u;y<5u;y++){
-   for(var x:u32=0u;x<5u;x++){
-    let i=x+5u*y; let nx=y; let ny=(2u*x+3u*y)%5u;
-    b[nx+5u*ny]=rol((*s)[i],RHO[i]);
-   }
-  }
-  for(var y:u32=0u;y<5u;y++){
-   for(var x:u32=0u;x<5u;x++){
-    let i=x+5u*y;let a=b[i];let b1=b[((x+1u)%5u)+5u*y];let b2=b[((x+2u)%5u)+5u*y];
-    (*s)[i]=vec2<u32>(a.x^((~b1.x)&b2.x),a.y^((~b1.y)&b2.y));
-   }
-  }
-  (*s)[0]=vec2<u32>((*s)[0].x^RC[rnd].x,(*s)[0].y^RC[rnd].y);
- }
-}
-fn isValid(h:ptr<function,array<u32,8>>)->bool{
- for(var i:u32=0u;i<8u;i++){
-  if((*h)[i]<target[i]){return true;}
-  if((*h)[i]>target[i]){return false;}
- }
- return true;
-}
+const RHO:array<u32,25>=array<u32,25>(0u,1u,62u,28u,27u,36u,44u,6u,55u,20u,3u,10u,43u,25u,39u,41u,45u,15u,21u,8u,18u,2u,61u,56u,14u);
+const RC:array<vec2<u32>,24>=array<vec2<u32>,24>(vec2<u32>(0x00000001u,0x00000000u),vec2<u32>(0x00008082u,0x00000000u),vec2<u32>(0x0000808au,0x80000000u),vec2<u32>(0x80008000u,0x80000000u),vec2<u32>(0x0000808bu,0x00000000u),vec2<u32>(0x80000001u,0x00000000u),vec2<u32>(0x80008081u,0x80000000u),vec2<u32>(0x00008009u,0x80000000u),vec2<u32>(0x0000008au,0x00000000u),vec2<u32>(0x00000088u,0x00000000u),vec2<u32>(0x80008009u,0x00000000u),vec2<u32>(0x8000000au,0x00000000u),vec2<u32>(0x8000808bu,0x00000000u),vec2<u32>(0x0000008bu,0x80000000u),vec2<u32>(0x00008089u,0x80000000u),vec2<u32>(0x00008003u,0x80000000u),vec2<u32>(0x00008002u,0x80000000u),vec2<u32>(0x00000080u,0x80000000u),vec2<u32>(0x0000800au,0x00000000u),vec2<u32>(0x8000000au,0x80000000u),vec2<u32>(0x80008081u,0x80000000u),vec2<u32>(0x00008080u,0x80000000u),vec2<u32>(0x80000001u,0x00000000u),vec2<u32>(0x80008008u,0x80000000u));
+fn rol(v:vec2<u32>,n:u32)->vec2<u32>{if(n==0u){return v;}if(n<32u){return vec2<u32>((v.x<<n)|(v.y>>(32u-n)),(v.y<<n)|(v.x>>(32u-n)));}if(n==32u){return vec2<u32>(v.y,v.x);}let m=n-32u;return vec2<u32>((v.y<<m)|(v.x>>(32u-m)),(v.x<<m)|(v.y>>(32u-m)));}
+fn bswap(x:u32)->u32{return ((x&0x000000ffu)<<24u)|((x&0x0000ff00u)<<8u)|((x&0x00ff0000u)>>8u)|((x&0xff000000u)>>24u);}
+fn keccakf(s:ptr<function,array<vec2<u32>,25>>){for(var rnd:u32=0u;rnd<24u;rnd++){var c:array<vec2<u32>,5>;var d:array<vec2<u32>,5>;var b:array<vec2<u32>,25>;for(var x:u32=0u;x<5u;x++){var q=(*s)[x];q=vec2<u32>(q.x^(*s)[x+5u].x,q.y^(*s)[x+5u].y);q=vec2<u32>(q.x^(*s)[x+10u].x,q.y^(*s)[x+10u].y);q=vec2<u32>(q.x^(*s)[x+15u].x,q.y^(*s)[x+15u].y);q=vec2<u32>(q.x^(*s)[x+20u].x,q.y^(*s)[x+20u].y);c[x]=q;}for(var x:u32=0u;x<5u;x++){let p=c[(x+4u)%5u];let r=rol(c[(x+1u)%5u],1u);d[x]=vec2<u32>(p.x^r.x,p.y^r.y);}for(var y:u32=0u;y<5u;y++){for(var x:u32=0u;x<5u;x++){let i=x+5u*y;(*s)[i]=vec2<u32>((*s)[i].x^d[x].x,(*s)[i].y^d[x].y);}}for(var y:u32=0u;y<5u;y++){for(var x:u32=0u;x<5u;x++){let i=x+5u*y;let nx=y;let ny=(2u*x+3u*y)%5u;b[nx+5u*ny]=rol((*s)[i],RHO[i]);}}for(var y:u32=0u;y<5u;y++){for(var x:u32=0u;x<5u;x++){let i=x+5u*y;let a=b[i];let b1=b[((x+1u)%5u)+5u*y];let b2=b[((x+2u)%5u)+5u*y];(*s)[i]=vec2<u32>(a.x^((~b1.x)&b2.x),a.y^((~b1.y)&b2.y));}}(*s)[0]=vec2<u32>((*s)[0].x^RC[rnd].x,(*s)[0].y^RC[rnd].y);}}
+fn isValid(h:ptr<function,array<u32,8>>)->bool{for(var i:u32=0u;i<8u;i++){if((*h)[i]<powTarget[i]){return true;}if((*h)[i]>powTarget[i]){return false;}}return true;}
 @compute @workgroup_size(64)
-fn main(@builtin(global_invocation_id) gid:vec3<u32>){
- let idx=gid.x;if(idx>=params.count){return;}
- let lo=params.startLo+idx;
- let carry=select(0u,1u,lo<params.startLo);
- let hi=params.startHi+carry;
-
- var words:array<u32,34>;
- for(var i:u32=0u;i<34u;i++){words[i]=baseWords[i];}
- // uint256 nonce uses only its low 64 bits here. Solidity packed uint256 is big-endian.
- words[19]=bswap(hi);
- words[20]=bswap(lo);
-
- var s:array<vec2<u32>,25>;
- for(var i:u32=0u;i<25u;i++){s[i]=vec2<u32>(0u,0u);}
- for(var i:u32=0u;i<17u;i++){s[i]=vec2<u32>(words[i*2u],words[i*2u+1u]);}
- keccakf(&s);
-
- var h:array<u32,8>;
- h[0]=bswap(s[0].x);h[1]=bswap(s[0].y);h[2]=bswap(s[1].x);h[3]=bswap(s[1].y);
- h[4]=bswap(s[2].x);h[5]=bswap(s[2].y);h[6]=bswap(s[3].x);h[7]=bswap(s[3].y);
-
- if(isValid(&h)){
-  let won=atomicCompareExchangeWeak(&result.found,0u,1u);
-  if(won.exchanged){
-   result.nonceLo=lo;result.nonceHi=hi;
-   result.h0=h[0];result.h1=h[1];result.h2=h[2];result.h3=h[3];
-   result.h4=h[4];result.h5=h[5];result.h6=h[6];result.h7=h[7];
-  }
- }
-}`;
-
-async function initGPU(){
-  if(!navigator.gpu){
-    el("gpuBadge").textContent="WebGPU unsupported";
-    el("gpuName").textContent="WebGPU unavailable";
-    log("WebGPU is unavailable. Use current Chrome/Edge on HTTPS with GPU acceleration enabled.","bad");
-    return;
-  }
-  try{
-    const adapter=await navigator.gpu.requestAdapter({powerPreference:"high-performance"});
-    if(!adapter)throw new Error("No WebGPU adapter.");
-    const device=await adapter.requestDevice();
-    const info=adapter.info||{};
-    const label=[info.vendor,info.architecture,info.device].filter(Boolean).join(" ")||"WebGPU GPU";
-    el("gpuName").textContent=label;
-    el("gpuBadge").textContent="GPU READY";
-    log("GPU adapter ready: "+label,"good");
-
-    const module=device.createShaderModule({code:SHADER,label:"HASH CATS Keccak Miner"});
-    const ci=await module.getCompilationInfo();
-    const errs=ci.messages.filter(x=>x.type==="error");
-    if(errs.length)throw new Error(errs.map(x=>`${x.lineNum}:${x.linePos} ${x.message}`).join("\n"));
-
-    const pipeline=await device.createComputePipelineAsync({layout:"auto",compute:{module,entryPoint:"main"}});
-    const usage=GPUBufferUsage;
-    const baseBuffer=device.createBuffer({size:136,usage:usage.STORAGE|usage.COPY_DST});
-    const targetBuffer=device.createBuffer({size:32,usage:usage.STORAGE|usage.COPY_DST});
-    const paramsBuffer=device.createBuffer({size:16,usage:usage.UNIFORM|usage.COPY_DST});
-    const resultBuffer=device.createBuffer({size:44,usage:usage.STORAGE|usage.COPY_SRC|usage.COPY_DST});
-    const readBuffer=device.createBuffer({size:44,usage:GPUBufferUsage.COPY_DST|GPUBufferUsage.MAP_READ});
-
-    const bindGroup=device.createBindGroup({
-      layout:pipeline.getBindGroupLayout(0),
-      entries:[
-        {binding:0,resource:{buffer:baseBuffer}},
-        {binding:1,resource:{buffer:targetBuffer}},
-        {binding:2,resource:{buffer:paramsBuffer}},
-        {binding:3,resource:{buffer:resultBuffer}}
-      ]
-    });
-    gpu={adapter,device,pipeline,baseBuffer,targetBuffer,paramsBuffer,resultBuffer,readBuffer,bindGroup};
-    if(wallet)el("startBtn").disabled=false;
-  }catch(e){
-    el("gpuBadge").textContent="GPU ERROR";
-    log("WebGPU init failed: "+e.message,"bad");
-    console.error(e);
-  }
-}
-
-async function runBatch(challenge,target,start,count){
-  const {device}=gpu;
-  device.queue.writeBuffer(gpu.baseBuffer,0,packRateBlock(challenge,wallet));
-  device.queue.writeBuffer(gpu.targetBuffer,0,targetWords(target));
-  const p=u64parts(start);
-  device.queue.writeBuffer(gpu.paramsBuffer,0,new Uint32Array([p.lo,p.hi,count,0]));
-  device.queue.writeBuffer(gpu.resultBuffer,0,new Uint32Array(11));
-
-  const encoder=device.createCommandEncoder();
-  const pass=encoder.beginComputePass();
-  pass.setPipeline(gpu.pipeline);pass.setBindGroup(0,gpu.bindGroup);
-  pass.dispatchWorkgroups(Math.ceil(count/WORKGROUP));
-  pass.end();
-  encoder.copyBufferToBuffer(gpu.resultBuffer,0,gpu.readBuffer,0,44);
-  const t0=performance.now();
-  device.queue.submit([encoder.finish()]);
-  await gpu.readBuffer.mapAsync(GPUMapMode.READ);
-  const t1=performance.now();
-  const copy=new Uint32Array(gpu.readBuffer.getMappedRange().slice(0));
-  gpu.readBuffer.unmap();
-
-  if(copy[0]===1){
-    const nonce=(BigInt(copy[2])<<32n)|BigInt(copy[1]);
-    const hw=copy.slice(3,11);
-    return {ms:t1-t0,nonce,hash:hashWordsToHex(hw)};
-  }
-  return {ms:t1-t0,nonce:null,hash:null};
-}
-async function submitWinner(nonce,challenge,target,gpuHash){
-  if(submitting)return false;
-  submitting=true;
-  try{
-    const proof=ethers.solidityPackedKeccak256(["bytes32","address","uint256"],[challenge,wallet,nonce]);
-    if(BigInt(proof)>target){
-      log("GPU candidate rejected by CPU safety verification. No transaction sent.","bad");
-      log("GPU hash: "+gpuHash,"muted");
-      return false;
-    }
-    if(proof.toLowerCase()!==gpuHash.toLowerCase()){
-      log("GPU/CPU hash mismatch. Transaction blocked for safety.","bad");
-      log("GPU "+gpuHash+" / CPU "+proof,"bad");
-      return false;
-    }
-
-    const liveChallenge=await readContract.currentChallenge();
-    if(liveChallenge.toLowerCase()!==challenge.toLowerCase()){
-      log("Valid proof became stale before submission. Continuing on new challenge.","warn");
-      return false;
-    }
-
-    log("★ VALID BLOCK FOUND ★ nonce "+nonce.toString(),"good");
-    log("Proof "+proof,"good");
-    log("Opening wallet for winning transaction + 0.000341 BNB…","warn");
-    stopMining(false);
-    const tx=await writeContract.mine(nonce,{value:FEE});
-    log("Winning tx sent: "+tx.hash,"good");
-    const receipt=await tx.wait();
-    log("HASH CATS reward confirmed in block "+receipt.blockNumber+".","good");
-    await refreshChain();
-    return true;
-  }catch(e){
-    log("Winner submission failed: "+(e.shortMessage||e.message),"bad");
-    return false;
-  }finally{submitting=false}
-}
-async function miningLoop(){
-  hashesTested=0n;
-  nonceCursor=rand64();
-  lastChainCheck=0;
-  while(mining){
-    let chain;
-    try{
-      if(Date.now()-lastChainCheck>650){
-        chain=await refreshChain(true);lastChainCheck=Date.now();
-        if(!chain.activated){log("Mining is not activated on-chain yet.","warn");stopMining();break;}
-      }else chain={challenge:currentChallenge,target:currentTarget};
-      if(!wallet||!chain.challenge||chain.challenge===ethers.ZeroHash){await sleep(150);continue;}
-
-      const start=nonceCursor;
-      el("nonceRange").textContent=start.toString()+" → "+(start+BigInt(batchSize)-1n).toString();
-      el("batchStat").textContent=fmt(batchSize);
-      el("batchBar").style.width="65%";
-
-      const r=await runBatch(chain.challenge,BigInt(chain.target),start,batchSize);
-      if(!mining)break;
-      hashesTested+=BigInt(batchSize);
-      nonceCursor=(nonceCursor+BigInt(batchSize))&((1n<<64n)-1n);
-
-      const rate=batchSize/(Math.max(r.ms,1)/1000);
-      el("hashrate").textContent=formatRate(rate);
-      el("tested").textContent=fmt(hashesTested.toString());
-      el("batchMs").textContent=r.ms.toFixed(1)+" ms";
-      el("batchBar").style.width="100%";
-
-      const desired=Math.max(MIN_BATCH,Math.min(MAX_BATCH,Math.round(batchSize*(BATCH_TARGET_MS/Math.max(r.ms,10)))));
-      batchSize=Math.max(WORKGROUP,Math.floor(desired/WORKGROUP)*WORKGROUP);
-
-      if(r.nonce!==null){
-        await submitWinner(r.nonce,chain.challenge,BigInt(chain.target),r.hash);
-        if(!mining)break;
-      }
-
-      if(Math.random()<.18)spawnHash();
-      await sleep(0);
-    }catch(e){
-      log("Mining loop error: "+e.message,"bad");
-      console.error(e);
-      await sleep(600);
-    }
-  }
-}
-function spawnHash(){
-  const s=document.createElement("span");
-  s.textContent="0x"+crypto.getRandomValues(new Uint32Array(2)).reduce((a,x)=>a+x.toString(16).padStart(8,"0"),"");
-  s.style.top=(5+Math.random()*87)+"%";s.style.animationDuration=(2.5+Math.random()*3)+"s";
-  el("hashStream").appendChild(s);setTimeout(()=>s.remove(),6000);
-}
-async function startMining(){
-  if(mining)return;
-  if(!wallet)return log("Connect wallet first.","warn");
-  if(!gpu)return log("WebGPU is not ready.","bad");
-  const state=await refreshChain(true);
-  if(!state.activated)return log("Mining is not activated. Use Activate Mining first.","warn");
-  const wins=await readContract.remainingWinsFor(wallet);
-  if(wins===0n)return log("This wallet has reached the 50-win mining limit.","warn");
-
-  mining=true;
-  el("minerPanel").classList.add("mining");
-  el("minerState").textContent="MINING";
-  el("minerState").classList.add("live");
-  el("startBtn").disabled=true;el("stopBtn").disabled=false;
-  log("REAL WebGPU mining started.","good");
-  log("Proof = keccak256(challenge + wallet + uint256 nonce).","muted");
-  miningLoop();
-}
-function stopMining(withLog=true){
-  mining=false;
-  el("minerPanel").classList.remove("mining");
-  el("minerState").textContent="IDLE";el("minerState").classList.remove("live");
-  el("stopBtn").disabled=true;if(wallet&&gpu)el("startBtn").disabled=false;
-  if(withLog)log("Mining stopped.","warn");
-}
-
-el("connectBtn").onclick=connect;el("heroConnect").onclick=connect;
-el("activateBtn").onclick=activate;el("refreshBtn").onclick=()=>refreshChain();
-el("startBtn").onclick=startMining;el("stopBtn").onclick=()=>stopMining();
-if(window.ethereum){
- window.ethereum.on?.("accountsChanged",()=>location.reload());
- window.ethereum.on?.("chainChanged",()=>location.reload());
-}
-
-(async()=>{
- log("HASH CATS production miner booting…");
- log("Contract "+CONTRACT,"muted");
- await initProvider();
- await Promise.allSettled([refreshChain(true),initGPU()]);
- setInterval(()=>{if(!mining)refreshChain(true).catch(()=>{})},5000);
-})();
+fn main(@builtin(global_invocation_id) gid:vec3<u32>){let idx=gid.x;if(idx>=params.count){return;}let lo=params.startLo+idx;let carry=select(0u,1u,lo<params.startLo);let hi=params.startHi+carry;var words:array<u32,34>;for(var i:u32=0u;i<34u;i++){words[i]=baseWords[i];}words[19]=bswap(hi);words[20]=bswap(lo);var s:array<vec2<u32>,25>;for(var i:u32=0u;i<25u;i++){s[i]=vec2<u32>(0u,0u);}for(var i:u32=0u;i<17u;i++){s[i]=vec2<u32>(words[i*2u],words[i*2u+1u]);}keccakf(&s);var h:array<u32,8>;h[0]=bswap(s[0].x);h[1]=bswap(s[0].y);h[2]=bswap(s[1].x);h[3]=bswap(s[1].y);h[4]=bswap(s[2].x);h[5]=bswap(s[2].y);h[6]=bswap(s[3].x);h[7]=bswap(s[3].y);if(isValid(&h)){let won=atomicCompareExchangeWeak(&result.found,0u,1u);if(won.exchanged){result.nonceLo=lo;result.nonceHi=hi;result.h0=h[0];result.h1=h[1];result.h2=h[2];result.h3=h[3];result.h4=h[4];result.h5=h[5];result.h6=h[6];result.h7=h[7];}}}`;
+async function initGPU(){if(!navigator.gpu){$("gpuBadge").textContent="WebGPU unsupported";$("gpuName").textContent="WebGPU unavailable";log("WebGPU is unavailable. Use current Chrome/Edge on HTTPS with GPU acceleration enabled.","bad");return;}try{const adapter=await navigator.gpu.requestAdapter({powerPreference:"high-performance"});if(!adapter)throw new Error("No WebGPU adapter.");const device=await adapter.requestDevice();const info=adapter.info||{};const label=[info.vendor,info.architecture,info.device].filter(Boolean).join(" ")||"WebGPU GPU";$("gpuName").textContent=label;log("GPU adapter ready: "+label,"good");const module=device.createShaderModule({code:SHADER,label:"HASH CATS Keccak Miner"});const ci=await module.getCompilationInfo();const errs=ci.messages.filter(x=>x.type==="error");if(errs.length){ const msg=errs.map(x=>`${x.lineNum}:${x.linePos} ${x.message}`).join(" | "); console.error("WGSL compile",ci.messages); throw new Error(msg); }const pipeline=await device.createComputePipelineAsync({layout:"auto",compute:{module,entryPoint:"main"}});const usage=GPUBufferUsage;const baseBuffer=device.createBuffer({size:136,usage:usage.STORAGE|usage.COPY_DST});const targetBuffer=device.createBuffer({size:32,usage:usage.STORAGE|usage.COPY_DST});const paramsBuffer=device.createBuffer({size:16,usage:usage.UNIFORM|usage.COPY_DST});const resultBuffer=device.createBuffer({size:44,usage:usage.STORAGE|usage.COPY_SRC|usage.COPY_DST});const readBuffer=device.createBuffer({size:44,usage:GPUBufferUsage.COPY_DST|GPUBufferUsage.MAP_READ});const bindGroup=device.createBindGroup({layout:pipeline.getBindGroupLayout(0),entries:[{binding:0,resource:{buffer:baseBuffer}},{binding:1,resource:{buffer:targetBuffer}},{binding:2,resource:{buffer:paramsBuffer}},{binding:3,resource:{buffer:resultBuffer}}]});gpu={adapter,device,pipeline,baseBuffer,targetBuffer,paramsBuffer,resultBuffer,readBuffer,bindGroup};$("gpuBadge").textContent="GPU READY";if(wallet)$("startBtn").disabled=false;}catch(e){$("gpuBadge").textContent="GPU ERROR";log("WebGPU init failed: "+e.message,"bad");console.error(e);}}
+async function runBatch(challenge,target,start,count){const{device}=gpu;device.queue.writeBuffer(gpu.baseBuffer,0,packRateBlock(challenge,wallet));device.queue.writeBuffer(gpu.targetBuffer,0,targetWords(target));const p=u64parts(start);device.queue.writeBuffer(gpu.paramsBuffer,0,new Uint32Array([p.lo,p.hi,count,0]));device.queue.writeBuffer(gpu.resultBuffer,0,new Uint32Array(11));const encoder=device.createCommandEncoder();const pass=encoder.beginComputePass();pass.setPipeline(gpu.pipeline);pass.setBindGroup(0,gpu.bindGroup);pass.dispatchWorkgroups(Math.ceil(count/WORKGROUP));pass.end();encoder.copyBufferToBuffer(gpu.resultBuffer,0,gpu.readBuffer,0,44);const t0=performance.now();device.queue.submit([encoder.finish()]);await gpu.readBuffer.mapAsync(GPUMapMode.READ);const t1=performance.now();const copy=new Uint32Array(gpu.readBuffer.getMappedRange().slice(0));gpu.readBuffer.unmap();if(copy[0]===1){const nonce=(BigInt(copy[2])<<32n)|BigInt(copy[1]);const hw=copy.slice(3,11);return{ms:t1-t0,nonce,hash:hashWordsToHex(hw)};}return{ms:t1-t0,nonce:null,hash:null};}
+async function submitWinner(nonce,challenge,target,gpuHash){if(submitting)return false;submitting=true;try{const proof=ethers.solidityPackedKeccak256(["bytes32","address","uint256"],[challenge,wallet,nonce]);if(BigInt(proof)>target){log("GPU candidate rejected by CPU safety verification. No transaction sent.","bad");log("GPU hash: "+gpuHash,"muted");return false;}if(proof.toLowerCase()!==gpuHash.toLowerCase()){log("GPU/CPU hash mismatch. Transaction blocked for safety.","bad");log("GPU "+gpuHash+" / CPU "+proof,"bad");return false;}const liveChallenge=await readContract.currentChallenge();if(liveChallenge.toLowerCase()!==challenge.toLowerCase()){log("Valid proof became stale before submission. Continuing on new challenge.","warn");return false;}log("★ VALID BLOCK FOUND ★ nonce "+nonce.toString(),"good");log("Proof "+proof,"good");log("Opening wallet for winning transaction + 0.000341 BNB…","warn");stopMining(false);const tx=await writeContract.mine(nonce,{value:FEE});log("Winning tx sent: "+tx.hash,"good");const receipt=await tx.wait();log("HASH CATS reward confirmed in block "+receipt.blockNumber+".","good");await refreshChain();return true;}catch(e){log("Winner submission failed: "+decodeRevert(e),"bad");return false;}finally{submitting=false}}
+async function miningLoop(){hashesTested=0n;nonceCursor=rand64();lastChainCheck=0;while(mining){let chain;try{if(Date.now()-lastChainCheck>650){chain=await refreshChain(true);lastChainCheck=Date.now();if(!chain.activated){log("Mining is not activated on-chain yet.","warn");stopMining();break;}}else chain={challenge:currentChallenge,target:currentTarget};if(!wallet||!chain.challenge||chain.challenge===ethers.ZeroHash){await sleep(150);continue;}const start=nonceCursor;$("nonceRange").textContent=start.toString()+" → "+(start+BigInt(batchSize)-1n).toString();$("batchStat").textContent=fmt(batchSize);$("batchBar").style.width="65%";const r=await runBatch(chain.challenge,BigInt(chain.target),start,batchSize);if(!mining)break;hashesTested+=BigInt(batchSize);nonceCursor=(nonceCursor+BigInt(batchSize))&((1n<<64n)-1n);const rate=batchSize/(Math.max(r.ms,1)/1000);$("hashrate").textContent=formatRate(rate);$("tested").textContent=fmt(hashesTested.toString());$("batchMs").textContent=r.ms.toFixed(1)+" ms";$("batchBar").style.width="100%";const desired=Math.max(MIN_BATCH,Math.min(MAX_BATCH,Math.round(batchSize*(BATCH_TARGET_MS/Math.max(r.ms,10)))));batchSize=Math.max(WORKGROUP,Math.floor(desired/WORKGROUP)*WORKGROUP);if(r.nonce!==null){await submitWinner(r.nonce,chain.challenge,BigInt(chain.target),r.hash);if(!mining)break;}if(Math.random()<.18)spawnHash();await sleep(0);}catch(e){log("Mining loop error: "+e.message,"bad");console.error(e);await sleep(600);}}}
+function spawnHash(){const s=document.createElement("span");s.textContent="0x"+crypto.getRandomValues(new Uint32Array(2)).reduce((a,x)=>a+x.toString(16).padStart(8,"0"),"");s.style.top=(5+Math.random()*87)+"%";s.style.animationDuration=(2.5+Math.random()*3)+"s";$("hashStream").appendChild(s);setTimeout(()=>s.remove(),6000);}
+async function startMining(){if(mining)return;if(!wallet)return log("Connect wallet first.","warn");if(!gpu)return log("WebGPU is not ready.","bad");const state=await refreshChain(true);if(!state.activated)return log("Mining is not activated. Use Activate Mining first.","warn");const wins=await readContract.remainingWinsFor(wallet);if(wins===0n)return log("This wallet has reached the 50-win mining limit.","warn");mining=true;$("minerPanel").classList.add("mining");$("minerState").textContent="MINING";$("minerState").classList.add("live");$("startBtn").disabled=true;$("stopBtn").disabled=false;log("REAL WebGPU mining started.","good");log("Proof = keccak256(challenge + wallet + uint256 nonce).","muted");miningLoop();}
+function stopMining(withLog=true){mining=false;$("minerPanel").classList.remove("mining");$("minerState").textContent="IDLE";$("minerState").classList.remove("live");$("stopBtn").disabled=true;if(wallet&&gpu)$("startBtn").disabled=false;if(withLog)log("Mining stopped.","warn");}
+$("connectBtn").onclick=connect;$("heroConnect").onclick=connect;$("activateBtn").onclick=activate;$("refreshBtn").onclick=()=>refreshChain();$("startBtn").onclick=startMining;$("stopBtn").onclick=()=>stopMining();if(window.ethereum){window.ethereum.on?.("accountsChanged",()=>location.reload());window.ethereum.on?.("chainChanged",()=>location.reload());}
+(async()=>{log("HASH CATS production miner BUILD 3.0 booting…");log("Contract "+CONTRACT,"muted");await initProvider();await Promise.allSettled([refreshChain(true),initGPU()]);setInterval(()=>{if(!mining)refreshChain(true).catch(()=>{})},5000);})();
 </script>
 </body>
 </html>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" role="img" aria-labelledby="title desc">
+  <title id="title">HASH CATS</title>
+  <desc id="desc">Minimal cat and hash logo for HASH CATS</desc>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#55ff9b"/>
+      <stop offset="1" stop-color="#45dfff"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(4 5)">
+    <rect x="0" y="0" width="70" height="70" rx="18" fill="#091411" stroke="#18392b"/>
+    <path d="M18 27 26 17 35 25 44 17 52 27v17c0 6-5 11-11 11H29c-6 0-11-5-11-11V27Z" fill="none" stroke="url(#g)" stroke-width="4" stroke-linejoin="round"/>
+    <circle cx="29" cy="36" r="2.8" fill="#55ff9b"/>
+    <circle cx="41" cy="36" r="2.8" fill="#55ff9b"/>
+    <path d="M31 45c2.5 2.3 5.5 2.3 8 0" fill="none" stroke="#55ff9b" stroke-width="3.2" stroke-linecap="round"/>
+    <path d="M31 28h8M33 24l-2 8M39 24l-2 8" stroke="#45dfff" stroke-width="2.6" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(92 17)">
+    <text x="0" y="29" fill="#F2F7F5" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="800" letter-spacing="1.8">HASH</text>
+    <text x="86" y="29" fill="#55ff9b" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="800" letter-spacing="1.8">CATS</text>
+    <text x="1" y="50" fill="#7D918D" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700" letter-spacing="2.4">GPU PROOF-OF-WORK</text>
+  </g>
+</svg>
