@@ -84,6 +84,7 @@ h1{font-size:clamp(43px,6vw,77px);line-height:.91;margin:19px 0 16px;letter-spac
       <button class="btn btn-primary" id="heroConnect">Connect Wallet</button>
       <a class="btn btn-dark" target="_blank" rel="noopener" href="https://x.com/hashcats_bsc">X / Twitter</a>
       <a class="btn btn-dark" target="_blank" rel="noopener" href="https://bscscan.com/address/0x971a63cc74d28210a09aa0914483c6116473e6b3">BscScan</a>
+      <a class="btn btn-dark" href="/HASH_CATS_CLI_BUILD_FROM_SOURCE_GUIDE.md" download="HASH_CATS_CLI_BUILD_FROM_SOURCE_GUIDE.md">⬇ CLI Miner Guide</a>
     </div>
     <div class="micro"><span>REWARD <b>237,500 HASHCATS</b></span><span>WINNER FEE <b>0.000341 BNB</b></span><span>MAX <b>50 WINS / WALLET</b></span></div>
     <div class="security-strip">
@@ -119,6 +120,21 @@ h1{font-size:clamp(43px,6vw,77px);line-height:.91;margin:19px 0 16px;letter-spac
       <div class="metric"><small>HASHES TESTED</small><strong id="tested">0</strong></div>
       <div class="metric"><small>GPU BATCH</small><strong id="batchStat">—</strong></div>
     </div>
+  </div>
+</section>
+
+
+<section class="panel" style="margin-top:16px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap">
+  <div style="min-width:240px;flex:1">
+    <div style="font-size:11px;font-weight:900;letter-spacing:.12em;color:#55ff9b;margin-bottom:7px">NVIDIA CUDA CLI MINER</div>
+    <div style="font-size:22px;font-weight:950;letter-spacing:-.02em">CLI MINER — BUILD FROM SOURCE</div>
+    <div style="color:#8fa39e;font-size:12px;line-height:1.6;margin-top:7px;max-width:760px">
+      Advanced miners can compile the HASH CATS Windows CUDA miner locally. No precompiled mystery EXE, no seed phrase, and no private key required for mining.
+    </div>
+  </div>
+  <div style="display:flex;gap:9px;flex-wrap:wrap">
+    <a class="btn btn-primary" href="/HASH_CATS_CLI_BUILD_FROM_SOURCE_GUIDE.md" download="HASH_CATS_CLI_BUILD_FROM_SOURCE_GUIDE.md">Download CLI Guide (.md)</a>
+    <a class="btn btn-dark" href="/HASH_CATS_CLI_BUILD_FROM_SOURCE_GUIDE.md" target="_blank" rel="noopener">View Guide</a>
   </div>
 </section>
 
@@ -202,7 +218,7 @@ h1{font-size:clamp(43px,6vw,77px);line-height:.91;margin:19px 0 16px;letter-spac
   </div>
 </div>
 
-<div class="footer"><span>HASH CATS · minehashcats.xyz · <a href="https://x.com/hashcats_bsc" target="_blank" rel="noopener">@hashcats_bsc</a> · BUILD 3.3</span><span>Contract 0x971a63cc74d28210a09aa0914483c6116473e6b3</span></div>
+<div class="footer"><span>HASH CATS · minehashcats.xyz · <a href="/HASH_CATS_CLI_BUILD_FROM_SOURCE_GUIDE.md" download="HASH_CATS_CLI_BUILD_FROM_SOURCE_GUIDE.md">CLI Guide</a> · <a href="https://x.com/hashcats_bsc" target="_blank" rel="noopener">@hashcats_bsc</a> · BUILD 3.4</span><span>Contract 0x971a63cc74d28210a09aa0914483c6116473e6b3</span></div>
 </div>
 
 <script>
@@ -450,7 +466,7 @@ function spawnHash(){const s=document.createElement("span");s.textContent="0x"+c
 async function startMining(){if(mining)return;if(!wallet)return log("Connect wallet first.","warn");if(!gpu)return log("WebGPU is not ready.","bad");const state=await refreshChain(true);if(!state.activated)return log("Mining is not activated. Use Activate Mining first.","warn");const wins=await readContract.remainingWinsFor(wallet);if(wins===0n)return log("This wallet has reached the 50-win mining limit.","warn");mining=true;$("minerPanel").classList.add("mining");$("minerState").textContent="MINING";$("minerState").classList.add("live");$("startBtn").disabled=true;$("stopBtn").disabled=false;log("REAL WebGPU mining started.","good");log("Proof = keccak256(challenge + wallet + uint256 nonce).","muted");miningLoop();}
 function stopMining(withLog=true){mining=false;$("minerPanel").classList.remove("mining");$("minerState").textContent="IDLE";$("minerState").classList.remove("live");$("stopBtn").disabled=true;if(wallet&&gpu)$("startBtn").disabled=false;if(withLog)log("Mining stopped.","warn");}
 $("connectBtn").onclick=connect;$("heroConnect").onclick=connect;$("activateBtn").onclick=activate;$("refreshBtn").onclick=()=>refreshChain();$("startBtn").onclick=startMining;$("stopBtn").onclick=()=>stopMining();$("claimRewardBtn").onclick=claimPendingReward;$("dismissClaimBtn").onclick=dismissClaim;$("alertToggleBtn").onclick=enableHandsFreeAlerts;
-(async()=>{log("HASH CATS production miner BUILD 3.3 booting…");log("Contract "+CONTRACT,"muted");await initProvider();await Promise.allSettled([refreshChain(true),initGPU()]);setInterval(()=>{if(!mining)refreshChain(true).catch(()=>{})},5000);})();
+(async()=>{log("HASH CATS production miner BUILD 3.4 booting…");log("Contract "+CONTRACT,"muted");await initProvider();await Promise.allSettled([refreshChain(true),initGPU()]);setInterval(()=>{if(!mining)refreshChain(true).catch(()=>{})},5000);})();
 </script>
 </body>
 </html>
