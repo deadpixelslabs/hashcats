@@ -2,3 +2,4 @@ HASH CATS official domain: https://minehashcats.xyz
 Official X: https://x.com/hashcats_bsc
 BNB Chain contract: 0x971a63cc74d28210a09aa0914483c6116473e6b3
 Wallet policy: no auto-connect, no auto-sign, no token approvals. Winning claims require an explicit user click.
+Hands-Free Alert Mode: optional user-enabled sound/desktop/tab notifications only; it never auto-connects, signs, or submits a claim.
