@@ -7,9 +7,9 @@
 <title>HASH CATS — Real WebGPU Mining</title>
 <meta name="description" content="HASH CATS — real browser GPU Proof-of-Work mining on BNB Smart Chain.">
 <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.5/dist/ethers.umd.min.js"></script>
-<link rel="icon" type="image/svg+xml" href="./favicon.svg?v=3">
-<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png?v=3">
-<link rel="apple-touch-icon" href="./apple-touch-icon.png?v=3">
+<link rel="icon" type="image/svg+xml" href="./favicon.svg?v=32">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png?v=32">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png?v=32">
 <style>
 :root{--bg:#05070b;--panel:#0b111b;--panel2:#0d1624;--line:#1b2a3b;--text:#edf7f3;--muted:#7d918d;--green:#55ff9b;--cyan:#45dfff;--yellow:#ffc857;--red:#ff6577;--shadow:0 18px 70px rgba(0,0,0,.40)}
 *{box-sizing:border-box}html,body{margin:0;background:#05070b;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}body{min-height:100vh;overflow-x:hidden}
@@ -31,6 +31,25 @@ h1{font-size:clamp(43px,6vw,77px);line-height:.91;margin:19px 0 16px;letter-spac
 .stats{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:10px}.stat{padding:15px;border:1px solid rgba(255,255,255,.065);border-radius:16px;background:rgba(10,16,25,.86)}.stat small{display:block;color:#728883;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px}.stat strong{font-size:18px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.stat .tiny{font:10px ui-monospace,monospace;color:#68807a;margin-top:5px}
 .content{display:grid;grid-template-columns:1.08fr .92fr;gap:16px;margin-top:16px}.box{padding:18px}.box-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.box h2{font-size:16px;margin:0;letter-spacing:.01em}.terminal{height:330px;border:1px solid rgba(255,255,255,.055);background:#04080d;border-radius:15px;padding:13px;overflow:auto;font:11px/1.6 ui-monospace,monospace;color:#78daa9}.terminal .bad{color:#ff7d8c}.terminal .good{color:#76ffad}.terminal .warn{color:#ffd36b}.terminal .muted{color:#637871}.terminal::-webkit-scrollbar{width:7px}.terminal::-webkit-scrollbar-thumb{background:#152536;border-radius:20px}
 .controls{display:grid;gap:10px}.control{padding:13px;border:1px solid rgba(255,255,255,.06);border-radius:14px;background:rgba(255,255,255,.025)}.control-row{display:flex;justify-content:space-between;gap:15px;align-items:center}.control-label{color:#798d88;font-size:11px}.control-value{font:700 12px ui-monospace,monospace;text-align:right;word-break:break-all}.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:1px}.progress{height:8px;border-radius:999px;background:#071019;overflow:hidden;border:1px solid rgba(255,255,255,.04);margin-top:9px}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--cyan));transition:width .2s}.notice{padding:12px 13px;border-radius:13px;border:1px solid rgba(255,200,87,.13);background:rgba(255,200,87,.045);color:#c8b683;font-size:11px;line-height:1.55}.footer{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-top:18px;color:#5e736e;font-size:11px;padding:0 5px}.live{color:var(--green)}.yellow{color:var(--yellow)}.red{color:var(--red)}
+
+.security-strip{margin-top:11px;display:flex;gap:8px;flex-wrap:wrap}
+.security-chip{font:10px ui-monospace,monospace;color:#9eb5af;border:1px solid rgba(85,255,155,.12);background:rgba(85,255,155,.04);padding:7px 9px;border-radius:999px}
+.modal-backdrop{position:fixed;inset:0;z-index:1000;display:none;place-items:center;padding:18px;background:rgba(1,4,7,.82);backdrop-filter:blur(12px)}
+.modal-backdrop.show{display:grid}
+.claim-modal{width:min(560px,100%);border:1px solid rgba(85,255,155,.20);border-radius:24px;background:linear-gradient(180deg,#0e1821,#080d13);box-shadow:0 25px 100px rgba(0,0,0,.65),0 0 55px rgba(85,255,155,.08);overflow:hidden}
+.claim-head{padding:22px 22px 16px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:flex-start;gap:18px}
+.claim-icon{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:rgba(85,255,155,.07);border:1px solid rgba(85,255,155,.16)}
+.claim-title{font-size:25px;font-weight:950;letter-spacing:-.02em;margin:0}.claim-sub{font-size:12px;color:#879b96;margin-top:5px}
+.claim-body{padding:20px 22px}.claim-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+.claim-item{padding:12px;border-radius:13px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.055)}
+.claim-item small{display:block;color:#718680;font-size:9px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.claim-item strong{font:700 13px ui-monospace,monospace;word-break:break-all}
+.claim-status{padding:11px 12px;border-radius:12px;background:rgba(85,255,155,.055);border:1px solid rgba(85,255,155,.12);color:#9de5ba;font-size:11px;line-height:1.5;margin-top:10px}
+.claim-status.stale{background:rgba(255,200,87,.055);border-color:rgba(255,200,87,.17);color:#e8cb7d}
+.claim-status.error{background:rgba(255,101,119,.055);border-color:rgba(255,101,119,.17);color:#ff9daa}
+.claim-actions{display:grid;grid-template-columns:1fr auto;gap:9px;margin-top:15px}
+.claim-foot{padding:0 22px 20px;color:#61746f;font-size:10px;line-height:1.5}
+
 @media(max-width:1050px){.hero,.content{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:700px){.wrap{width:min(100% - 18px,1320px)}.nav{align-items:flex-start}.brand-sub{display:none}.nav-right .badge{display:none}.hero-copy{padding:22px;min-height:auto}.miner{min-height:405px}.stats{grid-template-columns:1fr 1fr}.miner-cards{grid-template-columns:1fr}.action-grid{grid-template-columns:1fr}h1{font-size:46px}.banner{padding:15px}}
 </style>
@@ -59,6 +78,12 @@ h1{font-size:clamp(43px,6vw,77px);line-height:.91;margin:19px 0 16px;letter-spac
       <a class="btn btn-dark" target="_blank" rel="noopener" href="https://bscscan.com/address/0x971a63cc74d28210a09aa0914483c6116473e6b3">BscScan</a>
     </div>
     <div class="micro"><span>REWARD <b>237,500 HASHCATS</b></span><span>WINNER FEE <b>0.000341 BNB</b></span><span>MAX <b>50 WINS / WALLET</b></span></div>
+    <div class="security-strip">
+      <span class="security-chip">NO AUTO-CONNECT</span>
+      <span class="security-chip">NO AUTO-SIGN</span>
+      <span class="security-chip">NO TOKEN APPROVALS</span>
+      <span class="security-chip">CLAIM REQUIRES YOUR CLICK</span>
+    </div>
     <div class="banner">
       <div>
         <div class="banner-title">HASH CATS GPU MINING</div>
@@ -120,12 +145,44 @@ h1{font-size:clamp(43px,6vw,77px);line-height:.91;margin:19px 0 16px;letter-spac
         <button class="btn btn-dark" id="activateBtn" disabled>Activate Mining</button>
         <button class="btn btn-dark" id="refreshBtn">Refresh Chain</button>
       </div>
-      <div class="notice">WebGPU requires HTTPS and a supported browser/GPU. Mining work happens locally. When a valid nonce is found, the browser verifies it again with ethers before opening your wallet. Non-winners send no mining transaction and pay no protocol fee.</div>
+      <div class="notice">WebGPU requires HTTPS and a supported browser/GPU. Mining happens locally. This site does not auto-connect a wallet, request token approvals, or open a signing request on page load. When a valid nonce is found, you will see a Block Found screen first. A wallet transaction is created only after you click CLAIM REWARD.</div>
     </div>
   </div>
 </section>
 
-<div class="footer"><span>HASH CATS · minehashcats.xyz · <a href="https://x.com/hashcats_bsc" target="_blank" rel="noopener">@hashcats_bsc</a> · BUILD 3.1</span><span>Contract 0x971a63cc74d28210a09aa0914483c6116473e6b3</span></div>
+
+<div class="modal-backdrop" id="claimBackdrop" role="dialog" aria-modal="true" aria-labelledby="claimTitle">
+  <div class="claim-modal">
+    <div class="claim-head">
+      <div style="display:flex;gap:13px;align-items:center">
+        <div class="claim-icon">
+          <svg viewBox="0 0 64 64" width="34" height="34" aria-hidden="true">
+            <path d="M18 24l7-8 7 7 7-7 7 8v16c0 4.4-3.6 8-8 8H26c-4.4 0-8-3.6-8-8V24z" fill="none" stroke="#55ff9b" stroke-width="3.5" stroke-linejoin="round"/>
+            <circle cx="27" cy="33" r="2.6" fill="#55ff9b"/><circle cx="37" cy="33" r="2.6" fill="#55ff9b"/>
+          </svg>
+        </div>
+        <div><h2 class="claim-title" id="claimTitle">BLOCK FOUND</h2><div class="claim-sub">Valid HASH CATS Proof-of-Work found by your GPU.</div></div>
+      </div>
+      <span class="badge live">WINNER</span>
+    </div>
+    <div class="claim-body">
+      <div class="claim-grid">
+        <div class="claim-item"><small>Reward</small><strong>237,500 HASHCATS</strong></div>
+        <div class="claim-item"><small>Winner Fee</small><strong>0.000341 BNB + gas</strong></div>
+        <div class="claim-item"><small>Nonce</small><strong id="claimNonce">—</strong></div>
+        <div class="claim-item"><small>Proof Hash</small><strong id="claimHash">—</strong></div>
+      </div>
+      <div class="claim-status" id="claimStatus">Proof verified locally. No wallet transaction has been requested yet.</div>
+      <div class="claim-actions">
+        <button class="btn btn-primary" id="claimRewardBtn">CLAIM REWARD</button>
+        <button class="btn btn-dark" id="dismissClaimBtn">Dismiss</button>
+      </div>
+    </div>
+    <div class="claim-foot">Before sending, the site re-checks the live challenge and simulates the claim. If another miner has already won, the proof is marked stale and no transaction is requested.</div>
+  </div>
+</div>
+
+<div class="footer"><span>HASH CATS · minehashcats.xyz · <a href="https://x.com/hashcats_bsc" target="_blank" rel="noopener">@hashcats_bsc</a> · BUILD 3.2</span><span>Contract 0x971a63cc74d28210a09aa0914483c6116473e6b3</span></div>
 </div>
 
 <script>
@@ -156,7 +213,7 @@ async function readPowTarget(){
   return value;
 }
 let provider,signer,readContract,writeContract,wallet;
-let gpu=null,mining=false,submitting=false;
+let gpu=null,mining=false,submitting=false;let pendingProof=null,pendingWatch=null;
 let hashesTested=0n,nonceCursor=0n,batchSize=32768,currentChallenge=null,currentTarget=null,lastChainCheck=0;
 const $=id=>document.getElementById(id);
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
@@ -171,10 +228,10 @@ function targetWords(target){const h=target.toString(16).padStart(64,"0");const 
 function u64parts(n){return{lo:Number(n&0xffffffffn)>>>0,hi:Number((n>>32n)&0xffffffffn)>>>0}}
 function hashWordsToHex(words){return"0x"+Array.from(words).map(x=>(x>>>0).toString(16).padStart(8,"0")).join("")}
 function decodeRevert(err){try{const raw=err?.data?.data||err?.data||err?.info?.error?.data||err?.error?.data; if(!raw||!readContract)return err?.shortMessage||err?.message||"Transaction reverted"; const parsed=readContract.interface.parseError(raw); if(!parsed)return err?.shortMessage||err?.message||"Transaction reverted"; return parsed.name+(parsed.args?.length?` (${parsed.args.map(x=>x.toString()).join(", ")})`:"");}catch{return err?.shortMessage||err?.message||"Transaction reverted";}}
-async function initProvider(){if(window.ethereum)provider=new ethers.BrowserProvider(window.ethereum);else provider=new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");readContract=new ethers.Contract(CONTRACT,ABI,provider);}
+async function initProvider(){provider=new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");readContract=new ethers.Contract(CONTRACT,ABI,provider);log("Read-only RPC ready. Wallet has not been accessed.","muted");}
 async function switchBSC(){if(!window.ethereum)throw new Error("No EVM wallet detected.");try{await window.ethereum.request({method:"wallet_switchEthereumChain",params:[{chainId:CHAIN_ID_HEX}]});}catch(e){if(e.code!==4902)throw e;await window.ethereum.request({method:"wallet_addEthereumChain",params:[{chainId:CHAIN_ID_HEX,chainName:"BNB Smart Chain",nativeCurrency:{name:"BNB",symbol:"BNB",decimals:18},rpcUrls:["https://bsc-dataseed.binance.org/"],blockExplorerUrls:["https://bscscan.com"]}]});}}
-async function connect(){try{await switchBSC();await window.ethereum.request({method:"eth_requestAccounts"});provider=new ethers.BrowserProvider(window.ethereum);signer=await provider.getSigner();wallet=await signer.getAddress();readContract=new ethers.Contract(CONTRACT,ABI,provider);writeContract=new ethers.Contract(CONTRACT,ABI,signer);$("connectBtn").textContent=short(wallet);$("heroConnect").textContent="Wallet Connected";$("walletShort").textContent=short(wallet);log("Wallet connected: "+wallet,"good");$("activateBtn").disabled=false;await refreshChain();if(gpu)$("startBtn").disabled=false;}catch(e){log(e.shortMessage||e.message,"bad");}}
-async function refreshChain(silent=false){try{if(!readContract)await initProvider();const calls=[readContract.miningActivated(),readContract.currentChallenge(),readPowTarget(),readContract.miningBlocksMined(),readContract.miningPoolRemaining(),readContract.currentDifficulty(),provider.getBlockNumber()];if(wallet)calls.push(readContract.remainingWinsFor(wallet));const r=await Promise.all(calls);const activated=r[0],challenge=r[1],target=r[2],mined=r[3],pool=r[4],diff=r[5],bn=r[6];currentChallenge=challenge;currentTarget=target;$("activated").textContent=activated?"LIVE":"NOT ACTIVE";$("activated").className=activated?"live":"yellow"; if($("activateBtn")){ $("activateBtn").disabled=!!activated || !wallet; $("activateBtn").textContent=activated?"Mining Active":"Activate Mining"; }$("minedBlocks").textContent=fmt(Number(mined));$("poolLeft").textContent=(Number(ethers.formatUnits(pool,18))/1e9).toFixed(3)+"B";$("difficulty").textContent=Number(diff)>=1e9?(Number(diff)/1e9).toFixed(2)+"B":fmt(Number(diff));$("bscBlock").textContent=fmt(bn);$("challenge").textContent=short(challenge);$("targetView").textContent=short("0x"+target.toString(16).padStart(64,"0"));if(wallet)$("winsLeft").textContent=fmt(Number(r[7]));if(!silent)log("Chain state refreshed.");return{activated,challenge,target,mined};}catch(e){if(!silent)log("Chain read failed: "+(e.shortMessage||e.message),"bad");throw e;}}
+async function connect(){try{await switchBSC();await window.ethereum.request({method:"eth_requestAccounts"});provider=new ethers.BrowserProvider(window.ethereum);signer=await provider.getSigner();wallet=await signer.getAddress();readContract=new ethers.Contract(CONTRACT,ABI,provider);writeContract=new ethers.Contract(CONTRACT,ABI,signer);$("connectBtn").textContent=short(wallet);$("heroConnect").textContent="Wallet Connected";$("walletShort").textContent=short(wallet);log("Wallet connected: "+wallet,"good");window.ethereum.on?.("accountsChanged",()=>location.reload());window.ethereum.on?.("chainChanged",()=>location.reload());$("activateBtn").disabled=false;await refreshChain();if(gpu)$("startBtn").disabled=false;}catch(e){log(e.shortMessage||e.message,"bad");}}
+async function refreshChain(silent=false){try{if(!readContract)await initProvider();const calls=[readContract.miningActivated(),readContract.currentChallenge(),readPowTarget(),readContract.miningBlocksMined(),readContract.miningPoolRemaining(),readContract.currentDifficulty(),provider.getBlockNumber()];if(wallet)calls.push(readContract.remainingWinsFor(wallet));const r=await Promise.all(calls);const activated=r[0],challenge=r[1],target=r[2],mined=r[3],pool=r[4],diff=r[5],bn=r[6];currentChallenge=challenge;currentTarget=target;$("activated").textContent=activated?"LIVE":"NOT ACTIVE";$("activated").className=activated?"live":"yellow";if(wallet){$("activateBtn").disabled=activated;$("activateBtn").textContent=activated?"Mining Activated":"Activate Mining";} if($("activateBtn")){ $("activateBtn").disabled=!!activated || !wallet; $("activateBtn").textContent=activated?"Mining Active":"Activate Mining"; }$("minedBlocks").textContent=fmt(Number(mined));$("poolLeft").textContent=(Number(ethers.formatUnits(pool,18))/1e9).toFixed(3)+"B";$("difficulty").textContent=Number(diff)>=1e9?(Number(diff)/1e9).toFixed(2)+"B":fmt(Number(diff));$("bscBlock").textContent=fmt(bn);$("challenge").textContent=short(challenge);$("targetView").textContent=short("0x"+target.toString(16).padStart(64,"0"));if(wallet)$("winsLeft").textContent=fmt(Number(r[7]));if(!silent)log("Chain state refreshed.");return{activated,challenge,target,mined};}catch(e){if(!silent)log("Chain read failed: "+(e.shortMessage||e.message),"bad");throw e;}}
 async function activate(){if(!writeContract)return log("Connect wallet first.","warn");try{$("activateBtn").disabled=true;log("Submitting activateMining()…","warn");const tx=await writeContract.activateMining();log("Activation tx: "+tx.hash);await tx.wait();log("Mining activated on-chain.","good");await refreshChain();}catch(e){log("Activation failed: "+decodeRevert(e),"bad")}finally{$("activateBtn").disabled=false}}
 const SHADER=String.raw`
 struct Params { startLo:u32, startHi:u32, count:u32, pad:u32 }
@@ -197,13 +254,110 @@ fn isValid(h:ptr<function,array<u32,8>>)->bool{for(var i:u32=0u;i<8u;i++){if((*h
 fn main(@builtin(global_invocation_id) gid:vec3<u32>){let idx=gid.x;if(idx>=params.count){return;}let lo=params.startLo+idx;let carry=select(0u,1u,lo<params.startLo);let hi=params.startHi+carry;var words:array<u32,34>;for(var i:u32=0u;i<34u;i++){words[i]=baseWords[i];}words[19]=bswap(hi);words[20]=bswap(lo);var s:array<vec2<u32>,25>;for(var i:u32=0u;i<25u;i++){s[i]=vec2<u32>(0u,0u);}for(var i:u32=0u;i<17u;i++){s[i]=vec2<u32>(words[i*2u],words[i*2u+1u]);}keccakf(&s);var h:array<u32,8>;h[0]=bswap(s[0].x);h[1]=bswap(s[0].y);h[2]=bswap(s[1].x);h[3]=bswap(s[1].y);h[4]=bswap(s[2].x);h[5]=bswap(s[2].y);h[6]=bswap(s[3].x);h[7]=bswap(s[3].y);if(isValid(&h)){let won=atomicCompareExchangeWeak(&result.found,0u,1u);if(won.exchanged){result.nonceLo=lo;result.nonceHi=hi;result.h0=h[0];result.h1=h[1];result.h2=h[2];result.h3=h[3];result.h4=h[4];result.h5=h[5];result.h6=h[6];result.h7=h[7];}}}`;
 async function initGPU(){if(!navigator.gpu){$("gpuBadge").textContent="WebGPU unsupported";$("gpuName").textContent="WebGPU unavailable";log("WebGPU is unavailable. Use current Chrome/Edge on HTTPS with GPU acceleration enabled.","bad");return;}try{const adapter=await navigator.gpu.requestAdapter({powerPreference:"high-performance"});if(!adapter)throw new Error("No WebGPU adapter.");const device=await adapter.requestDevice();const info=adapter.info||{};const label=[info.vendor,info.architecture,info.device].filter(Boolean).join(" ")||"WebGPU GPU";$("gpuName").textContent=label;log("GPU adapter ready: "+label,"good");const module=device.createShaderModule({code:SHADER,label:"HASH CATS Keccak Miner"});const ci=await module.getCompilationInfo();const errs=ci.messages.filter(x=>x.type==="error");if(errs.length){ const msg=errs.map(x=>`${x.lineNum}:${x.linePos} ${x.message}`).join(" | "); console.error("WGSL compile",ci.messages); throw new Error(msg); }const pipeline=await device.createComputePipelineAsync({layout:"auto",compute:{module,entryPoint:"main"}});const usage=GPUBufferUsage;const baseBuffer=device.createBuffer({size:136,usage:usage.STORAGE|usage.COPY_DST});const targetBuffer=device.createBuffer({size:32,usage:usage.STORAGE|usage.COPY_DST});const paramsBuffer=device.createBuffer({size:16,usage:usage.UNIFORM|usage.COPY_DST});const resultBuffer=device.createBuffer({size:44,usage:usage.STORAGE|usage.COPY_SRC|usage.COPY_DST});const readBuffer=device.createBuffer({size:44,usage:GPUBufferUsage.COPY_DST|GPUBufferUsage.MAP_READ});const bindGroup=device.createBindGroup({layout:pipeline.getBindGroupLayout(0),entries:[{binding:0,resource:{buffer:baseBuffer}},{binding:1,resource:{buffer:targetBuffer}},{binding:2,resource:{buffer:paramsBuffer}},{binding:3,resource:{buffer:resultBuffer}}]});gpu={adapter,device,pipeline,baseBuffer,targetBuffer,paramsBuffer,resultBuffer,readBuffer,bindGroup};$("gpuBadge").textContent="GPU READY";if(wallet)$("startBtn").disabled=false;}catch(e){$("gpuBadge").textContent="GPU ERROR";log("WebGPU init failed: "+e.message,"bad");console.error(e);}}
 async function runBatch(challenge,target,start,count){const{device}=gpu;device.queue.writeBuffer(gpu.baseBuffer,0,packRateBlock(challenge,wallet));device.queue.writeBuffer(gpu.targetBuffer,0,targetWords(target));const p=u64parts(start);device.queue.writeBuffer(gpu.paramsBuffer,0,new Uint32Array([p.lo,p.hi,count,0]));device.queue.writeBuffer(gpu.resultBuffer,0,new Uint32Array(11));const encoder=device.createCommandEncoder();const pass=encoder.beginComputePass();pass.setPipeline(gpu.pipeline);pass.setBindGroup(0,gpu.bindGroup);pass.dispatchWorkgroups(Math.ceil(count/WORKGROUP));pass.end();encoder.copyBufferToBuffer(gpu.resultBuffer,0,gpu.readBuffer,0,44);const t0=performance.now();device.queue.submit([encoder.finish()]);await gpu.readBuffer.mapAsync(GPUMapMode.READ);const t1=performance.now();const copy=new Uint32Array(gpu.readBuffer.getMappedRange().slice(0));gpu.readBuffer.unmap();if(copy[0]===1){const nonce=(BigInt(copy[2])<<32n)|BigInt(copy[1]);const hw=copy.slice(3,11);return{ms:t1-t0,nonce,hash:hashWordsToHex(hw)};}return{ms:t1-t0,nonce:null,hash:null};}
-async function submitWinner(nonce,challenge,target,gpuHash){if(submitting)return false;submitting=true;try{const proof=ethers.solidityPackedKeccak256(["bytes32","address","uint256"],[challenge,wallet,nonce]);if(BigInt(proof)>target){log("GPU candidate rejected by CPU safety verification. No transaction sent.","bad");log("GPU hash: "+gpuHash,"muted");return false;}if(proof.toLowerCase()!==gpuHash.toLowerCase()){log("GPU/CPU hash mismatch. Transaction blocked for safety.","bad");log("GPU "+gpuHash+" / CPU "+proof,"bad");return false;}const liveChallenge=await readContract.currentChallenge();if(liveChallenge.toLowerCase()!==challenge.toLowerCase()){log("Valid proof became stale before submission. Continuing on new challenge.","warn");return false;}log("★ VALID BLOCK FOUND ★ nonce "+nonce.toString(),"good");log("Proof "+proof,"good");log("Opening wallet for winning transaction + 0.000341 BNB…","warn");stopMining(false);const tx=await writeContract.mine(nonce,{value:FEE});log("Winning tx sent: "+tx.hash,"good");const receipt=await tx.wait();log("HASH CATS reward confirmed in block "+receipt.blockNumber+".","good");await refreshChain();return true;}catch(e){log("Winner submission failed: "+decodeRevert(e),"bad");return false;}finally{submitting=false}}
+async function submitWinner(nonce,challenge,target,gpuHash){
+  if(submitting||pendingProof)return false;
+  submitting=true;
+  try{
+    const proof=ethers.solidityPackedKeccak256(["bytes32","address","uint256"],[challenge,wallet,nonce]);
+    if(BigInt(proof)>target){
+      log("GPU candidate rejected by CPU safety verification. No transaction sent.","bad");
+      return false;
+    }
+    if(proof.toLowerCase()!==gpuHash.toLowerCase()){
+      log("GPU/CPU hash mismatch. Transaction blocked for safety.","bad");
+      return false;
+    }
+    const liveChallenge=await readContract.currentChallenge();
+    if(liveChallenge.toLowerCase()!==challenge.toLowerCase()){
+      log("Valid proof became stale before claim screen. Continuing on new challenge.","warn");
+      return false;
+    }
+    pendingProof={nonce,challenge,target,proof};
+    log("★ BLOCK FOUND ★ Valid proof held locally. Waiting for your CLAIM REWARD click.","good");
+    stopMining(false);
+    showClaimModal();
+    return true;
+  }catch(e){
+    log("Winner handling failed: "+decodeRevert(e),"bad");
+    return false;
+  }finally{submitting=false}
+}
+function showClaimModal(){
+  if(!pendingProof)return;
+  $("claimNonce").textContent=pendingProof.nonce.toString();
+  $("claimHash").textContent=short(pendingProof.proof);
+  $("claimStatus").className="claim-status";
+  $("claimStatus").textContent="Proof verified locally. No wallet transaction has been requested yet.";
+  $("claimRewardBtn").disabled=false;
+  $("claimRewardBtn").textContent="CLAIM REWARD";
+  $("claimBackdrop").classList.add("show");
+  clearInterval(pendingWatch);
+  pendingWatch=setInterval(checkPendingProof,1800);
+}
+async function checkPendingProof(){
+  if(!pendingProof)return;
+  try{
+    const live=await readContract.currentChallenge();
+    if(live.toLowerCase()!==pendingProof.challenge.toLowerCase()){
+      $("claimStatus").className="claim-status stale";
+      $("claimStatus").textContent="This proof is now stale because another mining block was confirmed. No transaction will be requested.";
+      $("claimRewardBtn").disabled=true;
+      $("claimRewardBtn").textContent="PROOF STALE";
+      clearInterval(pendingWatch);
+    }
+  }catch{}
+}
+function dismissClaim(){
+  clearInterval(pendingWatch);
+  $("claimBackdrop").classList.remove("show");
+  pendingProof=null;
+  if(wallet&&gpu)$("startBtn").disabled=false;
+}
+async function claimPendingReward(){
+  if(!pendingProof||!writeContract||submitting)return;
+  submitting=true;
+  $("claimRewardBtn").disabled=true;
+  $("claimRewardBtn").textContent="CHECKING PROOF…";
+  try{
+    const live=await readContract.currentChallenge();
+    if(live.toLowerCase()!==pendingProof.challenge.toLowerCase()){
+      $("claimStatus").className="claim-status stale";
+      $("claimStatus").textContent="Proof became stale before claim. No transaction was requested.";
+      $("claimRewardBtn").textContent="PROOF STALE";
+      clearInterval(pendingWatch);
+      return;
+    }
+    const proof=ethers.solidityPackedKeccak256(["bytes32","address","uint256"],[pendingProof.challenge,wallet,pendingProof.nonce]);
+    if(proof.toLowerCase()!==pendingProof.proof.toLowerCase()||BigInt(proof)>pendingProof.target)throw new Error("Local proof verification failed.");
+    $("claimStatus").textContent="Proof is live. Simulating the on-chain claim before requesting your wallet…";
+    await writeContract.mine.staticCall(pendingProof.nonce,{value:FEE});
+    $("claimRewardBtn").textContent="CONFIRM IN WALLET";
+    $("claimStatus").textContent="Simulation passed. Your wallet will now show exactly one mine(nonce) transaction with 0.000341 BNB.";
+    const tx=await writeContract.mine(pendingProof.nonce,{value:FEE});
+    log("Winning claim tx sent: "+tx.hash,"good");
+    $("claimStatus").textContent="Transaction sent. Waiting for BNB Chain confirmation…";
+    const receipt=await tx.wait();
+    log("237,500 HASHCATS reward confirmed in block "+receipt.blockNumber+".","good");
+    clearInterval(pendingWatch);
+    pendingProof=null;
+    $("claimRewardBtn").textContent="CLAIMED ✓";
+    $("claimStatus").textContent="Reward confirmed on-chain. 237,500 HASHCATS was minted to your wallet.";
+    await refreshChain();
+    setTimeout(()=>{$("claimBackdrop").classList.remove("show");if(wallet&&gpu)$("startBtn").disabled=false;},2200);
+  }catch(e){
+    $("claimStatus").className="claim-status error";
+    $("claimStatus").textContent="Claim not sent/confirmed: "+decodeRevert(e);
+    $("claimRewardBtn").disabled=false;
+    $("claimRewardBtn").textContent="TRY CLAIM AGAIN";
+    log("Claim failed: "+decodeRevert(e),"bad");
+  }finally{submitting=false}
+}
 async function miningLoop(){hashesTested=0n;nonceCursor=rand64();lastChainCheck=0;while(mining){let chain;try{if(Date.now()-lastChainCheck>650){chain=await refreshChain(true);lastChainCheck=Date.now();if(!chain.activated){log("Mining is not activated on-chain yet.","warn");stopMining();break;}}else chain={challenge:currentChallenge,target:currentTarget};if(!wallet||!chain.challenge||chain.challenge===ethers.ZeroHash){await sleep(150);continue;}const start=nonceCursor;$("nonceRange").textContent=start.toString()+" → "+(start+BigInt(batchSize)-1n).toString();$("batchStat").textContent=fmt(batchSize);$("batchBar").style.width="65%";const r=await runBatch(chain.challenge,BigInt(chain.target),start,batchSize);if(!mining)break;hashesTested+=BigInt(batchSize);nonceCursor=(nonceCursor+BigInt(batchSize))&((1n<<64n)-1n);const rate=batchSize/(Math.max(r.ms,1)/1000);$("hashrate").textContent=formatRate(rate);$("tested").textContent=fmt(hashesTested.toString());$("batchMs").textContent=r.ms.toFixed(1)+" ms";$("batchBar").style.width="100%";const desired=Math.max(MIN_BATCH,Math.min(MAX_BATCH,Math.round(batchSize*(BATCH_TARGET_MS/Math.max(r.ms,10)))));batchSize=Math.max(WORKGROUP,Math.floor(desired/WORKGROUP)*WORKGROUP);if(r.nonce!==null){await submitWinner(r.nonce,chain.challenge,BigInt(chain.target),r.hash);if(!mining)break;}if(Math.random()<.18)spawnHash();await sleep(0);}catch(e){log("Mining loop error: "+e.message,"bad");console.error(e);await sleep(600);}}}
 function spawnHash(){const s=document.createElement("span");s.textContent="0x"+crypto.getRandomValues(new Uint32Array(2)).reduce((a,x)=>a+x.toString(16).padStart(8,"0"),"");s.style.top=(5+Math.random()*87)+"%";s.style.animationDuration=(2.5+Math.random()*3)+"s";$("hashStream").appendChild(s);setTimeout(()=>s.remove(),6000);}
 async function startMining(){if(mining)return;if(!wallet)return log("Connect wallet first.","warn");if(!gpu)return log("WebGPU is not ready.","bad");const state=await refreshChain(true);if(!state.activated)return log("Mining is not activated. Use Activate Mining first.","warn");const wins=await readContract.remainingWinsFor(wallet);if(wins===0n)return log("This wallet has reached the 50-win mining limit.","warn");mining=true;$("minerPanel").classList.add("mining");$("minerState").textContent="MINING";$("minerState").classList.add("live");$("startBtn").disabled=true;$("stopBtn").disabled=false;log("REAL WebGPU mining started.","good");log("Proof = keccak256(challenge + wallet + uint256 nonce).","muted");miningLoop();}
 function stopMining(withLog=true){mining=false;$("minerPanel").classList.remove("mining");$("minerState").textContent="IDLE";$("minerState").classList.remove("live");$("stopBtn").disabled=true;if(wallet&&gpu)$("startBtn").disabled=false;if(withLog)log("Mining stopped.","warn");}
-$("connectBtn").onclick=connect;$("heroConnect").onclick=connect;$("activateBtn").onclick=activate;$("refreshBtn").onclick=()=>refreshChain();$("startBtn").onclick=startMining;$("stopBtn").onclick=()=>stopMining();if(window.ethereum){window.ethereum.on?.("accountsChanged",()=>location.reload());window.ethereum.on?.("chainChanged",()=>location.reload());}
-(async()=>{log("HASH CATS production miner BUILD 3.0 booting…");log("Contract "+CONTRACT,"muted");await initProvider();await Promise.allSettled([refreshChain(true),initGPU()]);setInterval(()=>{if(!mining)refreshChain(true).catch(()=>{})},5000);})();
+$("connectBtn").onclick=connect;$("heroConnect").onclick=connect;$("activateBtn").onclick=activate;$("refreshBtn").onclick=()=>refreshChain();$("startBtn").onclick=startMining;$("stopBtn").onclick=()=>stopMining();$("claimRewardBtn").onclick=claimPendingReward;$("dismissClaimBtn").onclick=dismissClaim;
+(async()=>{log("HASH CATS production miner BUILD 3.2 booting…");log("Contract "+CONTRACT,"muted");await initProvider();await Promise.allSettled([refreshChain(true),initGPU()]);setInterval(()=>{if(!mining)refreshChain(true).catch(()=>{})},5000);})();
 </script>
 </body>
 </html>
