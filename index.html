@@ -31,7 +31,7 @@
     .head{height:38px;padding:0 13px;display:flex;align-items:center;justify-content:space-between;text-transform:uppercase;font-weight:900;font-size:12px;letter-spacing:.08em}.head.green{background:var(--green2);color:#0d130b}.head.cyan{background:var(--cyan);color:#0a1517}.head.gray{background:#424656}.panel{background:var(--panel);overflow:hidden}
     .minerbody{display:grid;grid-template-columns:315px 1fr;gap:18px;padding:16px}.catstage{background:#0f1219;border:2px solid #4f5668;padding:8px;min-height:330px;display:flex;flex-direction:column}.catframe{position:relative;flex:1;min-height:280px;background:#171b25;display:grid;place-items:center;overflow:hidden;border:2px solid #616a7e}.catframe img.catart{width:100%;height:100%;object-fit:cover;image-rendering:pixelated}.catframe .placeholder{width:64%;max-width:210px;opacity:.45}.artlabel{position:absolute;left:8px;top:8px;background:#080b11e8;border:1px solid #586174;padding:5px 7px;font-size:10px;text-transform:uppercase;color:#e4ebfa}.catfoot{padding-top:8px;color:#8994aa;font-size:11px;display:flex;justify-content:space-between;gap:10px}.minearea{display:flex;flex-direction:column;gap:15px}.rowhead{display:flex;justify-content:space-between;gap:12px;font-size:12px;text-transform:uppercase;font-weight:900;color:#dce4f5}.rowhead .good{color:var(--green)}.hashstrip{display:grid;grid-template-columns:repeat(48,1fr);gap:2px;margin-top:7px}.hashstrip i{display:block;height:15px;background:#3a404f}.hashstrip i:nth-child(5n){background:#604766}.hashstrip i:nth-child(7n){background:#5d6c42}.hashstrip i:nth-child(11n){background:#386b7a}.targetstrip i.on{background:var(--green)}.hashline{font-size:12px;color:#ced8ed;word-break:break-all;margin-top:7px;min-height:29px}.muted{color:var(--muted)}
     .stats4{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.stat{border:2px solid #333a49;background:#171b24;padding:11px;min-height:80px}.stat small{display:block;text-transform:uppercase;color:#9aa6bd;font-size:10px;font-weight:900;letter-spacing:.08em}.stat strong{display:block;margin-top:8px;font-size:21px;color:#f5f7fc}.stat strong.green{color:var(--green)}
-    .controls{display:grid;grid-template-columns:1.2fr 1fr auto;gap:14px;align-items:end;border-top:2px dashed #343b4a;padding-top:14px}.label{display:block;text-transform:uppercase;color:#aab4c9;font-size:10px;font-weight:900;margin-bottom:7px}.machine{display:flex;gap:7px}.mode{padding:10px 16px;border:2px solid #4b5469;background:#353b4a;color:#cbd5e9;font-weight:900;min-width:78px;text-align:center}.mode.active{background:var(--green);border-color:#79a64a;color:#10160d}.mode.disabled{opacity:.4}.rangebox input{width:100%;accent-color:var(--green)}.fee{font-size:13px;color:#dbe5f8}.fee b{display:block;color:var(--green);font-size:16px;margin-top:5px}.actionrow{display:flex;gap:9px;flex-wrap:wrap;margin-top:2px}.statusline{font-size:12px;padding:9px 11px;background:#0c1016;border:1px solid #303746;color:#aeb9cf;min-height:36px}.statusline.good{color:#bfff89;border-color:#53763d}.statusline.warn{color:#ffe083;border-color:#796c35}.statusline.bad{color:#ff9c92;border-color:#754440}
+    .controls{display:grid;grid-template-columns:1.2fr 1fr auto;gap:14px;align-items:end;border-top:2px dashed #343b4a;padding-top:14px}.label{display:block;text-transform:uppercase;color:#aab4c9;font-size:10px;font-weight:900;margin-bottom:7px}.machine{display:flex;gap:7px}.mode{padding:10px 16px;border:2px solid #4b5469;background:#353b4a;color:#cbd5e9;font-weight:900;min-width:78px;text-align:center;cursor:pointer}.mode.active{background:var(--green);border-color:#79a64a;color:#10160d}.mode.disabled{opacity:.4;cursor:not-allowed}.rangebox input{width:100%;accent-color:var(--green)}.fee{font-size:13px;color:#dbe5f8}.fee b{display:block;color:var(--green);font-size:16px;margin-top:5px}.actionrow{display:flex;gap:9px;flex-wrap:wrap;margin-top:2px}.statusline{font-size:12px;padding:9px 11px;background:#0c1016;border:1px solid #303746;color:#aeb9cf;min-height:36px}.statusline.good{color:#bfff89;border-color:#53763d}.statusline.warn{color:#ffe083;border-color:#796c35}.statusline.bad{color:#ff9c92;border-color:#754440}
     .away{margin-top:14px;padding:12px 14px;border-top:2px dashed #363d4c;background:#181c25}.awayhead{display:flex;justify-content:space-between;text-transform:uppercase;font-size:11px;font-weight:900;color:#c3cce0}.slots{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;margin-top:9px}.slot{aspect-ratio:1;background:#1c2029;border:2px solid #2c3240;overflow:hidden;position:relative}.slot img{width:100%;height:100%;object-fit:cover}.slot span{position:absolute;left:3px;bottom:2px;font-size:8px;color:#fff;text-shadow:1px 1px #000}
     .twocol{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}.boxcontent{padding:14px;background:var(--panel)}.chart{height:160px;display:flex;align-items:flex-end;gap:3px;padding:8px 0 4px}.chart i{flex:1;background:#64783f;border-top:1px solid #91a969;min-height:3px}.explain{color:#aab5ca;font-size:12px;line-height:1.55}.networkgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}.metric{padding-bottom:9px;border-bottom:1px dashed #3a4150}.metric small{display:block;text-transform:uppercase;color:#99a4bb;font-size:10px;font-weight:900}.metric b{display:block;font-size:21px;margin-top:5px}.anchor{margin-top:12px;padding-top:12px;border-top:2px dashed #394150;font-size:11px;color:#aeb9cf}.anchor code{display:block;margin-top:5px;word-break:break-all;color:#dbe5f8}
     section.block{margin:16px 0}.mintgrid{padding:12px;display:grid;grid-template-columns:repeat(10,1fr);gap:8px}.mint{background:#242a36;border:2px solid #394252;padding:4px}.mint img{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#12151c}.mintmeta{display:flex;justify-content:space-between;gap:4px;padding-top:4px;font-size:9px}.mintmeta b{color:var(--green)}.emptymint{aspect-ratio:1;background:#171b23;border:2px solid #2a303d;display:grid;place-items:center;color:#475064;font-size:24px}
@@ -60,7 +60,7 @@
 <main class="wrap" id="mine">
   <header class="hero">
     <h1>MINE A <span>CAT</span></h1>
-    <p>Your browser searches nonces locally until one proof beats the live HASHCATS target. Nothing is submitted while searching. A valid win is verified again onchain, then the contract mints one random unused HASHCAT. Mint price is free; only a successful claim pays the fixed 1 USDC mining fee directly to treasury.</p>
+    <p>Your GPU searches real Keccak-256 nonces locally with WebGPU, using the same fast browser-mining approach as HASHPIXELS. CPU remains available only as a fallback. Nothing is submitted while searching. A valid win is verified again onchain, then the contract mints one random unused HASHCAT. Mint price is free; only a successful claim pays the fixed 1 USDC mining fee directly to treasury.</p>
     <div class="chips"><span class="chip">Chain <b>ARC 5042</b></span><span class="chip">Supply <b>4,444</b></span><span class="chip">Mint <b>FREE</b></span><span class="chip">Win Fee <b>1 USDC</b></span><span class="chip">Status <b id="chipStatus">LIVE</b></span></div>
   </header>
 
@@ -91,13 +91,17 @@
         <div class="controls">
           <div>
             <span class="label">Machine</span>
-            <div class="machine"><div class="mode active">CPU</div><div class="mode disabled" title="GPU miner is not enabled in this build">GPU</div></div>
+            <div class="machine"><button class="mode" id="cpuMode" type="button">CPU</button><button class="mode active" id="gpuMode" type="button">GPU</button></div>
           </div>
-          <div class="rangebox"><span class="label">Workers to use: <b id="workerLabel">4</b></span><input id="workers" type="range" min="1" max="16" value="4"></div>
+          <div class="rangebox">
+            <span class="label" id="engineLabel">GPU Engine</span>
+            <div id="gpuInfo" style="font-size:12px;color:var(--green);min-height:18px">Checking WebGPU…</div>
+            <div id="cpuTune" style="display:none;margin-top:6px"><span class="label">Workers to use: <b id="workerLabel">4</b></span><input id="workers" type="range" min="1" max="16" value="4"></div>
+          </div>
           <div class="fee"><span class="label">Successful mine costs</span><b>1.000000 USDC</b></div>
         </div>
         <div class="actionrow"><button class="btn" id="startBtn">Start Mining</button><button class="btn red" id="stopBtn" disabled>Stop</button><button class="btn dark" id="approveBtn" style="display:none">Approve 1 USDC</button></div>
-        <div class="statusline" id="statusLine">Connect your wallet to begin. Mining computation stays in your browser.</div>
+        <div class="statusline" id="statusLine">Connect your wallet to begin. WebGPU is the recommended HASHPIXELS-style mining engine.</div>
       </div>
     </div>
     <div class="away"><div class="awayhead"><span>Cats that got away</span><span id="awayCount">0 challenge changes this session</span></div><div class="slots" id="awaySlots"></div></div>
@@ -125,9 +129,9 @@
   const FEE = 1000000n;
   const ARC_CHAIN_HEX = "0x13b2";
   const ARC_CHAIN_DEC = 5042;
-  const SELECTOR = { mine:"4d474898", preview:"356016e0", allowance:"dd62ed3e", approve:"095ea7b3", balanceOf:"70a08231" };
+  const SELECTOR = { mine:"4d474898", preview:"356016e0", allowance:"dd62ed3e", approve:"095ea7b3", balanceOf:"70a08231", miningActivated:"f39109bb", currentChallenge:"51bdd585", target:"d4b83992" };
   const el = id => document.getElementById(id);
-  const state = { account:null, stats:null, health:null, latest:[], leaderboard:[], workers:[], mining:false, miningChallenge:null, totalHashes:0, speed:0, startedAt:0, away:0, lastWorkerReport:0, found:false };
+  const state = { account:null, stats:null, health:null, latest:[], leaderboard:[], workers:[], mining:false, miningChallenge:null, totalHashes:0, speed:0, startedAt:0, away:0, lastWorkerReport:0, found:false, mode:"gpu", gpu:null, gpuBatchSize:32768, gpuNonceCursor:0n, gpuLoopToken:0, lastFastCheck:0 };
 
   function short(a){ return a ? a.slice(0,6)+"…"+a.slice(-4) : "—"; }
   function comma(v){ try{return BigInt(v).toLocaleString("en-US")}catch{return String(v ?? "—")} }
@@ -155,7 +159,7 @@
       if(state.mining && oldChallenge && stats.currentChallenge!==state.miningChallenge){
         state.away++;renderAway();
         status("Network challenge changed — switching to the new target automatically.","warn");
-        restartWorkers();
+        restartMiner();
       }
     }catch(e){ console.warn(e); }
   }
@@ -194,27 +198,432 @@
   async function waitReceipt(hash,timeout=120000){const start=Date.now();while(Date.now()-start<timeout){const r=await ethereum.request({method:"eth_getTransactionReceipt",params:[hash]});if(r){if(r.status&&BigInt(r.status)===0n)throw new Error("Transaction reverted");return r}await new Promise(r=>setTimeout(r,900))}throw new Error("Timed out waiting for transaction receipt")}
   async function approveFee(){if(!state.account)await connect();await ensureArc();status("Approve exactly 1 USDC for one successful HASHCATS claim…","warn");const data="0x"+SELECTOR.approve+wordAddr(CONTRACT)+wordBigInt(FEE);const tx=await ethereum.request({method:"eth_sendTransaction",params:[{from:state.account,to:USDC,data,value:"0x0"}]});toast("Approval submitted: "+short(tx));await waitReceipt(tx);await refreshWallet();toast("1 USDC mining allowance approved.","good");return true}
 
-  function stopWorkers(keepStatus=false){state.workers.forEach(w=>{try{w.postMessage({type:"STOP"});w.terminate()}catch{}});state.workers=[];state.mining=false;state.miningChallenge=null;state.speed=0;el("minerState").textContent="■ IDLE";el("startBtn").disabled=false;el("stopBtn").disabled=true;if(!keepStatus)status("Mining stopped. No fee was charged.");updateProbability()}
-  function workerCount(){return Number(el("workers").value)||1}
-  function startWorkers(){
-    const s=state.stats;if(!s?.miningActivated)throw new Error("Mining is not activated");if(s.miningComplete)throw new Error("HASHCATS mining is complete");
-    stopWorkers(true);state.mining=true;state.miningChallenge=s.currentChallenge;state.startedAt=performance.now();state.totalHashes=0;state.speed=0;state.found=false;el("minerState").textContent="● MINING";el("startBtn").disabled=true;el("stopBtn").disabled=false;status("Mining locally. Keep this tab open; stale challenges switch automatically.","good");
-    const count=workerCount();for(let i=0;i<count;i++){const w=new Worker("/miner-worker.js?v=3");w.onmessage=onWorker;w.onerror=e=>status("Miner worker error: "+e.message,"bad");w.postMessage({type:"START",challenge:s.currentChallenge,miner:state.account,target:"0x"+BigInt(s.target).toString(16).padStart(64,"0"),batchSize:1024});state.workers.push(w)}
+  /* ===== HASHCATS HYBRID MINER: WebGPU primary, CPU fallback ===== */
+  const WORKGROUP = 64;
+  const GPU_BATCH_TARGET_MS = 140;
+  const GPU_MIN_BATCH = 4096;
+  const GPU_MAX_BATCH = 1048576;
+
+  function hexBytes(hex){
+    const h=String(hex||"").replace(/^0x/,"");
+    const out=new Uint8Array(h.length/2);
+    for(let i=0;i<out.length;i++)out[i]=parseInt(h.slice(i*2,i*2+2),16);
+    return out;
   }
-  function restartWorkers(){if(!state.mining||!state.account)return;const keep=state.totalHashes;startWorkers();state.totalHashes=keep;state.startedAt=performance.now();}
-  function onWorker(ev){const m=ev.data||{};if(m.type==="HASHES"){state.totalHashes+=Number(m.count||0);const instantaneous=(Number(m.count||0)/(Number(m.ms||1)/1000));const n=Math.max(1,state.workers.length);state.speed=state.speed?state.speed*.72+instantaneous*n*.28:instantaneous*n;renderMining()}else if(m.type==="FOUND"){state.totalHashes+=Number(m.hashes||0);handleFound(m).catch(e=>{status("Candidate handling failed: "+errMsg(e),"bad");toast(errMsg(e),"bad")})}else if(m.type==="ERROR"){status("Worker error: "+m.message,"bad")}}
+  function rand64(){
+    const a=new Uint32Array(2);crypto.getRandomValues(a);
+    return (BigInt(a[1])<<32n)|BigInt(a[0]);
+  }
+  function u64parts(n){return {lo:Number(n&0xffffffffn)>>>0,hi:Number((n>>32n)&0xffffffffn)>>>0}}
+  function packRateBlock(challenge,address){
+    const bytes=new Uint8Array(136);
+    bytes.set(hexBytes(challenge),0);
+    bytes.set(hexBytes(address),32);
+    // challenge(32) + address(20) + uint256 nonce(32) = 84 bytes.
+    // High 24 nonce bytes stay zero; GPU writes the low 64 bits at bytes 76..83.
+    bytes[84]=0x01; bytes[135]|=0x80;
+    const words=new Uint32Array(34);
+    for(let i=0;i<34;i++){
+      const p=i*4;
+      words[i]=(bytes[p]|(bytes[p+1]<<8)|(bytes[p+2]<<16)|(bytes[p+3]<<24))>>>0;
+    }
+    return words;
+  }
+  function targetWords(target){
+    const h=BigInt(target).toString(16).padStart(64,"0");
+    const out=new Uint32Array(8);
+    for(let i=0;i<8;i++)out[i]=parseInt(h.slice(i*8,i*8+8),16)>>>0;
+    return out;
+  }
+  function hashWordsToHex(words){return "0x"+Array.from(words).map(x=>(x>>>0).toString(16).padStart(8,"0")).join("")}
+
+  const SHADER=String.raw`
+struct Params { startLo:u32, startHi:u32, count:u32, pad:u32 }
+struct Result {
+  found: atomic<u32>,
+  nonceLo:u32, nonceHi:u32,
+  h0:u32,h1:u32,h2:u32,h3:u32,h4:u32,h5:u32,h6:u32,h7:u32
+}
+@group(0) @binding(0) var<storage,read> baseWords: array<u32>;
+@group(0) @binding(1) var<storage,read> target: array<u32>;
+@group(0) @binding(2) var<uniform> params: Params;
+@group(0) @binding(3) var<storage,read_write> result: Result;
+
+const RHO:array<u32,25>=array<u32,25>(
+  0u,1u,62u,28u,27u,
+  36u,44u,6u,55u,20u,
+  3u,10u,43u,25u,39u,
+  41u,45u,15u,21u,8u,
+  18u,2u,61u,56u,14u
+);
+const RC:array<vec2<u32>,24>=array<vec2<u32>,24>(
+ vec2<u32>(0x00000001u,0x00000000u),vec2<u32>(0x00008082u,0x00000000u),
+ vec2<u32>(0x0000808au,0x80000000u),vec2<u32>(0x80008000u,0x80000000u),
+ vec2<u32>(0x0000808bu,0x00000000u),vec2<u32>(0x80000001u,0x00000000u),
+ vec2<u32>(0x80008081u,0x80000000u),vec2<u32>(0x00008009u,0x80000000u),
+ vec2<u32>(0x0000008au,0x00000000u),vec2<u32>(0x00000088u,0x00000000u),
+ vec2<u32>(0x80008009u,0x00000000u),vec2<u32>(0x8000000au,0x00000000u),
+ vec2<u32>(0x8000808bu,0x00000000u),vec2<u32>(0x0000008bu,0x80000000u),
+ vec2<u32>(0x00008089u,0x80000000u),vec2<u32>(0x00008003u,0x80000000u),
+ vec2<u32>(0x00008002u,0x80000000u),vec2<u32>(0x00000080u,0x80000000u),
+ vec2<u32>(0x0000800au,0x00000000u),vec2<u32>(0x8000000au,0x80000000u),
+ vec2<u32>(0x80008081u,0x80000000u),vec2<u32>(0x00008080u,0x80000000u),
+ vec2<u32>(0x80000001u,0x00000000u),vec2<u32>(0x80008008u,0x80000000u)
+);
+fn rol(v:vec2<u32>,n:u32)->vec2<u32>{
+ if(n==0u){return v;}
+ if(n<32u){return vec2<u32>((v.x<<n)|(v.y>>(32u-n)),(v.y<<n)|(v.x>>(32u-n)));}
+ if(n==32u){return vec2<u32>(v.y,v.x);}
+ let m=n-32u;
+ return vec2<u32>((v.y<<m)|(v.x>>(32u-m)),(v.x<<m)|(v.y>>(32u-m)));
+}
+fn bswap(x:u32)->u32{
+ return ((x&0x000000ffu)<<24u)|((x&0x0000ff00u)<<8u)|((x&0x00ff0000u)>>8u)|((x&0xff000000u)>>24u);
+}
+fn keccakf(s:ptr<function,array<vec2<u32>,25>>){
+ for(var rnd:u32=0u;rnd<24u;rnd++){
+  var c:array<vec2<u32>,5>;
+  var d:array<vec2<u32>,5>;
+  var b:array<vec2<u32>,25>;
+  for(var x:u32=0u;x<5u;x++){
+   var q=(*s)[x];
+   q=vec2<u32>(q.x^(*s)[x+5u].x,q.y^(*s)[x+5u].y);
+   q=vec2<u32>(q.x^(*s)[x+10u].x,q.y^(*s)[x+10u].y);
+   q=vec2<u32>(q.x^(*s)[x+15u].x,q.y^(*s)[x+15u].y);
+   q=vec2<u32>(q.x^(*s)[x+20u].x,q.y^(*s)[x+20u].y);
+   c[x]=q;
+  }
+  for(var x:u32=0u;x<5u;x++){
+   let p=c[(x+4u)%5u]; let r=rol(c[(x+1u)%5u],1u);
+   d[x]=vec2<u32>(p.x^r.x,p.y^r.y);
+  }
+  for(var y:u32=0u;y<5u;y++){
+   for(var x:u32=0u;x<5u;x++){
+    let i=x+5u*y; (*s)[i]=vec2<u32>((*s)[i].x^d[x].x,(*s)[i].y^d[x].y);
+   }
+  }
+  for(var y:u32=0u;y<5u;y++){
+   for(var x:u32=0u;x<5u;x++){
+    let i=x+5u*y; let nx=y; let ny=(2u*x+3u*y)%5u;
+    b[nx+5u*ny]=rol((*s)[i],RHO[i]);
+   }
+  }
+  for(var y:u32=0u;y<5u;y++){
+   for(var x:u32=0u;x<5u;x++){
+    let i=x+5u*y;let a=b[i];let b1=b[((x+1u)%5u)+5u*y];let b2=b[((x+2u)%5u)+5u*y];
+    (*s)[i]=vec2<u32>(a.x^((~b1.x)&b2.x),a.y^((~b1.y)&b2.y));
+   }
+  }
+  (*s)[0]=vec2<u32>((*s)[0].x^RC[rnd].x,(*s)[0].y^RC[rnd].y);
+ }
+}
+fn isValid(h:ptr<function,array<u32,8>>)->bool{
+ for(var i:u32=0u;i<8u;i++){
+  if((*h)[i]<target[i]){return true;}
+  if((*h)[i]>target[i]){return false;}
+ }
+ return true;
+}
+@compute @workgroup_size(64)
+fn main(@builtin(global_invocation_id) gid:vec3<u32>){
+ let idx=gid.x;if(idx>=params.count){return;}
+ let lo=params.startLo+idx;
+ let carry=select(0u,1u,lo<params.startLo);
+ let hi=params.startHi+carry;
+
+ var words:array<u32,34>;
+ for(var i:u32=0u;i<34u;i++){words[i]=baseWords[i];}
+ // uint256 nonce uses only its low 64 bits here. Solidity packed uint256 is big-endian.
+ words[19]=bswap(hi);
+ words[20]=bswap(lo);
+
+ var s:array<vec2<u32>,25>;
+ for(var i:u32=0u;i<25u;i++){s[i]=vec2<u32>(0u,0u);}
+ for(var i:u32=0u;i<17u;i++){s[i]=vec2<u32>(words[i*2u],words[i*2u+1u]);}
+ keccakf(&s);
+
+ var h:array<u32,8>;
+ h[0]=bswap(s[0].x);h[1]=bswap(s[0].y);h[2]=bswap(s[1].x);h[3]=bswap(s[1].y);
+ h[4]=bswap(s[2].x);h[5]=bswap(s[2].y);h[6]=bswap(s[3].x);h[7]=bswap(s[3].y);
+
+ if(isValid(&h)){
+  let won=atomicCompareExchangeWeak(&result.found,0u,1u);
+  if(won.exchanged){
+   result.nonceLo=lo;result.nonceHi=hi;
+   result.h0=h[0];result.h1=h[1];result.h2=h[2];result.h3=h[3];
+   result.h4=h[4];result.h5=h[5];result.h6=h[6];result.h7=h[7];
+  }
+ }
+}`;
+
+  async function initGPU(){
+    const info=el("gpuInfo"), gpuBtn=el("gpuMode");
+    if(!navigator.gpu){
+      state.mode="cpu";gpuBtn.classList.add("disabled");gpuBtn.disabled=true;
+      info.textContent="WebGPU unavailable — CPU fallback active";
+      selectMode("cpu",false);
+      return false;
+    }
+    try{
+      info.textContent="Initializing high-performance WebGPU…";
+      const adapter=await navigator.gpu.requestAdapter({powerPreference:"high-performance"});
+      if(!adapter)throw new Error("No WebGPU adapter found");
+      const device=await adapter.requestDevice();
+      const adapterInfo=adapter.info||{};
+      const label=[adapterInfo.vendor,adapterInfo.architecture,adapterInfo.device].filter(Boolean).join(" ")||"High-performance WebGPU";
+      const module=device.createShaderModule({code:SHADER,label:"HASHCATS Arc Keccak Miner"});
+      const ci=await module.getCompilationInfo();
+      const errs=ci.messages.filter(x=>x.type==="error");
+      if(errs.length)throw new Error(errs.map(x=>`${x.lineNum}:${x.linePos} ${x.message}`).join(" | "));
+      const pipeline=await device.createComputePipelineAsync({layout:"auto",compute:{module,entryPoint:"main"}});
+      const U=GPUBufferUsage;
+      const baseBuffer=device.createBuffer({size:136,usage:U.STORAGE|U.COPY_DST});
+      const targetBuffer=device.createBuffer({size:32,usage:U.STORAGE|U.COPY_DST});
+      const paramsBuffer=device.createBuffer({size:16,usage:U.UNIFORM|U.COPY_DST});
+      const resultBuffer=device.createBuffer({size:44,usage:U.STORAGE|U.COPY_SRC|U.COPY_DST});
+      const readBuffer=device.createBuffer({size:44,usage:U.COPY_DST|U.MAP_READ});
+      const bindGroup=device.createBindGroup({
+        layout:pipeline.getBindGroupLayout(0),
+        entries:[
+          {binding:0,resource:{buffer:baseBuffer}},
+          {binding:1,resource:{buffer:targetBuffer}},
+          {binding:2,resource:{buffer:paramsBuffer}},
+          {binding:3,resource:{buffer:resultBuffer}}
+        ]
+      });
+      state.gpu={adapter,device,pipeline,baseBuffer,targetBuffer,paramsBuffer,resultBuffer,readBuffer,bindGroup,label};
+      info.textContent="READY · "+label;
+      gpuBtn.disabled=false;gpuBtn.classList.remove("disabled");
+      selectMode("gpu",false);
+      return true;
+    }catch(e){
+      console.error("WebGPU init:",e);
+      state.gpu=null;state.mode="cpu";gpuBtn.classList.add("disabled");gpuBtn.disabled=true;
+      info.textContent="GPU init failed — CPU fallback active";
+      selectMode("cpu",false);
+      return false;
+    }
+  }
+
+  async function runGPUBatch(challenge,target,start,count){
+    const g=state.gpu, device=g.device;
+    device.queue.writeBuffer(g.baseBuffer,0,packRateBlock(challenge,state.account));
+    device.queue.writeBuffer(g.targetBuffer,0,targetWords(target));
+    const p=u64parts(start);
+    device.queue.writeBuffer(g.paramsBuffer,0,new Uint32Array([p.lo,p.hi,count,0]));
+    device.queue.writeBuffer(g.resultBuffer,0,new Uint32Array(11));
+    const enc=device.createCommandEncoder();
+    const pass=enc.beginComputePass();
+    pass.setPipeline(g.pipeline);pass.setBindGroup(0,g.bindGroup);
+    pass.dispatchWorkgroups(Math.ceil(count/WORKGROUP));
+    pass.end();
+    enc.copyBufferToBuffer(g.resultBuffer,0,g.readBuffer,0,44);
+    const t0=performance.now();
+    device.queue.submit([enc.finish()]);
+    await g.readBuffer.mapAsync(GPUMapMode.READ);
+    const t1=performance.now();
+    const copy=new Uint32Array(g.readBuffer.getMappedRange().slice(0));
+    g.readBuffer.unmap();
+    if(copy[0]===1){
+      const nonce=(BigInt(copy[2])<<32n)|BigInt(copy[1]);
+      return {ms:t1-t0,nonce,hash:hashWordsToHex(copy.slice(3,11))};
+    }
+    return {ms:t1-t0,nonce:null,hash:null};
+  }
+
+  function selectMode(mode,announce=true){
+    if(state.mining)return;
+    if(mode==="gpu"&&!state.gpu)return;
+    state.mode=mode;
+    el("gpuMode").classList.toggle("active",mode==="gpu");
+    el("cpuMode").classList.toggle("active",mode==="cpu");
+    el("cpuTune").style.display=mode==="cpu"?"block":"none";
+    el("engineLabel").textContent=mode==="gpu"?"GPU Engine":"CPU Engine";
+    if(mode==="gpu"&&state.gpu)el("gpuInfo").textContent="READY · "+state.gpu.label;
+    if(mode==="cpu")el("gpuInfo").textContent=state.gpu?"CPU fallback selected · GPU is ready":"CPU fallback active";
+    if(announce)status(mode==="gpu"?"WebGPU selected. This is the fast HASHPIXELS-style miner.":"CPU fallback selected.","good");
+  }
+
+  function workerCount(){return Number(el("workers").value)||1}
+  function stopCPUWorkers(){
+    state.workers.forEach(w=>{try{w.postMessage({type:"STOP"});w.terminate()}catch{}});
+    state.workers=[];
+  }
+  function stopMining(keepStatus=false){
+    state.gpuLoopToken++;
+    stopCPUWorkers();
+    state.mining=false;state.miningChallenge=null;state.speed=0;
+    el("minerState").textContent="■ IDLE";el("startBtn").disabled=false;el("stopBtn").disabled=true;
+    if(!keepStatus)status("Mining stopped. No successful mining fee was charged.");
+    updateProbability();
+  }
+
+  function startCPU(){
+    const s=state.stats;
+    stopCPUWorkers();
+    state.mining=true;state.miningChallenge=s.currentChallenge;state.startedAt=performance.now();state.totalHashes=0;state.speed=0;state.found=false;
+    el("minerState").textContent="● CPU MINING";el("startBtn").disabled=true;el("stopBtn").disabled=false;
+    status("CPU fallback mining locally. For HASHPIXELS-style speed, use GPU mode.","warn");
+    const count=workerCount();
+    for(let i=0;i<count;i++){
+      const w=new Worker("/miner-worker.js?v=4");
+      w.onmessage=onCPUWorker;w.onerror=e=>status("CPU miner error: "+e.message,"bad");
+      w.postMessage({type:"START",challenge:s.currentChallenge,miner:state.account,target:"0x"+BigInt(s.target).toString(16).padStart(64,"0"),batchSize:1024});
+      state.workers.push(w);
+    }
+  }
+  function onCPUWorker(ev){
+    const m=ev.data||{};
+    if(m.type==="HASHES"){
+      state.totalHashes+=Number(m.count||0);
+      const inst=Number(m.count||0)/(Number(m.ms||1)/1000);
+      const n=Math.max(1,state.workers.length);
+      state.speed=state.speed?state.speed*.72+inst*n*.28:inst*n;
+      renderMining();
+    }else if(m.type==="FOUND"){
+      state.totalHashes+=Number(m.hashes||0);
+      handleFound(m).catch(e=>{status("Candidate handling failed: "+errMsg(e),"bad");toast(errMsg(e),"bad")});
+    }else if(m.type==="ERROR")status("CPU worker error: "+m.message,"bad");
+  }
+
+  async function fastMiningState(){
+    const [a,c,t]=await Promise.all([
+      ethCall(CONTRACT,"0x"+SELECTOR.miningActivated),
+      ethCall(CONTRACT,"0x"+SELECTOR.currentChallenge),
+      ethCall(CONTRACT,"0x"+SELECTOR.target)
+    ]);
+    return {
+      activated:BigInt(a)!==0n,
+      challenge:"0x"+c.replace(/^0x/,"").slice(0,64).padStart(64,"0"),
+      target:BigInt(t)
+    };
+  }
+
+  async function startGPU(){
+    if(!state.gpu)throw new Error("WebGPU is not ready. Use current Chrome/Brave/Edge on HTTPS with hardware acceleration enabled.");
+    state.gpuLoopToken++;
+    const token=state.gpuLoopToken;
+    state.mining=true;state.miningChallenge=state.stats.currentChallenge;state.startedAt=performance.now();
+    state.totalHashes=0;state.speed=0;state.found=false;state.gpuNonceCursor=rand64();state.gpuBatchSize=32768;state.lastFastCheck=0;
+    el("minerState").textContent="● GPU MINING";el("startBtn").disabled=true;el("stopBtn").disabled=false;
+    status("REAL WebGPU mining started — HASHPIXELS-style Keccak engine active.","good");
+    gpuLoop(token);
+  }
+
+  async function gpuLoop(token){
+    while(state.mining&&state.mode==="gpu"&&token===state.gpuLoopToken){
+      try{
+        let challenge=state.miningChallenge;
+        let target=BigInt(state.stats.target);
+        if(Date.now()-state.lastFastCheck>650){
+          const live=await fastMiningState();state.lastFastCheck=Date.now();
+          if(!live.activated)throw new Error("Mining is not active onchain");
+          if(challenge&&live.challenge.toLowerCase()!==challenge.toLowerCase()){
+            state.away++;renderAway();
+            state.miningChallenge=live.challenge;state.gpuNonceCursor=rand64();
+            challenge=live.challenge;target=live.target;
+            if(state.stats){state.stats.currentChallenge=live.challenge;state.stats.target=live.target.toString();}
+            status("Challenge changed — GPU switched instantly to the new HASHCAT target.","warn");
+          }else{challenge=live.challenge;target=live.target;state.miningChallenge=live.challenge;}
+        }
+        const start=state.gpuNonceCursor, count=state.gpuBatchSize;
+        const r=await runGPUBatch(challenge,target,start,count);
+        if(!state.mining||token!==state.gpuLoopToken)break;
+        state.totalHashes+=count;
+        state.gpuNonceCursor=(state.gpuNonceCursor+BigInt(count))&((1n<<64n)-1n);
+        const rate=count/(Math.max(r.ms,1)/1000);
+        state.speed=state.speed?state.speed*.70+rate*.30:rate;
+        renderMining();
+        const desired=Math.max(GPU_MIN_BATCH,Math.min(GPU_MAX_BATCH,Math.round(count*(GPU_BATCH_TARGET_MS/Math.max(r.ms,10)))));
+        state.gpuBatchSize=Math.max(WORKGROUP,Math.floor(desired/WORKGROUP)*WORKGROUP);
+        if(r.nonce!==null){
+          await handleFound({nonce:r.nonce.toString(),hash:r.hash,hashes:count,source:"gpu"});
+          break;
+        }
+        await new Promise(r=>setTimeout(r,0));
+      }catch(e){
+        console.error(e);status("GPU miner error: "+errMsg(e),"bad");
+        await new Promise(r=>setTimeout(r,600));
+      }
+    }
+  }
+
+  function restartMiner(){
+    if(!state.mining||!state.account)return;
+    const keep=state.totalHashes, mode=state.mode;
+    stopMining(true);
+    state.totalHashes=keep;
+    state.mining=true;
+    if(mode==="gpu"&&state.gpu)startGPU();else startCPU();
+  }
+
   function renderMining(){el("speed").textContent=fmtRate(state.speed);el("hashes").textContent=comma(Math.floor(state.totalHashes));updateProbability()}
-  function updateProbability(){const diff=Number(state.stats?.currentDifficulty||0),rate=Number(state.speed||0);if(!diff||!rate){el("wait").textContent="—";el("chance").textContent="—";return}el("wait").textContent=fmtTime(diff/rate);const p=1-Math.exp(-(rate*60)/diff);el("chance").textContent=(p*100).toFixed(p<.001?4:p<.01?3:2)+"%"}
+  function updateProbability(){
+    const diff=Number(state.stats?.currentDifficulty||0),rate=Number(state.speed||0);
+    if(!diff||!rate){el("wait").textContent="—";el("chance").textContent="—";return}
+    el("wait").textContent=fmtTime(diff/rate);
+    const p=1-Math.exp(-(rate*60)/diff);
+    el("chance").textContent=(p*100).toFixed(p<.001?4:p<.01?3:2)+"%";
+  }
 
-  async function verifyNonce(nonce){const data="0x"+SELECTOR.preview+wordAddr(state.account)+wordBigInt(nonce);const r=(await ethCall(CONTRACT,data)).replace(/^0x/,"").padStart(128,"0");return BigInt("0x"+r.slice(64,128))!==0n}
-  async function handleFound(m){if(state.found)return;state.found=true;stopWorkers(true);el("minerState").textContent="◆ FOUND";status("Candidate found! Verifying against the live contract before submitting…","warn");toast("Winning candidate found locally.","good");const valid=await verifyNonce(m.nonce);if(!valid){state.found=false;state.away++;renderAway();await refreshNetwork();status("Candidate became stale before submission. Resuming on the new challenge.","warn");startWorkers();return}const allow=await allowance();if(allow<FEE){state.found=false;status("Winning proof is valid, but the 1 USDC allowance is missing. Approve and restart immediately.","bad");el("approveBtn").style.display="inline-flex";return}
-    status("Proof verified. Confirm the mining transaction in your wallet. 1 USDC is charged only if this proof still wins onchain.","warn");const data="0x"+SELECTOR.mine+wordBigInt(m.nonce);try{const tx=await ethereum.request({method:"eth_sendTransaction",params:[{from:state.account,to:CONTRACT,data,value:"0x0"}]});toast("Mining transaction submitted: "+short(tx));await waitReceipt(tx);status("HASHCAT mined successfully! Refreshing collection…","good");toast("HASHCAT MINED!", "good");await new Promise(r=>setTimeout(r,1200));await refreshNetwork();await refreshWallet();state.found=false;}catch(e){state.found=false;status("Mine was not accepted (usually a stale race). No successful mining fee was charged. "+errMsg(e),"bad");await refreshNetwork();await refreshWallet();}}
-  async function start(){try{if(!state.account)await connect();await ensureArc();await refreshNetwork();const a=await allowance();if(a<FEE){await approveFee()}startWorkers()}catch(e){status(errMsg(e),"bad");toast(errMsg(e),"bad")}}
+  async function verifyNonce(nonce){
+    const data="0x"+SELECTOR.preview+wordAddr(state.account)+wordBigInt(nonce);
+    const r=(await ethCall(CONTRACT,data)).replace(/^0x/,"").padStart(128,"0");
+    return BigInt("0x"+r.slice(64,128))!==0n;
+  }
+  async function handleFound(m){
+    if(state.found)return;
+    state.found=true;stopMining(true);el("minerState").textContent="◆ FOUND";
+    status("Candidate found! Verifying against the live HASHCATS contract…","warn");toast("Winning candidate found locally.","good");
+    const valid=await verifyNonce(m.nonce);
+    if(!valid){
+      state.found=false;state.away++;renderAway();await refreshNetwork();
+      status("Candidate became stale before submission. Resuming on the new challenge.","warn");
+      if(state.mode==="gpu"&&state.gpu)startGPU();else startCPU();
+      return;
+    }
+    const allow=await allowance();
+    if(allow<FEE){
+      state.found=false;status("Winning proof is valid, but the 1 USDC allowance is missing. Approve immediately.","bad");
+      el("approveBtn").style.display="inline-flex";return;
+    }
+    status("Proof verified onchain. Confirm the winning transaction. 1 USDC is charged only if it still wins.","warn");
+    const data="0x"+SELECTOR.mine+wordBigInt(m.nonce);
+    try{
+      const tx=await ethereum.request({method:"eth_sendTransaction",params:[{from:state.account,to:CONTRACT,data,value:"0x0"}]});
+      toast("Mining transaction submitted: "+short(tx));
+      await waitReceipt(tx);
+      status("HASHCAT mined successfully! Refreshing collection…","good");toast("HASHCAT MINED!","good");
+      await new Promise(r=>setTimeout(r,1200));await refreshNetwork();await refreshWallet();state.found=false;
+    }catch(e){
+      state.found=false;status("Mine was not accepted (usually a stale race). No successful mining fee was charged. "+errMsg(e),"bad");
+      await refreshNetwork();await refreshWallet();
+    }
+  }
 
-  el("connectBtn").onclick=()=>connect().catch(e=>{status(errMsg(e),"bad");toast(errMsg(e),"bad")});el("startBtn").onclick=start;el("stopBtn").onclick=()=>stopWorkers();el("approveBtn").onclick=()=>approveFee().catch(e=>toast(errMsg(e),"bad"));
-  el("workers").max=Math.max(1,Math.min(16,navigator.hardwareConcurrency||8));el("workers").value=Math.max(1,Math.min(Number(el("workers").max),Math.max(2,(navigator.hardwareConcurrency||6)-1)));el("workerLabel").textContent=el("workers").value;el("workers").oninput=()=>{el("workerLabel").textContent=el("workers").value;if(state.mining){status("Worker count changed. Stop/start mining to apply it.","warn")}};
-  if(window.ethereum){ethereum.on?.("accountsChanged",a=>{stopWorkers(true);state.account=a?.[0]||null;el("connectBtn").textContent=state.account?short(state.account):"Connect";refreshWallet()});ethereum.on?.("chainChanged",()=>{stopWorkers(true);location.reload()})}
-  buildStrips();refreshNetwork();refreshLeaderboard();setInterval(refreshNetwork,5000);setInterval(refreshLeaderboard,30000);setInterval(()=>{if(state.latest.length){el("lastTime").textContent=timeAgo(state.latest[0].timestamp)}},10000);
+  async function start(){
+    try{
+      if(!state.account)await connect();
+      await ensureArc();await refreshNetwork();
+      const s=state.stats;if(!s?.miningActivated)throw new Error("Mining is not activated");if(s.miningComplete)throw new Error("HASHCATS mining is complete");
+      const a=await allowance();if(a<FEE)await approveFee();
+      if(state.mode==="gpu"){
+        if(!state.gpu)throw new Error("GPU mode is not ready. Switch to CPU or enable WebGPU/hardware acceleration.");
+        startGPU();
+      }else startCPU();
+    }catch(e){status(errMsg(e),"bad");toast(errMsg(e),"bad")}
+  }
+
+  el("connectBtn").onclick=()=>connect().catch(e=>{status(errMsg(e),"bad");toast(errMsg(e),"bad")});
+  el("startBtn").onclick=start;el("stopBtn").onclick=()=>stopMining();el("approveBtn").onclick=()=>approveFee().catch(e=>toast(errMsg(e),"bad"));
+  el("gpuMode").onclick=()=>selectMode("gpu");el("cpuMode").onclick=()=>selectMode("cpu");
+  el("workers").max=Math.max(1,Math.min(16,navigator.hardwareConcurrency||8));
+  el("workers").value=Math.max(1,Math.min(Number(el("workers").max),Math.max(2,(navigator.hardwareConcurrency||6)-1)));
+  el("workerLabel").textContent=el("workers").value;
+  el("workers").oninput=()=>{el("workerLabel").textContent=el("workers").value;if(state.mining&&state.mode==="cpu")status("CPU worker count changed. Stop/start to apply it.","warn")};
+
+  if(window.ethereum){ethereum.on?.("accountsChanged",a=>{stopMining(true);state.account=a?.[0]||null;el("connectBtn").textContent=state.account?short(state.account):"Connect";refreshWallet()});ethereum.on?.("chainChanged",()=>{stopMining(true);location.reload()})}
+  buildStrips();refreshNetwork();refreshLeaderboard();initGPU();setInterval(refreshNetwork,5000);setInterval(refreshLeaderboard,30000);setInterval(()=>{if(state.latest.length){el("lastTime").textContent=timeAgo(state.latest[0].timestamp)}},10000);
 })();
 </script>
 </body>
