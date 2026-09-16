@@ -1,472 +1,941 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#071019">
-<title>HASH CATS — Real WebGPU Mining</title>
-<meta name="description" content="HASH CATS — real browser GPU Proof-of-Work mining on BNB Smart Chain.">
-<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.5/dist/ethers.umd.min.js"></script>
-<link rel="icon" type="image/svg+xml" href="./favicon.svg?v=32">
-<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png?v=32">
-<link rel="apple-touch-icon" href="./apple-touch-icon.png?v=32">
-<style>
-:root{--bg:#05070b;--panel:#0b111b;--panel2:#0d1624;--line:#1b2a3b;--text:#edf7f3;--muted:#7d918d;--green:#55ff9b;--cyan:#45dfff;--yellow:#ffc857;--red:#ff6577;--shadow:0 18px 70px rgba(0,0,0,.40)}
-*{box-sizing:border-box}html,body{margin:0;background:#05070b;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}body{min-height:100vh;overflow-x:hidden}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 18% 5%,rgba(85,255,155,.10),transparent 28%),radial-gradient(circle at 85% 12%,rgba(69,223,255,.08),transparent 25%),linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:auto,auto,34px 34px,34px 34px}
-a{color:inherit;text-decoration:none}button{font:inherit}.wrap{width:min(1320px,calc(100% - 28px));margin:auto;padding:14px 0 70px;position:relative}
-.nav{position:sticky;top:10px;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 14px;border:1px solid rgba(255,255,255,.075);border-radius:18px;background:rgba(6,10,16,.85);backdrop-filter:blur(18px);box-shadow:var(--shadow)}
-.brand{display:flex;align-items:center;gap:11px;min-width:0}.brand img{height:44px;width:auto;max-width:235px;display:block}.brand-name{font-weight:950;letter-spacing:.08em;font-size:15px}.brand-sub{font:11px ui-monospace,monospace;color:var(--muted);margin-top:2px}.nav-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-.badge{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);border-radius:999px;padding:8px 11px;color:#a6bab5;font-size:12px}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:6px;box-shadow:0 0 10px var(--green)}
-.btn{border:0;border-radius:12px;padding:11px 14px;font-weight:850;cursor:pointer;transition:.18s;white-space:nowrap}.btn:hover{transform:translateY(-1px)}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}.btn-primary{background:linear-gradient(135deg,#55ff9b,#9dffd0);color:#06120c;box-shadow:0 8px 28px rgba(85,255,155,.15)}.btn-dark{background:#111c2b;border:1px solid rgba(255,255,255,.075);color:#e9f7f2}.btn-stop{background:rgba(255,101,119,.12);border:1px solid rgba(255,101,119,.24);color:#ff8997}
-.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:16px;margin-top:16px}.panel{border:1px solid rgba(255,255,255,.075);background:linear-gradient(180deg,rgba(13,21,34,.93),rgba(7,12,20,.93));border-radius:22px;box-shadow:var(--shadow);overflow:hidden}
-.hero-copy{padding:30px;min-height:430px;display:flex;flex-direction:column;justify-content:center;position:relative}.hero-copy:after{content:"#";position:absolute;right:25px;bottom:-35px;font-size:220px;font-weight:1000;color:rgba(85,255,155,.025);line-height:1}.kicker{display:inline-flex;width:max-content;align-items:center;gap:8px;padding:8px 11px;border-radius:999px;border:1px solid rgba(85,255,155,.16);background:rgba(85,255,155,.055);color:var(--green);font-size:11px;font-weight:900;letter-spacing:.12em}
-h1{font-size:clamp(43px,6vw,77px);line-height:.91;margin:19px 0 16px;letter-spacing:-.055em}h1 em{font-style:normal;color:var(--green);text-shadow:0 0 30px rgba(85,255,155,.16)}.lead{max-width:650px;color:#9cafaa;font-size:15px;line-height:1.72;margin:0 0 21px}.hero-actions{display:flex;gap:9px;flex-wrap:wrap}.micro{display:flex;gap:18px;flex-wrap:wrap;margin-top:26px;font:12px ui-monospace,monospace;color:#819490}.micro b{color:#d9e9e5}
-.banner{margin-top:18px;padding:18px 20px;border-radius:18px;border:1px solid rgba(255,255,255,.07);background:linear-gradient(90deg,rgba(85,255,155,.08),rgba(69,223,255,.04),rgba(255,255,255,.02));display:flex;justify-content:space-between;gap:18px;align-items:center;flex-wrap:wrap}.banner-title{font-size:22px;font-weight:900;letter-spacing:.02em}.banner-sub{color:#92a5a0;font-size:13px;margin-top:6px}
-.miner{min-height:430px;padding:18px;display:flex;flex-direction:column;position:relative;background:radial-gradient(circle at 50% 37%,rgba(85,255,155,.09),transparent 34%),linear-gradient(180deg,#09111d,#060b12)}.miner-visual{flex:1;min-height:255px;position:relative;display:grid;place-items:center;overflow:hidden;border:1px solid rgba(255,255,255,.055);border-radius:18px;background:#060b12}.ring{position:absolute;border-radius:50%;border:1px solid rgba(85,255,155,.14);animation:spin linear infinite}.ring:after{content:"";position:absolute;width:7px;height:7px;border-radius:50%;background:var(--green);top:-4px;left:50%;box-shadow:0 0 13px var(--green)}.r1{width:240px;height:240px;animation-duration:13s}.r2{width:185px;height:185px;animation-duration:8s;animation-direction:reverse}.r3{width:128px;height:128px;animation-duration:5s}
-.core{width:104px;height:104px;border-radius:28px;display:grid;place-items:center;z-index:2;background:radial-gradient(circle at 30% 22%,rgba(85,255,155,.19),transparent 35%),#0c1922;border:1px solid rgba(85,255,155,.22);box-shadow:0 0 45px rgba(85,255,155,.10),inset 0 0 28px rgba(85,255,155,.06)}.core svg{width:56px;height:56px}
-.mining .ring{animation-duration:.6s}.mining .r2{animation-duration:.42s}.mining .r3{animation-duration:.3s}.mining .core{animation:pulse .75s ease-in-out infinite}@keyframes spin{to{transform:rotate(360deg)}}@keyframes pulse{50%{transform:scale(1.07);box-shadow:0 0 65px rgba(85,255,155,.25)}}
-.hash-stream{position:absolute;inset:0;overflow:hidden;pointer-events:none;opacity:.45}.hash-stream span{position:absolute;font:10px ui-monospace,monospace;color:#48eaaa;white-space:nowrap;animation:drift linear forwards}@keyframes drift{from{transform:translateX(-130%);opacity:0}15%{opacity:.7}85%{opacity:.7}to{transform:translateX(120vw);opacity:0}}
-.miner-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.metric{padding:11px;border:1px solid rgba(255,255,255,.055);border-radius:13px;background:rgba(255,255,255,.025)}.metric small{display:block;color:#667e79;text-transform:uppercase;letter-spacing:.09em;font-size:9px;margin-bottom:6px}.metric strong{font:700 14px ui-monospace,monospace}
-.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:10px}.stat{padding:15px;border:1px solid rgba(255,255,255,.065);border-radius:16px;background:rgba(10,16,25,.86)}.stat small{display:block;color:#728883;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px}.stat strong{font-size:18px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.stat .tiny{font:10px ui-monospace,monospace;color:#68807a;margin-top:5px}
-.content{display:grid;grid-template-columns:1.08fr .92fr;gap:16px;margin-top:16px}.box{padding:18px}.box-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.box h2{font-size:16px;margin:0;letter-spacing:.01em}.terminal{height:330px;border:1px solid rgba(255,255,255,.055);background:#04080d;border-radius:15px;padding:13px;overflow:auto;font:11px/1.6 ui-monospace,monospace;color:#78daa9}.terminal .bad{color:#ff7d8c}.terminal .good{color:#76ffad}.terminal .warn{color:#ffd36b}.terminal .muted{color:#637871}.terminal::-webkit-scrollbar{width:7px}.terminal::-webkit-scrollbar-thumb{background:#152536;border-radius:20px}
-.controls{display:grid;gap:10px}.control{padding:13px;border:1px solid rgba(255,255,255,.06);border-radius:14px;background:rgba(255,255,255,.025)}.control-row{display:flex;justify-content:space-between;gap:15px;align-items:center}.control-label{color:#798d88;font-size:11px}.control-value{font:700 12px ui-monospace,monospace;text-align:right;word-break:break-all}.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:1px}.progress{height:8px;border-radius:999px;background:#071019;overflow:hidden;border:1px solid rgba(255,255,255,.04);margin-top:9px}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--cyan));transition:width .2s}.notice{padding:12px 13px;border-radius:13px;border:1px solid rgba(255,200,87,.13);background:rgba(255,200,87,.045);color:#c8b683;font-size:11px;line-height:1.55}
-.alert-control{padding:13px;border:1px solid rgba(69,223,255,.12);border-radius:14px;background:rgba(69,223,255,.035)}
-.alert-control .control-row{gap:10px}
-.alert-state{font:800 11px ui-monospace,monospace;color:#738782}
-.alert-state.on{color:var(--green)}
-.alert-help{color:#6f837e;font-size:10px;line-height:1.5;margin-top:8px}
-.alert-pulse{animation:alertGlow .75s ease-in-out infinite alternate}
-@keyframes alertGlow{from{box-shadow:0 0 0 rgba(85,255,155,0)}to{box-shadow:0 0 30px rgba(85,255,155,.18)}}
-.footer{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-top:18px;color:#5e736e;font-size:11px;padding:0 5px}.live{color:var(--green)}.yellow{color:var(--yellow)}.red{color:var(--red)}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HASHCATS — Mine</title>
+  <meta name="description" content="HASHCATS — 100% free mint NFT mining on ARC." />
+  <style>
+    :root{
+      --bg:#04050a;
+      --panel:#1b1f29;
+      --panel2:#212633;
+      --line:#2e3443;
+      --line2:#3f4658;
+      --green:#a7d65c;
+      --green2:#7ab654;
+      --cyan:#7ad9e8;
+      --cyan2:#4bb9ca;
+      --text:#e9edf8;
+      --muted:#9aa2b7;
+      --yellow:#f0d35b;
+      --danger:#ff8a7a;
+    }
 
-.security-strip{margin-top:11px;display:flex;gap:8px;flex-wrap:wrap}
-.security-chip{font:10px ui-monospace,monospace;color:#9eb5af;border:1px solid rgba(85,255,155,.12);background:rgba(85,255,155,.04);padding:7px 9px;border-radius:999px}
-.modal-backdrop{position:fixed;inset:0;z-index:1000;display:none;place-items:center;padding:18px;background:rgba(1,4,7,.82);backdrop-filter:blur(12px)}
-.modal-backdrop.show{display:grid}
-.claim-modal{width:min(560px,100%);border:1px solid rgba(85,255,155,.20);border-radius:24px;background:linear-gradient(180deg,#0e1821,#080d13);box-shadow:0 25px 100px rgba(0,0,0,.65),0 0 55px rgba(85,255,155,.08);overflow:hidden}
-.claim-head{padding:22px 22px 16px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:flex-start;gap:18px}
-.claim-icon{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:rgba(85,255,155,.07);border:1px solid rgba(85,255,155,.16)}
-.claim-title{font-size:25px;font-weight:950;letter-spacing:-.02em;margin:0}.claim-sub{font-size:12px;color:#879b96;margin-top:5px}
-.claim-body{padding:20px 22px}.claim-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
-.claim-item{padding:12px;border-radius:13px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.055)}
-.claim-item small{display:block;color:#718680;font-size:9px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
-.claim-item strong{font:700 13px ui-monospace,monospace;word-break:break-all}
-.claim-status{padding:11px 12px;border-radius:12px;background:rgba(85,255,155,.055);border:1px solid rgba(85,255,155,.12);color:#9de5ba;font-size:11px;line-height:1.5;margin-top:10px}
-.claim-status.stale{background:rgba(255,200,87,.055);border-color:rgba(255,200,87,.17);color:#e8cb7d}
-.claim-status.error{background:rgba(255,101,119,.055);border-color:rgba(255,101,119,.17);color:#ff9daa}
-.claim-actions{display:grid;grid-template-columns:1fr auto;gap:9px;margin-top:15px}
-.claim-foot{padding:0 22px 20px;color:#61746f;font-size:10px;line-height:1.5}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      background:
+        radial-gradient(circle at 15% 0%, rgba(122,217,232,.05), transparent 20%),
+        radial-gradient(circle at 85% 10%, rgba(167,214,92,.05), transparent 18%),
+        var(--bg);
+      color:var(--text);
+      font-family: "Courier New", monospace;
+      min-height:100vh;
+      image-rendering: pixelated;
+      letter-spacing:.02em;
+    }
+    a{text-decoration:none;color:inherit}
+    .wrap{width:min(1220px, calc(100% - 28px));margin:auto}
 
-@media(max-width:1050px){.hero,.content{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:700px){.wrap{width:min(100% - 18px,1320px)}.nav{align-items:flex-start}.brand-sub{display:none}.nav-right .badge{display:none}.hero-copy{padding:22px;min-height:auto}.miner{min-height:405px}.stats{grid-template-columns:1fr 1fr}.miner-cards{grid-template-columns:1fr}.action-grid{grid-template-columns:1fr}h1{font-size:46px}.banner{padding:15px}}
-</style>
+    /* pixel helpers */
+    .pixel-box{
+      border:2px solid var(--line2);
+      box-shadow:
+        inset 0 0 0 2px rgba(0,0,0,.35),
+        0 0 0 1px rgba(255,255,255,.02);
+      position:relative;
+    }
+    .pixel-box.green{
+      border-color:var(--green2);
+      box-shadow:
+        inset 0 0 0 2px rgba(0,0,0,.35),
+        0 0 0 1px rgba(167,214,92,.25);
+    }
+    .pixel-box.cyan{
+      border-color:var(--cyan2);
+      box-shadow:
+        inset 0 0 0 2px rgba(0,0,0,.35),
+        0 0 0 1px rgba(122,217,232,.28);
+    }
+    .pixel-tab{
+      display:inline-block;
+      padding:10px 16px;
+      background:var(--green);
+      color:#10150d;
+      font-weight:800;
+      text-transform:uppercase;
+      border:2px solid #7ea844;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.15);
+    }
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:12px 18px;
+      min-height:46px;
+      font-weight:800;
+      text-transform:uppercase;
+      border:2px solid #6ea24f;
+      background:var(--green);
+      color:#10150d;
+      cursor:pointer;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.15);
+    }
+    .btn.secondary{
+      background:#252b39;
+      color:#dbe7ff;
+      border-color:#54607b;
+    }
+    .btn:hover{filter:brightness(1.05)}
+
+    nav{
+      border-bottom:2px solid #2a2f3d;
+      background:#080b12;
+      position:sticky;top:0;z-index:20;
+    }
+    .nav-inner{
+      height:74px;
+      display:flex;align-items:center;justify-content:space-between;gap:18px;
+    }
+    .brand{
+      display:flex;align-items:center;gap:12px;font-size:18px;font-weight:800;
+      text-transform:uppercase;
+    }
+    .brand .icon{
+      width:28px;height:28px;border:2px solid var(--green2);
+      display:grid;place-items:center;background:#171d13;
+      font-size:16px;
+    }
+    .nav-left{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+    .nav-links{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+    .nav-links a{
+      padding:10px 12px;color:#d9e4ff;font-size:13px;text-transform:uppercase;font-weight:800;
+    }
+    .nav-links a.active{
+      background:var(--green);color:#10150d;border:2px solid #6ea24f;
+    }
+    .nav-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .ticker{
+      background:#202634;padding:11px 16px;border:2px solid #49536a;
+      font-size:13px;text-transform:uppercase;color:#dce8ff;min-width:245px;text-align:center;
+    }
+    .ticker b{color:var(--cyan)}
+
+    .intro{
+      padding:34px 0 22px;
+      border-top:1px dashed #303646;
+    }
+    h1{
+      margin:0 0 14px;
+      font-size:56px;
+      line-height:.92;
+      text-transform:uppercase;
+      letter-spacing:.03em;
+    }
+    .lead{
+      max-width:680px;
+      color:#bbc5db;
+      font-size:18px;
+      line-height:1.65;
+      margin-bottom:20px;
+    }
+    .info-row{
+      display:flex;gap:12px;flex-wrap:wrap;
+      color:#b6c0d8;font-size:13px;text-transform:uppercase;
+    }
+    .chip{
+      padding:9px 12px;background:#171b25;border:2px solid #2c3342;
+    }
+    .chip b{color:var(--green)}
+
+    .main-grid{
+      display:grid;grid-template-columns:1fr;
+      gap:18px;
+      padding-bottom:28px;
+    }
+
+    .mine-panel{
+      background:var(--panel);
+      padding:0;
+    }
+    .panel-head{
+      display:flex;align-items:center;justify-content:space-between;
+      background:var(--green2);
+      color:#11170d;
+      padding:10px 14px;
+      text-transform:uppercase;
+      font-weight:800;
+      font-size:14px;
+    }
+    .panel-body{
+      padding:18px;
+      display:grid;
+      grid-template-columns:320px 1fr;
+      gap:18px;
+      background:var(--panel);
+    }
+    .art-box{
+      background:#121621;
+      border:2px solid #4f566b;
+      padding:10px;
+      min-height:320px;
+    }
+    .art-frame{
+      height:100%;
+      border:2px solid #626b81;
+      background:
+        linear-gradient(180deg,#6f5f7c 0%, #5d536b 100%);
+      display:grid;place-items:center;
+      overflow:hidden;
+    }
+
+    /* faux pixel cat */
+    .cat-svg{
+      width:100%;height:auto;max-width:270px;
+      filter: drop-shadow(0 0 0 rgba(0,0,0,0));
+      image-rendering:pixelated;
+      shape-rendering:crispEdges;
+    }
+
+    .mine-right{
+      display:flex;flex-direction:column;gap:16px;
+    }
+    .barline{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      color:#dbe6ff;font-size:13px;text-transform:uppercase;font-weight:800;
+    }
+    .color-strip{
+      display:grid;grid-template-columns:repeat(40, 1fr);gap:2px;margin-top:8px;
+    }
+    .color-strip span{height:18px;background:#50607c}
+    .color-strip span:nth-child(4n){background:#a76b3b}
+    .color-strip span:nth-child(5n){background:#57a6c8}
+    .color-strip span:nth-child(3n){background:#8d5ea4}
+    .color-strip span:nth-child(7n){background:#7cb465}
+    .progress{
+      display:grid;grid-template-columns:repeat(36, 1fr);gap:2px;margin-top:8px
+    }
+    .progress span{height:17px;background:#484e5e}
+    .progress span.hit{background:var(--green)}
+    .small-text{font-size:13px;color:#c7d0e7;line-height:1.6}
+    .muted{color:var(--muted)}
+
+    .stats-grid{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+    }
+    .stat{
+      padding:14px;border:2px solid #32394a;background:#1a1f2a;
+      min-height:86px;
+    }
+    .stat .label{
+      font-size:12px;text-transform:uppercase;color:#a4aec5;font-weight:800
+    }
+    .stat .value{
+      font-size:27px;margin-top:10px;font-weight:800;color:#fff
+    }
+    .stat .value.green{color:var(--green)}
+    .controls{
+      display:flex;justify-content:space-between;gap:18px;align-items:end;flex-wrap:wrap
+    }
+    .toggle-group{
+      display:flex;gap:8px;align-items:center;flex-wrap:wrap
+    }
+    .mini-btn{
+      min-width:82px;text-align:center;padding:12px 14px;border:2px solid #57607a;background:#444b60;
+      color:#dfe8ff;font-weight:800;text-transform:uppercase;
+    }
+    .mini-btn.active{background:var(--green);border-color:#7ba349;color:#10150d}
+    .slider-wrap{min-width:260px;flex:1}
+    input[type=range]{width:100%}
+    .cost{
+      min-width:175px;
+      font-size:16px;
+      color:var(--green);
+      font-weight:800;
+      text-transform:uppercase;
+    }
+
+    .lower-grid{
+      display:grid;grid-template-columns:1fr 1fr;gap:18px;
+    }
+    .section-head{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:12px 14px;
+      font-size:14px;
+      text-transform:uppercase;
+      font-weight:800;
+      border-bottom:2px solid var(--line2);
+    }
+    .section-head.cyan{background:var(--cyan);color:#0e171b;border-bottom-color:#4aa7b8}
+    .section-head.gray{background:#3f4252;color:#fff;border-bottom-color:#5c6276}
+    .panel-content{padding:16px;background:var(--panel)}
+    .chart{
+      height:180px;
+      display:flex;align-items:flex-end;gap:3px;
+      padding:16px 0 6px;
+    }
+    .chart span{
+      flex:1;background:#6b7e43;border:1px solid #879d5d;
+    }
+    .network-cols{
+      display:grid;grid-template-columns:1fr 1fr;gap:16px;
+    }
+    .metric-list{
+      display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;
+      padding-top:4px;
+    }
+    .metric .k{font-size:12px;text-transform:uppercase;color:#acb6cd;font-weight:800}
+    .metric .v{font-size:28px;margin-top:6px;font-weight:800}
+    .anchor{
+      margin-top:18px;padding-top:16px;border-top:2px dashed #394153
+    }
+    .code-line{
+      color:#cfd9f0;word-break:break-all;font-size:14px;line-height:1.5
+    }
+
+    .mints-panel{background:var(--panel)}
+    .mint-head{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:12px 14px;font-size:14px;font-weight:800;text-transform:uppercase;
+      background:#3f4252;border-bottom:2px solid #5c6276;
+    }
+    .mint-head a{color:var(--green)}
+    .mint-grid{
+      padding:16px;
+      display:grid;grid-template-columns:repeat(10,1fr);gap:10px;
+    }
+    .mint-card{
+      background:#232838;border:2px solid #3a4253;padding:4px;
+    }
+    .mint-card .thumb{
+      width:100%;aspect-ratio:1/1;background:#5a5366;display:grid;place-items:center;overflow:hidden
+    }
+    .mint-card svg{width:100%;height:100%}
+    .mint-meta{
+      display:flex;justify-content:space-between;gap:8px;
+      font-size:11px;color:#d7def0;padding-top:4px
+    }
+    .mint-meta b{color:var(--green)}
+
+    footer{
+      padding:30px 0 44px;color:#8892a9;font-size:13px
+    }
+    .foot{
+      display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;
+      border-top:2px solid #232838;padding-top:20px
+    }
+    .foot a{color:var(--cyan)}
+
+    @media (max-width: 1080px){
+      .panel-body{grid-template-columns:1fr}
+      .lower-grid{grid-template-columns:1fr}
+      .mint-grid{grid-template-columns:repeat(5,1fr)}
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width: 720px){
+      .nav-inner{height:auto;padding:12px 0}
+      h1{font-size:38px}
+      .lead{font-size:15px}
+      .ticker{min-width:unset}
+      .stats-grid{grid-template-columns:1fr}
+      .network-cols{grid-template-columns:1fr}
+      .metric-list{grid-template-columns:1fr 1fr}
+      .mint-grid{grid-template-columns:repeat(3,1fr)}
+    }
+    @media (max-width: 460px){
+      .wrap{width:min(100% - 16px, 1220px)}
+      .mint-grid{grid-template-columns:repeat(2,1fr)}
+      .metric-list{grid-template-columns:1fr}
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
-<nav class="nav">
-  <div class="brand">
-    <img src="./logo.svg?v=3" alt="HASH CATS" style="width:220px;max-width:42vw;height:auto;display:block">
-  </div>
-  <div class="nav-right">
-    <span class="badge"><span class="dot"></span>MAINNET</span>
-    <span class="badge" id="gpuBadge">GPU: checking…</span>
-    <button class="btn btn-primary" id="connectBtn">Connect Wallet</button>
-  </div>
-</nav>
-
-<section class="hero">
-  <div class="panel hero-copy">
-    <span class="kicker"><span class="dot"></span> REAL WEBGPU PROOF-OF-WORK</span>
-    <h1>MINE IT.<br><em>DON'T MINT IT.</em></h1>
-    <p class="lead">Your GPU searches real Keccak-256 nonces locally. A transaction is requested only after this browser has found and independently verified a valid proof for the live HASH CATS challenge.</p>
-    <div class="hero-actions">
-      <button class="btn btn-primary" id="heroConnect">Connect Wallet</button>
-      <a class="btn btn-dark" target="_blank" rel="noopener" href="https://x.com/hashcats_bsc">X / Twitter</a>
-      <a class="btn btn-dark" target="_blank" rel="noopener" href="https://bscscan.com/address/0x971a63cc74d28210a09aa0914483c6116473e6b3">BscScan</a>
-      <a class="btn btn-dark" href="/HASH_CATS_CLI_BUILD_FROM_SOURCE_GUIDE.md" download="HASH_CATS_CLI_BUILD_FROM_SOURCE_GUIDE.md">⬇ CLI Miner Guide</a>
-    </div>
-    <div class="micro"><span>REWARD <b>237,500 HASHCATS</b></span><span>WINNER FEE <b>0.000341 BNB</b></span><span>MAX <b>50 WINS / WALLET</b></span></div>
-    <div class="security-strip">
-      <span class="security-chip">NO AUTO-CONNECT</span>
-      <span class="security-chip">NO AUTO-SIGN</span>
-      <span class="security-chip">NO TOKEN APPROVALS</span>
-      <span class="security-chip">CLAIM REQUIRES YOUR CLICK</span>
-    </div>
-    <div class="banner">
-      <div>
-        <div class="banner-title">HASH CATS GPU MINING</div>
-        <div class="banner-sub">Real local GPU proof-of-work on BNB Chain. No mining fee unless a valid proof is found.</div>
+  <nav>
+    <div class="wrap nav-inner">
+      <div class="nav-left">
+        <a class="brand" href="#">
+          <span class="icon">🐱</span>
+          <span>HASHCATS</span>
+        </a>
+        <div class="nav-links">
+          <a href="#" class="active">Mine</a>
+          <a href="#collection">Collection</a>
+          <a href="#token">$HASH</a>
+          <a href="#stake">Stake</a>
+          <a href="#docs">Docs</a>
+        </div>
       </div>
-      <div class="badge">Contract 0x971a63…e6b3</div>
-    </div>
-  </div>
 
-  <div class="panel miner" id="minerPanel">
-    <div class="miner-visual">
-      <div class="hash-stream" id="hashStream"></div>
-      <div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div>
-      <div class="core">
-        <svg viewBox="0 0 64 64" aria-hidden="true">
-          <path d="M18 24l7-8 7 7 7-7 7 8v16c0 4.4-3.6 8-8 8H26c-4.4 0-8-3.6-8-8V24z" fill="none" stroke="#55ff9b" stroke-width="3.5" stroke-linejoin="round"/>
-          <circle cx="27" cy="33" r="2.6" fill="#55ff9b"/>
-          <circle cx="37" cy="33" r="2.6" fill="#55ff9b"/>
-          <path d="M28 40c2.2 2 5.8 2 8 0" fill="none" stroke="#55ff9b" stroke-width="3" stroke-linecap="round"/>
+      <div class="nav-right">
+        <div class="ticker"><b>64 274 053</b> / 9 329 mined</div>
+        <a class="btn" href="https://x.com/hashcats_ARC" target="_blank" rel="noopener">Connect / X</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <section class="intro">
+      <h1>MINE A CAT</h1>
+      <div class="lead">
+        HASHCATS is a <b>100% free mint</b> NFT mining project on <b>ARC</b>.
+        This preview uses a retro dashboard UI inspired by classic pixel-miner interfaces:
+        connect wallet, monitor the target, watch latest mints, and prepare for the mining layer.
+      </div>
+      <div class="info-row">
+        <div class="chip">Project: <b>Independent</b></div>
+        <div class="chip">Network: <b>ARC</b></div>
+        <div class="chip">Mint Price: <b>FREE</b></div>
+        <div class="chip">Official X: <b>@hashcats_ARC</b></div>
+      </div>
+    </section>
+
+    <section class="main-grid">
+      <div class="mine-panel pixel-box green">
+        <div class="panel-head">
+          <span>Miner</span>
+          <span>■ Idle</span>
+        </div>
+
+        <div class="panel-body">
+          <div class="art-box">
+            <div class="art-frame">
+              <svg class="cat-svg" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+                <rect width="220" height="220" fill="#6c5c79"/>
+                <rect x="0" y="0" width="220" height="220" fill="none" stroke="#473f54" stroke-width="10"/>
+                <circle cx="110" cy="96" r="70" fill="#404657"/>
+                <polygon points="64,70 80,40 97,69" fill="#767a8a"/>
+                <polygon points="123,69 140,40 156,71" fill="#767a8a"/>
+                <polygon points="72,66 80,50 89,67" fill="#cb7d98"/>
+                <polygon points="132,67 140,50 148,68" fill="#cb7d98"/>
+                <rect x="68" y="78" width="84" height="72" rx="24" fill="#7c8190"/>
+                <ellipse cx="90" cy="106" rx="22" ry="24" fill="#98ecf0"/>
+                <ellipse cx="130" cy="106" rx="22" ry="24" fill="#98ecf0"/>
+                <rect x="89" y="82" width="2" height="48" fill="#20252e"/>
+                <rect x="129" y="82" width="2" height="48" fill="#20252e"/>
+                <polygon points="110,112 120,122 110,127 100,122" fill="#ff8fb1"/>
+                <rect x="96" y="128" width="28" height="18" fill="#191d25"/>
+                <rect x="104" y="130" width="5" height="14" fill="#ffffff"/>
+                <rect x="112" y="130" width="5" height="14" fill="#ffffff"/>
+                <line x1="69" y1="121" x2="38" y2="116" stroke="#d9dfe9" stroke-width="3"/>
+                <line x1="69" y1="129" x2="35" y2="132" stroke="#d9dfe9" stroke-width="3"/>
+                <line x1="151" y1="121" x2="182" y2="116" stroke="#d9dfe9" stroke-width="3"/>
+                <line x1="151" y1="129" x2="185" y2="132" stroke="#d9dfe9" stroke-width="3"/>
+                <rect x="18" y="160" width="58" height="38" fill="#596747"/>
+                <rect x="40" y="144" width="15" height="32" fill="#869463"/>
+                <rect x="146" y="130" width="8" height="64" fill="#7b5b3f"/>
+                <path d="M152 145 C170 140, 178 150, 180 163 C173 168,165 166,155 158 Z" fill="#f1d595"/>
+                <rect x="171" y="163" width="16" height="7" fill="#c94a3e"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="mine-right">
+            <div>
+              <div class="barline">
+                <span>Last Cat Mined</span>
+                <span><span style="color:var(--yellow)">39</span> / <span style="color:var(--green)">36</span> bits</span>
+              </div>
+              <div class="color-strip">
+                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <div class="small-text" style="margin-top:8px">0xe859044e94fed02e026334655f9607218604f3ba0f239223f39fdaa9c8c14b9e</div>
+            </div>
+
+            <div>
+              <div class="barline">
+                <span>Target to Beat</span>
+                <span><span style="color:var(--green)">36</span> Leading Zero Bits</span>
+              </div>
+              <div class="progress">
+                <span class="hit"></span><span class="hit"></span><span class="hit"></span><span class="hit"></span><span class="hit"></span><span class="hit"></span>
+                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+
+            <div class="small-text">
+              <div><b>MINED BY</b> 0x7c4...5294 <span class="muted">2m ago</span></div>
+              <div class="muted" style="margin-top:4px">Your miner will appear here as soon as you start.</div>
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat">
+                <div class="label">Speed</div>
+                <div class="value">0 H/s</div>
+              </div>
+              <div class="stat">
+                <div class="label">Cats Seen</div>
+                <div class="value">0</div>
+              </div>
+              <div class="stat">
+                <div class="label">Expected Wait</div>
+                <div class="value">—</div>
+              </div>
+              <div class="stat">
+                <div class="label">Chance / Min</div>
+                <div class="value">—</div>
+              </div>
+            </div>
+
+            <div class="controls">
+              <div class="toggle-group">
+                <div>
+                  <div class="muted" style="font-size:12px;text-transform:uppercase;font-weight:800;margin-bottom:6px">Machine</div>
+                  <div style="display:flex;gap:8px">
+                    <div class="mini-btn active">CPU</div>
+                    <div class="mini-btn">GPU</div>
+                  </div>
+                </div>
+
+                <div class="slider-wrap">
+                  <div class="muted" style="font-size:12px;text-transform:uppercase;font-weight:800;margin-bottom:6px">Cores to Use: 4</div>
+                  <input type="range" min="1" max="16" value="4" />
+                </div>
+              </div>
+
+              <div style="display:flex;gap:14px;align-items:end;flex-wrap:wrap">
+                <div class="cost">Next Cat Costs<br>0.0000 ARC</div>
+                <button class="btn" onclick="alert('Preview only — connect wallet module will be added in production.')">Connect Wallet</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lower-grid">
+        <div class="pixel-box">
+          <div class="section-head gray">
+            <span>Why It Gets Harder</span>
+            <span>One Floor = Twice The Work</span>
+          </div>
+          <div class="panel-content">
+            <div style="font-size:14px;text-transform:uppercase;font-weight:800;color:#dfe6f6">Hashes by Leading Zero Bits</div>
+            <div class="chart">
+              <span style="height:92%"></span><span style="height:88%"></span><span style="height:85%"></span><span style="height:82%"></span>
+              <span style="height:79%"></span><span style="height:75%"></span><span style="height:73%"></span><span style="height:70%"></span>
+              <span style="height:67%"></span><span style="height:64%"></span><span style="height:61%"></span><span style="height:58%"></span>
+              <span style="height:55%"></span><span style="height:52%"></span><span style="height:49%"></span><span style="height:46%"></span>
+              <span style="height:43%"></span><span style="height:40%"></span><span style="height:37%"></span><span style="height:34%"></span>
+              <span style="height:31%"></span><span style="height:28%"></span><span style="height:25%"></span><span style="height:22%"></span>
+              <span style="height:19%"></span><span style="height:16%"></span><span style="height:13%"></span><span style="height:10%"></span>
+            </div>
+            <div class="small-text">
+              The shape above is one average cat. Each new floor increases total work required.
+              Your attempts take place inside a live mining epoch and compete against the current target.
+            </div>
+            <div style="margin-top:20px" class="small-text">
+              <b>Epoch 10 · Floor 36 Bits</b><br>
+              7,047 cats until the floor rises one bit and every search doubles with it.
+            </div>
+          </div>
+        </div>
+
+        <div class="pixel-box cyan">
+          <div class="section-head cyan">
+            <span>Network</span>
+            <span>36 Bits</span>
+          </div>
+          <div class="panel-content">
+            <div class="network-cols">
+              <div>
+                <div class="metric-list">
+                  <div class="metric">
+                    <div class="k">Difficulty</div>
+                    <div class="v">36</div>
+                  </div>
+                  <div class="metric">
+                    <div class="k">Mined</div>
+                    <div class="v">9 329</div>
+                  </div>
+                  <div class="metric">
+                    <div class="k">Streak</div>
+                    <div class="v">0</div>
+                  </div>
+                  <div class="metric">
+                    <div class="k">To The Wall</div>
+                    <div class="v">7 047</div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div class="metric-list">
+                  <div class="metric">
+                    <div class="k">Your Streak</div>
+                    <div class="v">0</div>
+                  </div>
+                  <div class="metric">
+                    <div class="k">Since Last</div>
+                    <div class="v">2m 32s</div>
+                  </div>
+                  <div class="metric">
+                    <div class="k">Anchor</div>
+                    <div class="v" style="font-size:22px;color:var(--cyan)">#64 274 053</div>
+                  </div>
+                  <div class="metric">
+                    <div class="k">Chain</div>
+                    <div class="v" style="font-size:22px">ARC</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="anchor">
+              <div class="small-text"><b>ANCHOR</b></div>
+              <div class="code-line">0x705cde96f4710a416cc5075bf1...9c34db66bec2e032e5c38_</div>
+              <div class="small-text muted" style="margin-top:10px">
+                Hash of a recent ARC block used as mining anchor. Your address can be included in the work to discourage copycat submissions.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mints-panel pixel-box" id="collection">
+        <div class="mint-head">
+          <span>Latest Mints</span>
+          <a href="https://x.com/hashcats_ARC" target="_blank" rel="noopener">All Cats →</a>
+        </div>
+
+        <div class="mint-grid">
+          <!-- 16 cards -->
+          
+    <div class="mint-card">
+      <div class="thumb">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" fill="#6c5c79"/>
+          <circle cx="50" cy="45" r="28" fill="#7c8190"/>
+          <polygon points="30,30 38,16 46,31" fill="#7c8190"/>
+          <polygon points="54,31 62,16 70,30" fill="#7c8190"/>
+          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
+          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
+          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
         </svg>
       </div>
+      <div class="mint-meta"><span>#9329</span><b>39</b></div>
     </div>
-    <div class="miner-cards">
-      <div class="metric"><small>REAL HASHRATE</small><strong id="hashrate">0 H/s</strong></div>
-      <div class="metric"><small>HASHES TESTED</small><strong id="tested">0</strong></div>
-      <div class="metric"><small>GPU BATCH</small><strong id="batchStat">—</strong></div>
-    </div>
-  </div>
-</section>
+    
 
-
-<section class="panel" style="margin-top:16px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap">
-  <div style="min-width:240px;flex:1">
-    <div style="font-size:11px;font-weight:900;letter-spacing:.12em;color:#55ff9b;margin-bottom:7px">NVIDIA CUDA CLI MINER</div>
-    <div style="font-size:22px;font-weight:950;letter-spacing:-.02em">CLI MINER — BUILD FROM SOURCE</div>
-    <div style="color:#8fa39e;font-size:12px;line-height:1.6;margin-top:7px;max-width:760px">
-      Advanced miners can compile the HASH CATS Windows CUDA miner locally. No precompiled mystery EXE, no seed phrase, and no private key required for mining.
-    </div>
-  </div>
-  <div style="display:flex;gap:9px;flex-wrap:wrap">
-    <a class="btn btn-primary" href="/HASH_CATS_CLI_BUILD_FROM_SOURCE_GUIDE.md" download="HASH_CATS_CLI_BUILD_FROM_SOURCE_GUIDE.md">Download CLI Guide (.md)</a>
-    <a class="btn btn-dark" href="/HASH_CATS_CLI_BUILD_FROM_SOURCE_GUIDE.md" target="_blank" rel="noopener">View Guide</a>
-  </div>
-</section>
-
-<section class="stats">
-  <div class="stat"><small>MINING</small><strong id="activated">—</strong><div class="tiny">contract state</div></div>
-  <div class="stat"><small>BLOCKS MINED</small><strong id="minedBlocks">—</strong><div class="tiny">/ 40,000</div></div>
-  <div class="stat"><small>POOL LEFT</small><strong id="poolLeft">—</strong><div class="tiny">HASHCATS</div></div>
-  <div class="stat"><small>DIFFICULTY</small><strong id="difficulty">—</strong><div class="tiny">expected hashes</div></div>
-  <div class="stat"><small>YOUR WINS LEFT</small><strong id="winsLeft">—</strong><div class="tiny">max 50</div></div>
-  <div class="stat"><small>NETWORK BLOCK</small><strong id="bscBlock">—</strong><div class="tiny">BNB Chain</div></div>
-</section>
-
-<section class="content">
-  <div class="panel box">
-    <div class="box-head"><h2>Mining Console</h2><span class="badge" id="minerState">IDLE</span></div>
-    <div class="terminal" id="terminal"></div>
-  </div>
-  <div class="panel box">
-    <div class="box-head"><h2>GPU Miner</h2><span class="badge" id="walletShort">NOT CONNECTED</span></div>
-    <div class="controls">
-      <div class="control"><div class="control-row"><span class="control-label">GPU</span><span class="control-value" id="gpuName">Waiting for WebGPU</span></div></div>
-      <div class="control"><div class="control-row"><span class="control-label">Challenge</span><span class="control-value" id="challenge">—</span></div></div>
-      <div class="control"><div class="control-row"><span class="control-label">Target</span><span class="control-value" id="targetView">—</span></div></div>
-      <div class="control"><div class="control-row"><span class="control-label">Current Nonce Range</span><span class="control-value" id="nonceRange">—</span></div></div>
-      <div class="control">
-        <div class="control-row"><span class="control-label">Batch progress</span><span class="control-value" id="batchMs">—</span></div>
-        <div class="progress"><span id="batchBar"></span></div>
+    <div class="mint-card">
+      <div class="thumb">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" fill="#55645a"/>
+          <circle cx="50" cy="45" r="28" fill="#6fc56c"/>
+          <polygon points="30,30 38,16 46,31" fill="#6fc56c"/>
+          <polygon points="54,31 62,16 70,30" fill="#6fc56c"/>
+          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
+          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
+          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
+        </svg>
       </div>
-      <div class="alert-control" id="alertControl">
-        <div class="control-row">
-          <div>
-            <div class="control-label">Hands-Free Alert Mode</div>
-            <div class="alert-help">Sound + desktop notification + flashing tab title when a valid block is found. Never auto-connects or auto-signs.</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:8px;flex:0 0 auto">
-            <span class="alert-state" id="alertState">OFF</span>
-            <button class="btn btn-dark" id="alertToggleBtn" type="button">Enable Alerts</button>
-          </div>
+      <div class="mint-meta"><span>#9328</span><b>37</b></div>
+    </div>
+    
+
+    <div class="mint-card">
+      <div class="thumb">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" fill="#686c7c"/>
+          <circle cx="50" cy="45" r="28" fill="#9ea8ba"/>
+          <polygon points="30,30 38,16 46,31" fill="#9ea8ba"/>
+          <polygon points="54,31 62,16 70,30" fill="#9ea8ba"/>
+          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
+          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
+          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
+        </svg>
+      </div>
+      <div class="mint-meta"><span>#9327</span><b>39</b></div>
+    </div>
+    
+
+    <div class="mint-card">
+      <div class="thumb">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" fill="#825f88"/>
+          <circle cx="50" cy="45" r="28" fill="#ff93c6"/>
+          <polygon points="30,30 38,16 46,31" fill="#ff93c6"/>
+          <polygon points="54,31 62,16 70,30" fill="#ff93c6"/>
+          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
+          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
+          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
+        </svg>
+      </div>
+      <div class="mint-meta"><span>#9326</span><b>37</b></div>
+    </div>
+    
+
+    <div class="mint-card">
+      <div class="thumb">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" fill="#576d83"/>
+          <circle cx="50" cy="45" r="28" fill="#84b8e3"/>
+          <polygon points="30,30 38,16 46,31" fill="#84b8e3"/>
+          <polygon points="54,31 62,16 70,30" fill="#84b8e3"/>
+          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
+          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
+          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
+        </svg>
+      </div>
+      <div class="mint-meta"><span>#9325</span><b>35</b></div>
+    </div>
+    
+
+    <div class="mint-card">
+      <div class="thumb">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" fill="#7b6b4f"/>
+          <circle cx="50" cy="45" r="28" fill="#caa77e"/>
+          <polygon points="30,30 38,16 46,31" fill="#caa77e"/>
+          <polygon points="54,31 62,16 70,30" fill="#caa77e"/>
+          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
+          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
+          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
+        </svg>
+      </div>
+      <div class="mint-meta"><span>#9324</span><b>37</b></div>
+    </div>
+    
+
+    <div class="mint-card">
+      <div class="thumb">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" fill="#7085aa"/>
+          <circle cx="50" cy="45" r="28" fill="#c98ad6"/>
+          <polygon points="30,30 38,16 46,31" fill="#c98ad6"/>
+          <polygon points="54,31 62,16 70,30" fill="#c98ad6"/>
+          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
+          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
+          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
+        </svg>
+      </div>
+      <div class="mint-meta"><span>#9323</span><b>35</b></div>
+    </div>
+    
+
+    <div class="mint-card">
+      <div class="thumb">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" fill="#6d6249"/>
+          <circle cx="50" cy="45" r="28" fill="#d5b24f"/>
+          <polygon points="30,30 38,16 46,31" fill="#d5b24f"/>
+          <polygon points="54,31 62,16 70,30" fill="#d5b24f"/>
+          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
+          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
+          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
+        </svg>
+      </div>
+      <div class="mint-meta"><span>#9322</span><b>36</b></div>
+    </div>
+    
+
+    <div class="mint-card">
+      <div class="thumb">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" fill="#824a7c"/>
+          <circle cx="50" cy="45" r="28" fill="#ef93d8"/>
+          <polygon points="30,30 38,16 46,31" fill="#ef93d8"/>
+          <polygon points="54,31 62,16 70,30" fill="#ef93d8"/>
+          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
+          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
+          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
+        </svg>
+      </div>
+      <div class="mint-meta"><span>#9321</span><b>40</b></div>
+    </div>
+    
+
+    <div class="mint-card">
+      <div class="thumb">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" fill="#7f684e"/>
+          <circle cx="50" cy="45" r="28" fill="#af845b"/>
+          <polygon points="30,30 38,16 46,31" fill="#af845b"/>
+          <polygon points="54,31 62,16 70,30" fill="#af845b"/>
+          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
+          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
+          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
+        </svg>
+      </div>
+      <div class="mint-meta"><span>#9320</span><b>36</b></div>
+    </div>
+    
+
+    <div class="mint-card">
+      <div class="thumb">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" fill="#4e6078"/>
+          <circle cx="50" cy="45" r="28" fill="#72b5e1"/>
+          <polygon points="30,30 38,16 46,31" fill="#72b5e1"/>
+          <polygon points="54,31 62,16 70,30" fill="#72b5e1"/>
+          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
+          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
+          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
+        </svg>
+      </div>
+      <div class="mint-meta"><span>#9319</span><b>35</b></div>
+    </div>
+    
+
+    <div class="mint-card">
+      <div class="thumb">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" fill="#657a45"/>
+          <circle cx="50" cy="45" r="28" fill="#a8d36e"/>
+          <polygon points="30,30 38,16 46,31" fill="#a8d36e"/>
+          <polygon points="54,31 62,16 70,30" fill="#a8d36e"/>
+          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
+          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
+          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
+        </svg>
+      </div>
+      <div class="mint-meta"><span>#9318</span><b>35</b></div>
+    </div>
+    
+
+    <div class="mint-card">
+      <div class="thumb">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" fill="#6a4f43"/>
+          <circle cx="50" cy="45" r="28" fill="#ff8b57"/>
+          <polygon points="30,30 38,16 46,31" fill="#ff8b57"/>
+          <polygon points="54,31 62,16 70,30" fill="#ff8b57"/>
+          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
+          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
+          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
+        </svg>
+      </div>
+      <div class="mint-meta"><span>#9317</span><b>36</b></div>
+    </div>
+    
+
+    <div class="mint-card">
+      <div class="thumb">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" fill="#5c6070"/>
+          <circle cx="50" cy="45" r="28" fill="#9ca9d0"/>
+          <polygon points="30,30 38,16 46,31" fill="#9ca9d0"/>
+          <polygon points="54,31 62,16 70,30" fill="#9ca9d0"/>
+          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
+          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
+          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
+        </svg>
+      </div>
+      <div class="mint-meta"><span>#9316</span><b>38</b></div>
+    </div>
+    
+
+    <div class="mint-card">
+      <div class="thumb">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" fill="#4f6554"/>
+          <circle cx="50" cy="45" r="28" fill="#8ec18f"/>
+          <polygon points="30,30 38,16 46,31" fill="#8ec18f"/>
+          <polygon points="54,31 62,16 70,30" fill="#8ec18f"/>
+          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
+          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
+          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
+        </svg>
+      </div>
+      <div class="mint-meta"><span>#9315</span><b>35</b></div>
+    </div>
+    
+
+    <div class="mint-card">
+      <div class="thumb">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" fill="#7a5b64"/>
+          <circle cx="50" cy="45" r="28" fill="#df8fa1"/>
+          <polygon points="30,30 38,16 46,31" fill="#df8fa1"/>
+          <polygon points="54,31 62,16 70,30" fill="#df8fa1"/>
+          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
+          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
+          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
+          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
+          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
+        </svg>
+      </div>
+      <div class="mint-meta"><span>#9314</span><b>34</b></div>
+    </div>
+    
         </div>
       </div>
-      <div class="action-grid">
-        <button class="btn btn-primary" id="startBtn" disabled>Start GPU Mining</button>
-        <button class="btn btn-stop" id="stopBtn" disabled>Stop Mining</button>
-        <button class="btn btn-dark" id="activateBtn" disabled>Activate Mining</button>
-        <button class="btn btn-dark" id="refreshBtn">Refresh Chain</button>
+    </section>
+
+    <footer>
+      <div class="foot">
+        <span>© 2026 HASHCATS · Independent ARC project · 100% Free Mint</span>
+        <span>
+          Official X:
+          <a href="https://x.com/hashcats_ARC" target="_blank" rel="noopener">@hashcats_ARC</a>
+        </span>
       </div>
-      <div class="notice">WebGPU requires HTTPS and a supported browser/GPU. Mining happens locally. This site does not auto-connect a wallet, request token approvals, or open a signing request on page load. Optional Hands-Free Alert Mode only notifies you when a block is found; a wallet transaction is still created only after you click CLAIM REWARD.</div>
-    </div>
-  </div>
-</section>
-
-
-<div class="modal-backdrop" id="claimBackdrop" role="dialog" aria-modal="true" aria-labelledby="claimTitle">
-  <div class="claim-modal">
-    <div class="claim-head">
-      <div style="display:flex;gap:13px;align-items:center">
-        <div class="claim-icon">
-          <svg viewBox="0 0 64 64" width="34" height="34" aria-hidden="true">
-            <path d="M18 24l7-8 7 7 7-7 7 8v16c0 4.4-3.6 8-8 8H26c-4.4 0-8-3.6-8-8V24z" fill="none" stroke="#55ff9b" stroke-width="3.5" stroke-linejoin="round"/>
-            <circle cx="27" cy="33" r="2.6" fill="#55ff9b"/><circle cx="37" cy="33" r="2.6" fill="#55ff9b"/>
-          </svg>
-        </div>
-        <div><h2 class="claim-title" id="claimTitle">BLOCK FOUND</h2><div class="claim-sub">Valid HASH CATS Proof-of-Work found by your GPU.</div></div>
-      </div>
-      <span class="badge live">WINNER</span>
-    </div>
-    <div class="claim-body">
-      <div class="claim-grid">
-        <div class="claim-item"><small>Reward</small><strong>237,500 HASHCATS</strong></div>
-        <div class="claim-item"><small>Winner Fee</small><strong>0.000341 BNB + gas</strong></div>
-        <div class="claim-item"><small>Nonce</small><strong id="claimNonce">—</strong></div>
-        <div class="claim-item"><small>Proof Hash</small><strong id="claimHash">—</strong></div>
-      </div>
-      <div class="claim-status" id="claimStatus">Proof verified locally. No wallet transaction has been requested yet.</div>
-      <div class="claim-actions">
-        <button class="btn btn-primary" id="claimRewardBtn">CLAIM REWARD</button>
-        <button class="btn btn-dark" id="dismissClaimBtn">Dismiss</button>
-      </div>
-    </div>
-    <div class="claim-foot">Before sending, the site re-checks the live challenge and simulates the claim. If another miner has already won, the proof is marked stale and no transaction is requested.</div>
-  </div>
-</div>
-
-<div class="footer"><span>HASH CATS · minehashcats.xyz · <a href="/HASH_CATS_CLI_BUILD_FROM_SOURCE_GUIDE.md" download="HASH_CATS_CLI_BUILD_FROM_SOURCE_GUIDE.md">CLI Guide</a> · <a href="https://x.com/hashcats_bsc" target="_blank" rel="noopener">@hashcats_bsc</a> · BUILD 3.4</span><span>Contract 0x971a63cc74d28210a09aa0914483c6116473e6b3</span></div>
-</div>
-
-<script>
-"use strict";
-const CONTRACT="0x971a63cc74d28210a09aa0914483c6116473e6b3";
-const CHAIN_ID_HEX="0x38";
-const FEE=341000000000000n;
-const WORKGROUP=64;
-const BATCH_TARGET_MS=140;
-const MIN_BATCH=4096;
-const MAX_BATCH=1048576;
-const ABI=[
- "function miningActivated() view returns(bool)",
- "function currentChallenge() view returns(bytes32)",
- "function miningBlocksMined() view returns(uint256)",
- "function miningBlocksRemaining() view returns(uint256)",
- "function miningPoolRemaining() view returns(uint256)",
- "function currentDifficulty() view returns(uint256)",
- "function remainingWinsFor(address) view returns(uint256)",
- "function activateMining()",
- "function mine(uint256 nonce) payable returns(bytes32)"
-];
-const TARGET_IFACE=new ethers.Interface(["function target() view returns(uint256)"]);
-async function readPowTarget(){
-  const data=TARGET_IFACE.encodeFunctionData("target",[]);
-  const raw=await provider.call({to:CONTRACT,data});
-  const [value]=TARGET_IFACE.decodeFunctionResult("target",raw);
-  return value;
-}
-let provider,signer,readContract,writeContract,wallet;
-let gpu=null,mining=false,submitting=false;let pendingProof=null,pendingWatch=null;let handsFreeAlerts=false,audioCtx=null,alertTimer=null,titleTimer=null,originalTitle=document.title;
-let hashesTested=0n,nonceCursor=0n,batchSize=32768,currentChallenge=null,currentTarget=null,lastChainCheck=0;
-const $=id=>document.getElementById(id);
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-const fmt=n=>new Intl.NumberFormat("en-US").format(n);
-const short=s=>s?s.slice(0,8)+"…"+s.slice(-6):"—";
-function log(msg,cls=""){const d=document.createElement("div");d.className=cls;d.textContent=`[${new Date().toLocaleTimeString()}] ${msg}`;$("terminal").appendChild(d);$("terminal").scrollTop=$("terminal").scrollHeight;while($("terminal").children.length>180)$("terminal").firstChild.remove();}
-function formatRate(v){if(v>=1e9)return(v/1e9).toFixed(2)+" GH/s";if(v>=1e6)return(v/1e6).toFixed(2)+" MH/s";if(v>=1e3)return(v/1e3).toFixed(2)+" KH/s";return v.toFixed(0)+" H/s"}
-function rand64(){const a=new Uint32Array(2);crypto.getRandomValues(a);return(BigInt(a[1])<<32n)|BigInt(a[0]);}
-function hexBytes(hex){return ethers.getBytes(hex)}
-function packRateBlock(challenge,address){const bytes=new Uint8Array(136);bytes.set(hexBytes(challenge),0);bytes.set(hexBytes(address),32);bytes[84]=0x01;bytes[135]|=0x80;const words=new Uint32Array(34);for(let i=0;i<34;i++){const p=i*4;words[i]=(bytes[p]|(bytes[p+1]<<8)|(bytes[p+2]<<16)|(bytes[p+3]<<24))>>>0;}return words;}
-function targetWords(target){const h=target.toString(16).padStart(64,"0");const out=new Uint32Array(8);for(let i=0;i<8;i++)out[i]=parseInt(h.slice(i*8,i*8+8),16)>>>0;return out;}
-function u64parts(n){return{lo:Number(n&0xffffffffn)>>>0,hi:Number((n>>32n)&0xffffffffn)>>>0}}
-function hashWordsToHex(words){return"0x"+Array.from(words).map(x=>(x>>>0).toString(16).padStart(8,"0")).join("")}
-function decodeRevert(err){try{const raw=err?.data?.data||err?.data||err?.info?.error?.data||err?.error?.data; if(!raw||!readContract)return err?.shortMessage||err?.message||"Transaction reverted"; const parsed=readContract.interface.parseError(raw); if(!parsed)return err?.shortMessage||err?.message||"Transaction reverted"; return parsed.name+(parsed.args?.length?` (${parsed.args.map(x=>x.toString()).join(", ")})`:"");}catch{return err?.shortMessage||err?.message||"Transaction reverted";}}
-async function initProvider(){provider=new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");readContract=new ethers.Contract(CONTRACT,ABI,provider);log("Read-only RPC ready. Wallet has not been accessed.","muted");}
-async function switchBSC(){if(!window.ethereum)throw new Error("No EVM wallet detected.");try{await window.ethereum.request({method:"wallet_switchEthereumChain",params:[{chainId:CHAIN_ID_HEX}]});}catch(e){if(e.code!==4902)throw e;await window.ethereum.request({method:"wallet_addEthereumChain",params:[{chainId:CHAIN_ID_HEX,chainName:"BNB Smart Chain",nativeCurrency:{name:"BNB",symbol:"BNB",decimals:18},rpcUrls:["https://bsc-dataseed.binance.org/"],blockExplorerUrls:["https://bscscan.com"]}]});}}
-async function connect(){try{await switchBSC();await window.ethereum.request({method:"eth_requestAccounts"});provider=new ethers.BrowserProvider(window.ethereum);signer=await provider.getSigner();wallet=await signer.getAddress();readContract=new ethers.Contract(CONTRACT,ABI,provider);writeContract=new ethers.Contract(CONTRACT,ABI,signer);$("connectBtn").textContent=short(wallet);$("heroConnect").textContent="Wallet Connected";$("walletShort").textContent=short(wallet);log("Wallet connected: "+wallet,"good");window.ethereum.on?.("accountsChanged",()=>location.reload());window.ethereum.on?.("chainChanged",()=>location.reload());$("activateBtn").disabled=false;await refreshChain();if(gpu)$("startBtn").disabled=false;}catch(e){log(e.shortMessage||e.message,"bad");}}
-async function refreshChain(silent=false){try{if(!readContract)await initProvider();const calls=[readContract.miningActivated(),readContract.currentChallenge(),readPowTarget(),readContract.miningBlocksMined(),readContract.miningPoolRemaining(),readContract.currentDifficulty(),provider.getBlockNumber()];if(wallet)calls.push(readContract.remainingWinsFor(wallet));const r=await Promise.all(calls);const activated=r[0],challenge=r[1],target=r[2],mined=r[3],pool=r[4],diff=r[5],bn=r[6];currentChallenge=challenge;currentTarget=target;$("activated").textContent=activated?"LIVE":"NOT ACTIVE";$("activated").className=activated?"live":"yellow";if(wallet){$("activateBtn").disabled=activated;$("activateBtn").textContent=activated?"Mining Activated":"Activate Mining";} if($("activateBtn")){ $("activateBtn").disabled=!!activated || !wallet; $("activateBtn").textContent=activated?"Mining Active":"Activate Mining"; }$("minedBlocks").textContent=fmt(Number(mined));$("poolLeft").textContent=(Number(ethers.formatUnits(pool,18))/1e9).toFixed(3)+"B";$("difficulty").textContent=Number(diff)>=1e9?(Number(diff)/1e9).toFixed(2)+"B":fmt(Number(diff));$("bscBlock").textContent=fmt(bn);$("challenge").textContent=short(challenge);$("targetView").textContent=short("0x"+target.toString(16).padStart(64,"0"));if(wallet)$("winsLeft").textContent=fmt(Number(r[7]));if(!silent)log("Chain state refreshed.");return{activated,challenge,target,mined};}catch(e){if(!silent)log("Chain read failed: "+(e.shortMessage||e.message),"bad");throw e;}}
-async function activate(){if(!writeContract)return log("Connect wallet first.","warn");try{$("activateBtn").disabled=true;log("Submitting activateMining()…","warn");const tx=await writeContract.activateMining();log("Activation tx: "+tx.hash);await tx.wait();log("Mining activated on-chain.","good");await refreshChain();}catch(e){log("Activation failed: "+decodeRevert(e),"bad")}finally{$("activateBtn").disabled=false}}
-const SHADER=String.raw`
-struct Params { startLo:u32, startHi:u32, count:u32, pad:u32 }
-struct Result {
-  found: atomic<u32>,
-  nonceLo:u32, nonceHi:u32,
-  h0:u32,h1:u32,h2:u32,h3:u32,h4:u32,h5:u32,h6:u32,h7:u32
-}
-@group(0) @binding(0) var<storage,read> baseWords: array<u32>;
-@group(0) @binding(1) var<storage,read> powTarget: array<u32>;
-@group(0) @binding(2) var<uniform> params: Params;
-@group(0) @binding(3) var<storage,read_write> result: Result;
-const RHO:array<u32,25>=array<u32,25>(0u,1u,62u,28u,27u,36u,44u,6u,55u,20u,3u,10u,43u,25u,39u,41u,45u,15u,21u,8u,18u,2u,61u,56u,14u);
-const RC:array<vec2<u32>,24>=array<vec2<u32>,24>(vec2<u32>(0x00000001u,0x00000000u),vec2<u32>(0x00008082u,0x00000000u),vec2<u32>(0x0000808au,0x80000000u),vec2<u32>(0x80008000u,0x80000000u),vec2<u32>(0x0000808bu,0x00000000u),vec2<u32>(0x80000001u,0x00000000u),vec2<u32>(0x80008081u,0x80000000u),vec2<u32>(0x00008009u,0x80000000u),vec2<u32>(0x0000008au,0x00000000u),vec2<u32>(0x00000088u,0x00000000u),vec2<u32>(0x80008009u,0x00000000u),vec2<u32>(0x8000000au,0x00000000u),vec2<u32>(0x8000808bu,0x00000000u),vec2<u32>(0x0000008bu,0x80000000u),vec2<u32>(0x00008089u,0x80000000u),vec2<u32>(0x00008003u,0x80000000u),vec2<u32>(0x00008002u,0x80000000u),vec2<u32>(0x00000080u,0x80000000u),vec2<u32>(0x0000800au,0x00000000u),vec2<u32>(0x8000000au,0x80000000u),vec2<u32>(0x80008081u,0x80000000u),vec2<u32>(0x00008080u,0x80000000u),vec2<u32>(0x80000001u,0x00000000u),vec2<u32>(0x80008008u,0x80000000u));
-fn rol(v:vec2<u32>,n:u32)->vec2<u32>{if(n==0u){return v;}if(n<32u){return vec2<u32>((v.x<<n)|(v.y>>(32u-n)),(v.y<<n)|(v.x>>(32u-n)));}if(n==32u){return vec2<u32>(v.y,v.x);}let m=n-32u;return vec2<u32>((v.y<<m)|(v.x>>(32u-m)),(v.x<<m)|(v.y>>(32u-m)));}
-fn bswap(x:u32)->u32{return ((x&0x000000ffu)<<24u)|((x&0x0000ff00u)<<8u)|((x&0x00ff0000u)>>8u)|((x&0xff000000u)>>24u);}
-fn keccakf(s:ptr<function,array<vec2<u32>,25>>){for(var rnd:u32=0u;rnd<24u;rnd++){var c:array<vec2<u32>,5>;var d:array<vec2<u32>,5>;var b:array<vec2<u32>,25>;for(var x:u32=0u;x<5u;x++){var q=(*s)[x];q=vec2<u32>(q.x^(*s)[x+5u].x,q.y^(*s)[x+5u].y);q=vec2<u32>(q.x^(*s)[x+10u].x,q.y^(*s)[x+10u].y);q=vec2<u32>(q.x^(*s)[x+15u].x,q.y^(*s)[x+15u].y);q=vec2<u32>(q.x^(*s)[x+20u].x,q.y^(*s)[x+20u].y);c[x]=q;}for(var x:u32=0u;x<5u;x++){let p=c[(x+4u)%5u];let r=rol(c[(x+1u)%5u],1u);d[x]=vec2<u32>(p.x^r.x,p.y^r.y);}for(var y:u32=0u;y<5u;y++){for(var x:u32=0u;x<5u;x++){let i=x+5u*y;(*s)[i]=vec2<u32>((*s)[i].x^d[x].x,(*s)[i].y^d[x].y);}}for(var y:u32=0u;y<5u;y++){for(var x:u32=0u;x<5u;x++){let i=x+5u*y;let nx=y;let ny=(2u*x+3u*y)%5u;b[nx+5u*ny]=rol((*s)[i],RHO[i]);}}for(var y:u32=0u;y<5u;y++){for(var x:u32=0u;x<5u;x++){let i=x+5u*y;let a=b[i];let b1=b[((x+1u)%5u)+5u*y];let b2=b[((x+2u)%5u)+5u*y];(*s)[i]=vec2<u32>(a.x^((~b1.x)&b2.x),a.y^((~b1.y)&b2.y));}}(*s)[0]=vec2<u32>((*s)[0].x^RC[rnd].x,(*s)[0].y^RC[rnd].y);}}
-fn isValid(h:ptr<function,array<u32,8>>)->bool{for(var i:u32=0u;i<8u;i++){if((*h)[i]<powTarget[i]){return true;}if((*h)[i]>powTarget[i]){return false;}}return true;}
-@compute @workgroup_size(64)
-fn main(@builtin(global_invocation_id) gid:vec3<u32>){let idx=gid.x;if(idx>=params.count){return;}let lo=params.startLo+idx;let carry=select(0u,1u,lo<params.startLo);let hi=params.startHi+carry;var words:array<u32,34>;for(var i:u32=0u;i<34u;i++){words[i]=baseWords[i];}words[19]=bswap(hi);words[20]=bswap(lo);var s:array<vec2<u32>,25>;for(var i:u32=0u;i<25u;i++){s[i]=vec2<u32>(0u,0u);}for(var i:u32=0u;i<17u;i++){s[i]=vec2<u32>(words[i*2u],words[i*2u+1u]);}keccakf(&s);var h:array<u32,8>;h[0]=bswap(s[0].x);h[1]=bswap(s[0].y);h[2]=bswap(s[1].x);h[3]=bswap(s[1].y);h[4]=bswap(s[2].x);h[5]=bswap(s[2].y);h[6]=bswap(s[3].x);h[7]=bswap(s[3].y);if(isValid(&h)){let won=atomicCompareExchangeWeak(&result.found,0u,1u);if(won.exchanged){result.nonceLo=lo;result.nonceHi=hi;result.h0=h[0];result.h1=h[1];result.h2=h[2];result.h3=h[3];result.h4=h[4];result.h5=h[5];result.h6=h[6];result.h7=h[7];}}}`;
-async function initGPU(){if(!navigator.gpu){$("gpuBadge").textContent="WebGPU unsupported";$("gpuName").textContent="WebGPU unavailable";log("WebGPU is unavailable. Use current Chrome/Edge on HTTPS with GPU acceleration enabled.","bad");return;}try{const adapter=await navigator.gpu.requestAdapter({powerPreference:"high-performance"});if(!adapter)throw new Error("No WebGPU adapter.");const device=await adapter.requestDevice();const info=adapter.info||{};const label=[info.vendor,info.architecture,info.device].filter(Boolean).join(" ")||"WebGPU GPU";$("gpuName").textContent=label;log("GPU adapter ready: "+label,"good");const module=device.createShaderModule({code:SHADER,label:"HASH CATS Keccak Miner"});const ci=await module.getCompilationInfo();const errs=ci.messages.filter(x=>x.type==="error");if(errs.length){ const msg=errs.map(x=>`${x.lineNum}:${x.linePos} ${x.message}`).join(" | "); console.error("WGSL compile",ci.messages); throw new Error(msg); }const pipeline=await device.createComputePipelineAsync({layout:"auto",compute:{module,entryPoint:"main"}});const usage=GPUBufferUsage;const baseBuffer=device.createBuffer({size:136,usage:usage.STORAGE|usage.COPY_DST});const targetBuffer=device.createBuffer({size:32,usage:usage.STORAGE|usage.COPY_DST});const paramsBuffer=device.createBuffer({size:16,usage:usage.UNIFORM|usage.COPY_DST});const resultBuffer=device.createBuffer({size:44,usage:usage.STORAGE|usage.COPY_SRC|usage.COPY_DST});const readBuffer=device.createBuffer({size:44,usage:GPUBufferUsage.COPY_DST|GPUBufferUsage.MAP_READ});const bindGroup=device.createBindGroup({layout:pipeline.getBindGroupLayout(0),entries:[{binding:0,resource:{buffer:baseBuffer}},{binding:1,resource:{buffer:targetBuffer}},{binding:2,resource:{buffer:paramsBuffer}},{binding:3,resource:{buffer:resultBuffer}}]});gpu={adapter,device,pipeline,baseBuffer,targetBuffer,paramsBuffer,resultBuffer,readBuffer,bindGroup};$("gpuBadge").textContent="GPU READY";if(wallet)$("startBtn").disabled=false;}catch(e){$("gpuBadge").textContent="GPU ERROR";log("WebGPU init failed: "+e.message,"bad");console.error(e);}}
-async function runBatch(challenge,target,start,count){const{device}=gpu;device.queue.writeBuffer(gpu.baseBuffer,0,packRateBlock(challenge,wallet));device.queue.writeBuffer(gpu.targetBuffer,0,targetWords(target));const p=u64parts(start);device.queue.writeBuffer(gpu.paramsBuffer,0,new Uint32Array([p.lo,p.hi,count,0]));device.queue.writeBuffer(gpu.resultBuffer,0,new Uint32Array(11));const encoder=device.createCommandEncoder();const pass=encoder.beginComputePass();pass.setPipeline(gpu.pipeline);pass.setBindGroup(0,gpu.bindGroup);pass.dispatchWorkgroups(Math.ceil(count/WORKGROUP));pass.end();encoder.copyBufferToBuffer(gpu.resultBuffer,0,gpu.readBuffer,0,44);const t0=performance.now();device.queue.submit([encoder.finish()]);await gpu.readBuffer.mapAsync(GPUMapMode.READ);const t1=performance.now();const copy=new Uint32Array(gpu.readBuffer.getMappedRange().slice(0));gpu.readBuffer.unmap();if(copy[0]===1){const nonce=(BigInt(copy[2])<<32n)|BigInt(copy[1]);const hw=copy.slice(3,11);return{ms:t1-t0,nonce,hash:hashWordsToHex(hw)};}return{ms:t1-t0,nonce:null,hash:null};}
-
-function stopBlockAlerts(){
-  clearInterval(alertTimer); alertTimer=null;
-  clearInterval(titleTimer); titleTimer=null;
-  document.title=originalTitle;
-  document.body.classList.remove("alert-pulse");
-}
-function playAlertTone(){
-  if(!handsFreeAlerts||!audioCtx)return;
-  try{
-    if(audioCtx.state==="suspended")audioCtx.resume();
-    const now=audioCtx.currentTime;
-    [0,0.22,0.44].forEach((d,i)=>{
-      const osc=audioCtx.createOscillator();
-      const gain=audioCtx.createGain();
-      osc.type="square"; osc.frequency.value=i===1?1046:784;
-      gain.gain.setValueAtTime(0.0001,now+d);
-      gain.gain.exponentialRampToValueAtTime(0.22,now+d+0.02);
-      gain.gain.exponentialRampToValueAtTime(0.0001,now+d+0.16);
-      osc.connect(gain); gain.connect(audioCtx.destination);
-      osc.start(now+d); osc.stop(now+d+0.18);
-    });
-  }catch{}
-}
-async function enableHandsFreeAlerts(){
-  try{
-    if(handsFreeAlerts){
-      handsFreeAlerts=false; stopBlockAlerts();
-      $("alertState").textContent="OFF"; $("alertState").classList.remove("on");
-      $("alertToggleBtn").textContent="Enable Alerts";
-      log("Hands-Free Alert Mode disabled.","muted");
-      return;
-    }
-    const AC=window.AudioContext||window.webkitAudioContext;
-    if(AC&&!audioCtx)audioCtx=new AC();
-    if(audioCtx?.state==="suspended")await audioCtx.resume();
-    if("Notification" in window && Notification.permission==="default"){
-      const permission=await Notification.requestPermission();
-      if(permission!=="granted")log("Desktop notifications were not allowed. Sound + tab alerts will still work.","warn");
-    }
-    handsFreeAlerts=true;
-    $("alertState").textContent="ON"; $("alertState").classList.add("on");
-    $("alertToggleBtn").textContent="Disable Alerts";
-    playAlertTone();
-    log("Hands-Free Alert Mode enabled. You can leave this tab running.","good");
-  }catch(e){log("Could not enable alerts: "+e.message,"bad");}
-}
-function triggerBlockAlerts(){
-  if(!handsFreeAlerts)return;
-  stopBlockAlerts();
-  document.body.classList.add("alert-pulse");
-  let flip=false;
-  titleTimer=setInterval(()=>{flip=!flip;document.title=flip?"🚨 BLOCK FOUND — CLAIM HASHCATS":originalTitle;},650);
-  playAlertTone();
-  alertTimer=setInterval(playAlertTone,4500);
-  if("Notification" in window && Notification.permission==="granted"){
-    try{
-      const n=new Notification("HASH CATS — BLOCK FOUND!",{
-        body:"237,500 HASHCATS is ready to claim. Return to the miner and click CLAIM REWARD.",
-        icon:"/logo.png",
-        badge:"/favicon-32.png",
-        tag:"hashcats-block-found",
-        requireInteraction:true
-      });
-      n.onclick=()=>{window.focus();try{n.close()}catch{}};
-    }catch{}
-  }
-  try{navigator.vibrate?.([250,120,250,120,500]);}catch{}
-}
-
-async function submitWinner(nonce,challenge,target,gpuHash){
-  if(submitting||pendingProof)return false;
-  submitting=true;
-  try{
-    const proof=ethers.solidityPackedKeccak256(["bytes32","address","uint256"],[challenge,wallet,nonce]);
-    if(BigInt(proof)>target){
-      log("GPU candidate rejected by CPU safety verification. No transaction sent.","bad");
-      return false;
-    }
-    if(proof.toLowerCase()!==gpuHash.toLowerCase()){
-      log("GPU/CPU hash mismatch. Transaction blocked for safety.","bad");
-      return false;
-    }
-    const liveChallenge=await readContract.currentChallenge();
-    if(liveChallenge.toLowerCase()!==challenge.toLowerCase()){
-      log("Valid proof became stale before claim screen. Continuing on new challenge.","warn");
-      return false;
-    }
-    pendingProof={nonce,challenge,target,proof};
-    log("★ BLOCK FOUND ★ Valid proof held locally. Waiting for your CLAIM REWARD click.","good");
-    stopMining(false);
-    showClaimModal();
-    triggerBlockAlerts();
-    return true;
-  }catch(e){
-    log("Winner handling failed: "+decodeRevert(e),"bad");
-    return false;
-  }finally{submitting=false}
-}
-function showClaimModal(){
-  if(!pendingProof)return;
-  $("claimNonce").textContent=pendingProof.nonce.toString();
-  $("claimHash").textContent=short(pendingProof.proof);
-  $("claimStatus").className="claim-status";
-  $("claimStatus").textContent="Proof verified locally. No wallet transaction has been requested yet.";
-  $("claimRewardBtn").disabled=false;
-  $("claimRewardBtn").textContent="CLAIM REWARD";
-  $("claimBackdrop").classList.add("show");
-  clearInterval(pendingWatch);
-  pendingWatch=setInterval(checkPendingProof,1800);
-}
-async function checkPendingProof(){
-  if(!pendingProof)return;
-  try{
-    const live=await readContract.currentChallenge();
-    if(live.toLowerCase()!==pendingProof.challenge.toLowerCase()){
-      $("claimStatus").className="claim-status stale";
-      $("claimStatus").textContent="This proof is now stale because another mining block was confirmed. No transaction will be requested.";
-      $("claimRewardBtn").disabled=true;
-      $("claimRewardBtn").textContent="PROOF STALE";
-      clearInterval(pendingWatch);
-    }
-  }catch{}
-}
-function dismissClaim(){
-  stopBlockAlerts();
-  clearInterval(pendingWatch);
-  $("claimBackdrop").classList.remove("show");
-  pendingProof=null;
-  if(wallet&&gpu)$("startBtn").disabled=false;
-}
-async function claimPendingReward(){
-  if(!pendingProof||!writeContract||submitting)return;
-  stopBlockAlerts();
-  submitting=true;
-  $("claimRewardBtn").disabled=true;
-  $("claimRewardBtn").textContent="CHECKING PROOF…";
-  try{
-    const live=await readContract.currentChallenge();
-    if(live.toLowerCase()!==pendingProof.challenge.toLowerCase()){
-      $("claimStatus").className="claim-status stale";
-      $("claimStatus").textContent="Proof became stale before claim. No transaction was requested.";
-      $("claimRewardBtn").textContent="PROOF STALE";
-      clearInterval(pendingWatch);
-      return;
-    }
-    const proof=ethers.solidityPackedKeccak256(["bytes32","address","uint256"],[pendingProof.challenge,wallet,pendingProof.nonce]);
-    if(proof.toLowerCase()!==pendingProof.proof.toLowerCase()||BigInt(proof)>pendingProof.target)throw new Error("Local proof verification failed.");
-    $("claimStatus").textContent="Proof is live. Simulating the on-chain claim before requesting your wallet…";
-    await writeContract.mine.staticCall(pendingProof.nonce,{value:FEE});
-    $("claimRewardBtn").textContent="CONFIRM IN WALLET";
-    $("claimStatus").textContent="Simulation passed. Your wallet will now show exactly one mine(nonce) transaction with 0.000341 BNB.";
-    const tx=await writeContract.mine(pendingProof.nonce,{value:FEE});
-    log("Winning claim tx sent: "+tx.hash,"good");
-    $("claimStatus").textContent="Transaction sent. Waiting for BNB Chain confirmation…";
-    const receipt=await tx.wait();
-    log("237,500 HASHCATS reward confirmed in block "+receipt.blockNumber+".","good");
-    clearInterval(pendingWatch);
-    pendingProof=null;
-    $("claimRewardBtn").textContent="CLAIMED ✓";
-    $("claimStatus").textContent="Reward confirmed on-chain. 237,500 HASHCATS was minted to your wallet.";
-    await refreshChain();
-    setTimeout(()=>{$("claimBackdrop").classList.remove("show");if(wallet&&gpu)$("startBtn").disabled=false;},2200);
-  }catch(e){
-    $("claimStatus").className="claim-status error";
-    $("claimStatus").textContent="Claim not sent/confirmed: "+decodeRevert(e);
-    $("claimRewardBtn").disabled=false;
-    $("claimRewardBtn").textContent="TRY CLAIM AGAIN";
-    log("Claim failed: "+decodeRevert(e),"bad");
-  }finally{submitting=false}
-}
-async function miningLoop(){hashesTested=0n;nonceCursor=rand64();lastChainCheck=0;while(mining){let chain;try{if(Date.now()-lastChainCheck>650){chain=await refreshChain(true);lastChainCheck=Date.now();if(!chain.activated){log("Mining is not activated on-chain yet.","warn");stopMining();break;}}else chain={challenge:currentChallenge,target:currentTarget};if(!wallet||!chain.challenge||chain.challenge===ethers.ZeroHash){await sleep(150);continue;}const start=nonceCursor;$("nonceRange").textContent=start.toString()+" → "+(start+BigInt(batchSize)-1n).toString();$("batchStat").textContent=fmt(batchSize);$("batchBar").style.width="65%";const r=await runBatch(chain.challenge,BigInt(chain.target),start,batchSize);if(!mining)break;hashesTested+=BigInt(batchSize);nonceCursor=(nonceCursor+BigInt(batchSize))&((1n<<64n)-1n);const rate=batchSize/(Math.max(r.ms,1)/1000);$("hashrate").textContent=formatRate(rate);$("tested").textContent=fmt(hashesTested.toString());$("batchMs").textContent=r.ms.toFixed(1)+" ms";$("batchBar").style.width="100%";const desired=Math.max(MIN_BATCH,Math.min(MAX_BATCH,Math.round(batchSize*(BATCH_TARGET_MS/Math.max(r.ms,10)))));batchSize=Math.max(WORKGROUP,Math.floor(desired/WORKGROUP)*WORKGROUP);if(r.nonce!==null){await submitWinner(r.nonce,chain.challenge,BigInt(chain.target),r.hash);if(!mining)break;}if(Math.random()<.18)spawnHash();await sleep(0);}catch(e){log("Mining loop error: "+e.message,"bad");console.error(e);await sleep(600);}}}
-function spawnHash(){const s=document.createElement("span");s.textContent="0x"+crypto.getRandomValues(new Uint32Array(2)).reduce((a,x)=>a+x.toString(16).padStart(8,"0"),"");s.style.top=(5+Math.random()*87)+"%";s.style.animationDuration=(2.5+Math.random()*3)+"s";$("hashStream").appendChild(s);setTimeout(()=>s.remove(),6000);}
-async function startMining(){if(mining)return;if(!wallet)return log("Connect wallet first.","warn");if(!gpu)return log("WebGPU is not ready.","bad");const state=await refreshChain(true);if(!state.activated)return log("Mining is not activated. Use Activate Mining first.","warn");const wins=await readContract.remainingWinsFor(wallet);if(wins===0n)return log("This wallet has reached the 50-win mining limit.","warn");mining=true;$("minerPanel").classList.add("mining");$("minerState").textContent="MINING";$("minerState").classList.add("live");$("startBtn").disabled=true;$("stopBtn").disabled=false;log("REAL WebGPU mining started.","good");log("Proof = keccak256(challenge + wallet + uint256 nonce).","muted");miningLoop();}
-function stopMining(withLog=true){mining=false;$("minerPanel").classList.remove("mining");$("minerState").textContent="IDLE";$("minerState").classList.remove("live");$("stopBtn").disabled=true;if(wallet&&gpu)$("startBtn").disabled=false;if(withLog)log("Mining stopped.","warn");}
-$("connectBtn").onclick=connect;$("heroConnect").onclick=connect;$("activateBtn").onclick=activate;$("refreshBtn").onclick=()=>refreshChain();$("startBtn").onclick=startMining;$("stopBtn").onclick=()=>stopMining();$("claimRewardBtn").onclick=claimPendingReward;$("dismissClaimBtn").onclick=dismissClaim;$("alertToggleBtn").onclick=enableHandsFreeAlerts;
-(async()=>{log("HASH CATS production miner BUILD 3.4 booting…");log("Contract "+CONTRACT,"muted");await initProvider();await Promise.allSettled([refreshChain(true),initGPU()]);setInterval(()=>{if(!mining)refreshChain(true).catch(()=>{})},5000);})();
-</script>
+    </footer>
+  </main>
 </body>
 </html>
