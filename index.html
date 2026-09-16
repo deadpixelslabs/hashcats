@@ -37,10 +37,11 @@
     section.block{margin:16px 0}.mintgrid{padding:12px;display:grid;grid-template-columns:repeat(10,1fr);gap:8px}.mint{background:#242a36;border:2px solid #394252;padding:4px}.mint img{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#12151c}.mintmeta{display:flex;justify-content:space-between;gap:4px;padding-top:4px;font-size:9px}.mintmeta b{color:var(--green)}.emptymint{aspect-ratio:1;background:#171b23;border:2px solid #2a303d;display:grid;place-items:center;color:#475064;font-size:24px}
     .leader{width:100%;border-collapse:collapse;font-size:11px}.leader th,.leader td{text-align:left;padding:9px;border-bottom:1px solid #333a48}.leader th{color:#9faabd;text-transform:uppercase}.leader td:nth-child(1){color:var(--green);font-weight:900}.leader code{color:#d9e3f5}.foot{padding:28px 0 44px;color:#747e92;font-size:11px}.footin{border-top:2px solid #232936;padding-top:18px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.foot a{color:var(--cyan)}
     .toast{position:fixed;right:16px;bottom:16px;z-index:80;max-width:min(420px,calc(100% - 32px));padding:12px 14px;background:#11151d;border:2px solid #515a6e;color:#e9eef8;box-shadow:4px 4px 0 #000;font-size:12px;display:none}.toast.show{display:block}.toast.good{border-color:var(--green2)}.toast.bad{border-color:#9b4c47}
+    .winnerOverlay{position:fixed;inset:0;z-index:120;background:rgba(2,4,7,.82);display:none;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(4px)}.winnerOverlay.show{display:flex}.winnerBox{width:min(620px,100%);background:#161b24;border:3px solid var(--green);box-shadow:0 0 0 3px #0a0d12,8px 8px 0 #000}.winnerHead{background:var(--green);color:#10160d;padding:12px 14px;font-weight:900;text-transform:uppercase;display:flex;justify-content:space-between;gap:12px}.winnerBody{padding:18px}.winnerTitle{font-size:28px;font-weight:900;margin:0 0 8px;color:#eaf7d8}.winnerBody p{color:#b9c4d8;line-height:1.5;margin:7px 0 14px}.winnerData{display:grid;gap:8px;margin:14px 0}.winnerData div{background:#0c1016;border:1px solid #3b4454;padding:9px}.winnerData small{display:block;color:#8e9ab0;text-transform:uppercase;margin-bottom:4px}.winnerData code{display:block;word-break:break-all;color:#e6edf9}.winnerActions{display:flex;gap:9px;flex-wrap:wrap}.winnerState{padding:10px 11px;margin:12px 0;border:1px solid #52613c;background:#0b100b;color:#bfff89}.winnerState.warn{border-color:#796c35;color:#ffe083;background:#121006}.winnerState.bad{border-color:#754440;color:#ff9c92;background:#130b0b}.winnerMinted{display:none;margin:14px 0;padding:12px;background:#0b100b;border:2px solid var(--green);text-align:center}.winnerMinted.show{display:block}.winnerMinted img{width:min(260px,70vw);aspect-ratio:1/1;object-fit:cover;image-rendering:pixelated;border:2px solid #465b34;background:#0b0e13}.winnerMinted strong{display:block;margin-top:10px;font-size:22px;color:#d9ffad}.winnerMinted code{display:block;margin-top:6px;color:#9fb0c8;word-break:break-all;font-size:10px}
     @media(max-width:970px){.navlinks{display:none}.minerbody{grid-template-columns:1fr}.catstage{max-width:430px;width:100%;margin:auto}.twocol{grid-template-columns:1fr}.mintgrid{grid-template-columns:repeat(5,1fr)}}
     @media(max-width:700px){.wrap{width:min(100% - 16px,1210px)}.navin{align-items:flex-start}.navright{flex-direction:column;align-items:flex-end}.ticker{font-size:9px}.brand{font-size:18px}.stats4{grid-template-columns:repeat(2,1fr)}.controls{grid-template-columns:1fr}.slots{grid-template-columns:repeat(6,1fr)}.mintgrid{grid-template-columns:repeat(3,1fr)}.hero{padding-top:23px}.hero p{font-size:13px}}
   </style>
-  <meta name="hashcats-build" content="gpu-fixed-2026-09-16">
+  <meta name="hashcats-build" content="winner-success-popup-2026-09-16">
 </head>
 <body>
 <nav>
@@ -118,6 +119,19 @@
 </main>
 
 <footer class="foot"><div class="wrap footin"><span>© 2026 HASHCATS · 4,444 proof-of-work cats on Arc</span><span><a href="https://x.com/hashcats_ARC" target="_blank">Official X</a> · <a href="https://arc-scan.org/address/0x5f53a69f8f87b7a321c8cd69957a7e622314b732" target="_blank">Contract</a></span></div></footer>
+<div class="winnerOverlay" id="winnerOverlay" role="dialog" aria-modal="true" aria-labelledby="winnerTitle">
+  <div class="winnerBox">
+    <div class="winnerHead"><span id="winnerHeadText">◆ HASHCAT PROOF FOUND</span><span id="winnerBadge">VERIFYING</span></div>
+    <div class="winnerBody">
+      <h2 class="winnerTitle" id="winnerTitle">Your GPU found a candidate.</h2>
+      <p id="winnerIntro">The miner is paused so this proof is not lost. The site re-checks it against the live Arc contract before any transaction is requested.</p>
+      <div class="winnerData" id="winnerProofData"><div><small>Nonce</small><code id="winnerNonce">—</code></div><div><small>Proof Hash</small><code id="winnerHash">—</code></div></div>
+      <div class="winnerMinted" id="winnerMinted"><img id="winnerNftImage" alt="Mined HASHCAT"><strong id="winnerNftName">HASHCATS</strong><code id="winnerTx">—</code></div>
+      <div class="winnerState warn" id="winnerState">Verifying proof on Arc…</div>
+      <div class="winnerActions"><button class="btn" id="claimBtn" disabled>Claim HASHCAT</button><button class="btn dark" id="dismissWinnerBtn">Dismiss</button></div>
+    </div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -132,7 +146,7 @@
   const ARC_CHAIN_DEC = 5042;
   const SELECTOR = { mine:"4d474898", preview:"356016e0", allowance:"dd62ed3e", approve:"095ea7b3", balanceOf:"70a08231", miningActivated:"f39109bb", currentChallenge:"51bdd585", target:"d4b83992" };
   const el = id => document.getElementById(id);
-  const state = { account:null, stats:null, health:null, latest:[], leaderboard:[], workers:[], mining:false, miningChallenge:null, totalHashes:0, speed:0, startedAt:0, away:0, lastWorkerReport:0, found:false, mode:"gpu", gpu:null, gpuBatchSize:32768, gpuNonceCursor:0n, gpuLoopToken:0, lastFastCheck:0 };
+  const state = { account:null, stats:null, health:null, latest:[], leaderboard:[], workers:[], mining:false, miningChallenge:null, totalHashes:0, speed:0, startedAt:0, away:0, lastWorkerReport:0, found:false, pendingCandidate:null,winnerComplete:false, mode:"gpu", gpu:null, gpuBatchSize:32768, gpuNonceCursor:0n, gpuLoopToken:0, lastFastCheck:0 };
 
   function short(a){ return a ? a.slice(0,6)+"…"+a.slice(-4) : "—"; }
   function comma(v){ try{return BigInt(v).toLocaleString("en-US")}catch{return String(v ?? "—")} }
@@ -146,6 +160,64 @@
   function toast(msg,type=""){ const t=el("toast");t.textContent=msg;t.className="toast show "+type;clearTimeout(t._timer);t._timer=setTimeout(()=>t.className="toast",4500); }
   function status(msg,type=""){ el("statusLine").textContent=msg;el("statusLine").className="statusline "+type; }
   function errMsg(e){ return e?.shortMessage || e?.message || e?.data?.message || String(e); }
+  function withTimeout(promise,ms,label="Request"){ return Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error(label+" timed out")),ms))]); }
+  function setWinnerState(msg,type="warn"){const w=el("winnerState");w.textContent=msg;w.className="winnerState "+type;}
+  function showWinner(candidate){
+    state.winnerComplete=false;
+    el("winnerOverlay").classList.add("show");
+    el("winnerHeadText").textContent="◆ HASHCAT PROOF FOUND";
+    el("winnerTitle").textContent="Your GPU found a candidate.";
+    el("winnerIntro").textContent="The miner is paused so this proof is not lost. The site re-checks it against the live Arc contract before any transaction is requested.";
+    el("winnerProofData").style.display="grid";el("winnerMinted").classList.remove("show");
+    el("winnerNonce").textContent=String(candidate.nonce||"—");el("winnerHash").textContent=candidate.hash||"—";
+    el("winnerBadge").textContent="VERIFYING";el("claimBtn").disabled=true;el("claimBtn").textContent="Claim HASHCAT";el("dismissWinnerBtn").textContent="Dismiss";setWinnerState("Verifying proof on Arc…","warn");
+  }
+  function hideWinner(){el("winnerOverlay").classList.remove("show");}
+  function extractMinedTokenId(receipt){
+    const logs=Array.isArray(receipt?.logs)?receipt.logs:[];
+    for(const log of logs){
+      try{
+        if(String(log.address||"").toLowerCase()!==CONTRACT.toLowerCase())continue;
+        if(!Array.isArray(log.topics)||log.topics.length<4)continue;
+        if(!log.data||log.data==="0x")continue; // excludes the ERC721 Transfer log
+        const id=BigInt(log.topics[3]);
+        if(id>=1n&&id<=4444n)return id.toString();
+      }catch{}
+    }
+    return null;
+  }
+  async function resolveMinedTokenId(tx,receipt){
+    const direct=extractMinedTokenId(receipt);if(direct)return direct;
+    for(let i=0;i<8;i++){
+      try{
+        const latest=await api("/api/latest?limit=10");
+        const hit=(latest.items||[]).find(x=>String(x.transactionHash||"").toLowerCase()===String(tx||"").toLowerCase());
+        if(hit?.tokenId)return String(hit.tokenId);
+      }catch{}
+      await new Promise(r=>setTimeout(r,700));
+    }
+    return null;
+  }
+  function showMinedSuccess(tokenId,tx){
+    state.winnerComplete=true;
+    el("winnerOverlay").classList.add("show");
+    el("winnerHeadText").textContent="◆ HASHCAT MINED";el("winnerBadge").textContent="SUCCESS";
+    el("winnerTitle").textContent=tokenId?`YOU MINED HASHCATS #${tokenId}`:"HASHCAT MINED SUCCESSFULLY";
+    el("winnerIntro").textContent="Confirmed on Arc. The NFT was minted directly to your connected wallet.";
+    el("winnerProofData").style.display="none";
+    if(tokenId){
+      el("winnerNftImage").src=`${ASSET_BASE}/images/${tokenId}.png?v=${Date.now()}`;
+      el("winnerNftName").textContent=`HASHCATS #${tokenId}`;
+      el("winnerMinted").classList.add("show");
+    }else{el("winnerMinted").classList.remove("show");}
+    el("winnerTx").textContent=tx||"Confirmed on Arc";
+    setWinnerState(tokenId?`Success — HASHCATS #${tokenId} is now yours. The popup will stay open until you close it.`:"Success — your HASHCAT is confirmed onchain. The popup will stay open until you close it.","");
+    el("claimBtn").disabled=false;el("claimBtn").textContent="Mine Another";el("dismissWinnerBtn").textContent="Close";
+  }
+  async function resumeAfterStale(){
+    state.pendingCandidate=null;state.found=false;await refreshNetwork();
+    if(state.mode==="gpu"&&state.gpu)startGPU();else startCPU();
+  }
 
   function buildStrips(){ ["hashStrip","targetStrip"].forEach(id=>{el(id).innerHTML="";for(let i=0;i<48;i++){const s=document.createElement("i");el(id).appendChild(s)}}); el("chart").innerHTML="";for(let i=0;i<32;i++){const b=document.createElement("i");b.style.height=(96-i*2.7)+"%";el("chart").appendChild(b)}; renderAway(); }
   function renderAway(){el("awaySlots").innerHTML="";for(let i=0;i<12;i++){const d=document.createElement("div");d.className="slot";if(i<Math.min(state.away,12)){d.innerHTML='<img src="/logo.svg" alt=""><span>STALE</span>'}el("awaySlots").appendChild(d)}el("awayCount").textContent=state.away+" challenge changes this session"}
@@ -195,7 +267,7 @@
   async function ethCall(to,data){return ethereum.request({method:"eth_call",params:[{to,data},"latest"]});}
   async function allowance(){const data="0x"+SELECTOR.allowance+wordAddr(state.account)+wordAddr(CONTRACT);return BigInt(await ethCall(USDC,data));}
   async function usdcBalance(){const data="0x"+SELECTOR.balanceOf+wordAddr(state.account);return BigInt(await ethCall(USDC,data));}
-  async function refreshWallet(){ if(!state.account)return;try{const [bal,allow]=await Promise.all([usdcBalance(),allowance()]);el("walletBalance").textContent=(Number(bal)/1e6).toFixed(2);el("approveBtn").style.display=allow<FEE?"inline-flex":"none";if(allow>=FEE&&!state.mining)status("Ready. 1 USDC allowance is available only for a successful mining claim.","good");}catch(e){console.warn(e)} }
+  async function refreshWallet(){ if(!state.account)return;try{const [bal,allow]=await Promise.all([usdcBalance(),allowance()]);el("walletBalance").textContent=(Number(bal)/1e6).toFixed(2);el("approveBtn").style.display=allow<FEE?"inline-flex":"none";if(allow>=FEE&&!state.mining&&!state.pendingCandidate)status("Ready. 1 USDC allowance is available only for a successful mining claim.","good");}catch(e){console.warn(e)} }
   async function waitReceipt(hash,timeout=120000){const start=Date.now();while(Date.now()-start<timeout){const r=await ethereum.request({method:"eth_getTransactionReceipt",params:[hash]});if(r){if(r.status&&BigInt(r.status)===0n)throw new Error("Transaction reverted");return r}await new Promise(r=>setTimeout(r,900))}throw new Error("Timed out waiting for transaction receipt")}
   async function approveFee(){if(!state.account)await connect();await ensureArc();status("Approve exactly 1 USDC for one successful HASHCATS claim…","warn");const data="0x"+SELECTOR.approve+wordAddr(CONTRACT)+wordBigInt(FEE);const tx=await ethereum.request({method:"eth_sendTransaction",params:[{from:state.account,to:USDC,data,value:"0x0"}]});toast("Approval submitted: "+short(tx));await waitReceipt(tx);await refreshWallet();toast("1 USDC mining allowance approved.","good");return true}
 
@@ -546,7 +618,7 @@ fn main(@builtin(global_invocation_id) gid:vec3<u32>){
         const desired=Math.max(GPU_MIN_BATCH,Math.min(GPU_MAX_BATCH,Math.round(count*(GPU_BATCH_TARGET_MS/Math.max(r.ms,10)))));
         state.gpuBatchSize=Math.max(WORKGROUP,Math.floor(desired/WORKGROUP)*WORKGROUP);
         if(r.nonce!==null){
-          await handleFound({nonce:r.nonce.toString(),hash:r.hash,hashes:count,source:"gpu"});
+          await handleFound({nonce:r.nonce.toString(),hash:r.hash,hashes:count,source:"gpu",challenge});
           break;
         }
         await new Promise(r=>setTimeout(r,0));
@@ -577,41 +649,94 @@ fn main(@builtin(global_invocation_id) gid:vec3<u32>){
 
   async function verifyNonce(nonce){
     const data="0x"+SELECTOR.preview+wordAddr(state.account)+wordBigInt(nonce);
-    const r=(await ethCall(CONTRACT,data)).replace(/^0x/,"").padStart(128,"0");
+    const raw=await ethCall(CONTRACT,data);
+    const r=raw.replace(/^0x/,"").padStart(128,"0");
+    if(r.length<128)throw new Error("Invalid previewProof response");
     return BigInt("0x"+r.slice(64,128))!==0n;
   }
+
   async function handleFound(m){
     if(state.found)return;
-    state.found=true;stopMining(true);el("minerState").textContent="◆ FOUND";
-    status("Candidate found! Verifying against the live HASHCATS contract…","warn");toast("Winning candidate found locally.","good");
-    const valid=await verifyNonce(m.nonce);
-    if(!valid){
-      state.found=false;state.away++;renderAway();await refreshNetwork();
-      status("Candidate became stale before submission. Resuming on the new challenge.","warn");
-      if(state.mode==="gpu"&&state.gpu)startGPU();else startCPU();
-      return;
-    }
-    const allow=await allowance();
-    if(allow<FEE){
-      state.found=false;status("Winning proof is valid, but the 1 USDC allowance is missing. Approve immediately.","bad");
-      el("approveBtn").style.display="inline-flex";return;
-    }
-    status("Proof verified onchain. Confirm the winning transaction. 1 USDC is charged only if it still wins.","warn");
-    const data="0x"+SELECTOR.mine+wordBigInt(m.nonce);
+    const challengeAtFound=m.challenge||state.miningChallenge||state.stats?.currentChallenge||null;
+    state.found=true;
+    state.pendingCandidate={nonce:String(m.nonce),hash:m.hash||"—",challenge:challengeAtFound,source:m.source||"miner"};
+    stopMining(true);
+    el("minerState").textContent="◆ FOUND";
+    showWinner(state.pendingCandidate);
+    status("Candidate found! Miner paused while the proof is verified on Arc.","warn");
+    toast("HASHCAT proof found — verifying now.","good");
     try{
-      const tx=await ethereum.request({method:"eth_sendTransaction",params:[{from:state.account,to:CONTRACT,data,value:"0x0"}]});
-      toast("Mining transaction submitted: "+short(tx));
-      await waitReceipt(tx);
-      status("HASHCAT mined successfully! Refreshing collection…","good");toast("HASHCAT MINED!","good");
-      await new Promise(r=>setTimeout(r,1200));await refreshNetwork();await refreshWallet();state.found=false;
+      const valid=await withTimeout(verifyNonce(state.pendingCandidate.nonce),8000,"Proof verification");
+      if(!valid){
+        el("winnerBadge").textContent="STALE";setWinnerState("This candidate is no longer valid. Another proof or challenge won the race. Resuming mining automatically…","bad");
+        status("Candidate was stale. No transaction was sent and no successful mining fee was charged. Resuming…","warn");
+        state.away++;renderAway();
+        setTimeout(async()=>{hideWinner();await resumeAfterStale();},1400);
+        return;
+      }
+      const allow=await withTimeout(allowance(),8000,"Allowance check");
+      el("winnerBadge").textContent="VALID";
+      if(allow<FEE){
+        setWinnerState("VALID PROOF. Your 1 USDC allowance is missing. Click CLAIM HASHCAT — approval will be requested first, then the proof is re-checked.","warn");
+      }else{
+        setWinnerState("VALID PROOF. Click CLAIM HASHCAT now to open your wallet and submit the winning transaction.","");
+      }
+      el("claimBtn").disabled=false;
+      status("VALID HASHCAT proof found. Click CLAIM HASHCAT now — the miner is safely paused.","good");
     }catch(e){
-      state.found=false;status("Mine was not accepted (usually a stale race). No successful mining fee was charged. "+errMsg(e),"bad");
-      await refreshNetwork();await refreshWallet();
+      console.error("Candidate verification:",e);
+      el("winnerBadge").textContent="CHECK";
+      setWinnerState("Automatic verification could not finish: "+errMsg(e)+". The candidate is kept in this tab. Click RECHECK & CLAIM.","bad");
+      el("claimBtn").disabled=false;el("claimBtn").textContent="Recheck & Claim";
+      status("Proof found, but automatic verification hit an RPC error. Candidate kept — click RECHECK & CLAIM.","bad");
+    }
+  }
+
+  async function claimPending(){
+    const c=state.pendingCandidate;if(!c)return;
+    const btn=el("claimBtn");btn.disabled=true;btn.textContent="Checking…";
+    try{
+      await ensureArc();
+      const valid=await withTimeout(verifyNonce(c.nonce),8000,"Proof re-check");
+      if(!valid){
+        el("winnerBadge").textContent="STALE";setWinnerState("The proof became stale before submission. No transaction was sent. Resuming mining…","bad");
+        status("Winning proof became stale before submission. No successful mining fee was charged.","warn");
+        state.away++;renderAway();setTimeout(async()=>{hideWinner();await resumeAfterStale();},1200);return;
+      }
+      let allow=await withTimeout(allowance(),8000,"Allowance check");
+      if(allow<FEE){
+        btn.textContent="Approve 1 USDC…";setWinnerState("Proof is still valid. Approve 1 USDC allowance in your wallet, then it will be re-checked once more.","warn");
+        await approveFee();
+        const stillValid=await withTimeout(verifyNonce(c.nonce),8000,"Post-approval proof re-check");
+        if(!stillValid)throw new Error("Proof became stale while approval was being confirmed");
+      }
+      el("winnerBadge").textContent="CLAIM";btn.textContent="Confirm in wallet…";
+      setWinnerState("Proof is valid. Opening your wallet for the winning HASHCATS transaction…","warn");
+      status("Confirm the winning HASHCATS transaction in your wallet.","warn");
+      const data="0x"+SELECTOR.mine+wordBigInt(c.nonce);
+      const tx=await ethereum.request({method:"eth_sendTransaction",params:[{from:state.account,to:CONTRACT,data,value:"0x0"}]});
+      el("winnerBadge").textContent="PENDING";setWinnerState("Transaction submitted: "+short(tx)+". Waiting for Arc confirmation…","warn");toast("Mining transaction submitted: "+short(tx));
+      const receipt=await waitReceipt(tx);
+      const tokenId=await resolveMinedTokenId(tx,receipt);
+      state.pendingCandidate=null;state.found=false;
+      showMinedSuccess(tokenId,tx);
+      status(tokenId?`HASHCATS #${tokenId} mined successfully!`:`HASHCAT mined successfully!`,"good");
+      toast(tokenId?`YOU MINED HASHCATS #${tokenId}!`:"HASHCAT MINED!","good");
+      await refreshNetwork();await refreshWallet();await refreshLeaderboard();
+      // Intentionally do NOT auto-hide the success popup. The miner must see the NFT result.
+
+    }catch(e){
+      console.error("Claim candidate:",e);
+      const msg=errMsg(e);
+      // Keep the candidate so a rejected wallet prompt or transient RPC error can be retried.
+      el("winnerBadge").textContent="RETRY";setWinnerState("Claim not completed: "+msg+". The candidate is still kept in this tab; click RETRY CLAIM while the challenge remains valid.","bad");
+      status("Claim not completed: "+msg,"bad");btn.disabled=false;btn.textContent="Retry Claim";
     }
   }
 
   async function start(){
     try{
+      if(state.pendingCandidate){showWinner(state.pendingCandidate);throw new Error("A found candidate is still pending. Claim or dismiss it before starting a new search.");}
       if(!state.account)await connect();
       await ensureArc();await refreshNetwork();
       const s=state.stats;if(!s?.miningActivated)throw new Error("Mining is not activated");if(s.miningComplete)throw new Error("HASHCATS mining is complete");
@@ -623,6 +748,19 @@ fn main(@builtin(global_invocation_id) gid:vec3<u32>){
     }catch(e){status(errMsg(e),"bad");toast(errMsg(e),"bad")}
   }
 
+  el("claimBtn").onclick=async()=>{
+    if(state.winnerComplete){
+      hideWinner();state.winnerComplete=false;
+      try{await start();}catch(e){status(errMsg(e),"bad");}
+      return;
+    }
+    claimPending();
+  };
+  el("dismissWinnerBtn").onclick=()=>{
+    hideWinner();
+    if(state.winnerComplete){state.winnerComplete=false;status("HASHCAT confirmed on Arc. Ready to mine again.","good");}
+    else status("Winning candidate kept in this tab. Re-open it with Start before beginning a new search.","warn");
+  };
   el("connectBtn").onclick=()=>connect().catch(e=>{status(errMsg(e),"bad");toast(errMsg(e),"bad")});
   el("startBtn").onclick=start;el("stopBtn").onclick=()=>stopMining();el("approveBtn").onclick=()=>approveFee().catch(e=>toast(errMsg(e),"bad"));
   el("gpuMode").onclick=async()=>{
