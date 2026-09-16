@@ -1,13 +1,7 @@
-# HASHCATS Miner — WebGPU compatibility build
+# HASHCATS Miner — GPU Fixed Final
 
-This build keeps the HASHCATS Arc production frontend but changes GPU detection so it does not require a high-performance-only adapter.
+Production Arc miner frontend.
 
-Adapter order:
-1. high-performance preference
-2. browser default adapter
-3. low-power preference
+Key fix: the WGSL storage binding previously used the identifier `target`, which reproduced the shader compile issue from the earlier miner prototype. It is now `targetBuf`, matching the proven fix pattern used by the working WebGPU miner.
 
-If any WebGPU adapter is available, GPU mode is enabled. CPU remains fallback only.
-
-Production contract: `0x5f53a69f8f87b7a321c8cd69957a7e622314b732`
-Backend: `https://hashcats-server.vercel.app`
+Deploy by replacing the existing GitHub frontend files with this folder and committing. Vercel should redeploy automatically. Then hard-refresh the site once.

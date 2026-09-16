@@ -40,6 +40,7 @@
     @media(max-width:970px){.navlinks{display:none}.minerbody{grid-template-columns:1fr}.catstage{max-width:430px;width:100%;margin:auto}.twocol{grid-template-columns:1fr}.mintgrid{grid-template-columns:repeat(5,1fr)}}
     @media(max-width:700px){.wrap{width:min(100% - 16px,1210px)}.navin{align-items:flex-start}.navright{flex-direction:column;align-items:flex-end}.ticker{font-size:9px}.brand{font-size:18px}.stats4{grid-template-columns:repeat(2,1fr)}.controls{grid-template-columns:1fr}.slots{grid-template-columns:repeat(6,1fr)}.mintgrid{grid-template-columns:repeat(3,1fr)}.hero{padding-top:23px}.hero p{font-size:13px}}
   </style>
+  <meta name="hashcats-build" content="gpu-fixed-2026-09-16">
 </head>
 <body>
 <nav>
@@ -245,7 +246,7 @@ struct Result {
   h0:u32,h1:u32,h2:u32,h3:u32,h4:u32,h5:u32,h6:u32,h7:u32
 }
 @group(0) @binding(0) var<storage,read> baseWords: array<u32>;
-@group(0) @binding(1) var<storage,read> target: array<u32>;
+@group(0) @binding(1) var<storage,read> targetBuf: array<u32>;
 @group(0) @binding(2) var<uniform> params: Params;
 @group(0) @binding(3) var<storage,read_write> result: Result;
 
@@ -319,8 +320,8 @@ fn keccakf(s:ptr<function,array<vec2<u32>,25>>){
 }
 fn isValid(h:ptr<function,array<u32,8>>)->bool{
  for(var i:u32=0u;i<8u;i++){
-  if((*h)[i]<target[i]){return true;}
-  if((*h)[i]>target[i]){return false;}
+  if((*h)[i]<targetBuf[i]){return true;}
+  if((*h)[i]>targetBuf[i]){return false;}
  }
  return true;
 }
@@ -406,8 +407,9 @@ fn main(@builtin(global_invocation_id) gid:vec3<u32>){
     }catch(e){
       console.error("WebGPU init:",e);
       state.gpu=null;state.mode="cpu";gpuBtn.classList.add("disabled");gpuBtn.disabled=false;
-      info.textContent="GPU INIT FAILED · "+(e?.message||String(e))+" · click GPU to retry";
+      const gpuError = "GPU INIT FAILED · "+(e?.message||String(e))+" · click GPU to retry";
       selectMode("cpu",false);
+      info.textContent=gpuError;
       return false;
     }
   }
