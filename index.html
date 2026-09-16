@@ -362,17 +362,22 @@ fn main(@builtin(global_invocation_id) gid:vec3<u32>){
       state.mode="cpu";
       gpuBtn.classList.add("disabled");
       gpuBtn.disabled=false; // keep clickable so the user can retry after browser/GPU settings change
-      info.textContent="WEBGPU API UNAVAILABLE · click GPU to retry after enabling graphics acceleration";
+      info.textContent="WEBGPU API UNAVAILABLE in this page context · click GPU to retry";
       selectMode("cpu",false);
       return false;
     }
     try{
-      info.textContent="Initializing high-performance WebGPU…";
-      const adapter=await navigator.gpu.requestAdapter({powerPreference:"high-performance"});
-      if(!adapter)throw new Error("No WebGPU adapter found");
+      info.textContent="Detecting available WebGPU adapter…";
+      // Do not require a special browser setting or a discrete/high-performance GPU.
+      // Try the preferred adapter first, then fall back to the browser's default adapter.
+      let adapter=await navigator.gpu.requestAdapter({powerPreference:"high-performance"});
+      if(!adapter) adapter=await navigator.gpu.requestAdapter();
+      if(!adapter) adapter=await navigator.gpu.requestAdapter({powerPreference:"low-power"});
+      if(!adapter)throw new Error("Browser exposes WebGPU, but no GPU adapter was returned");
       const device=await adapter.requestDevice();
-      const adapterInfo=adapter.info||{};
-      const label=[adapterInfo.vendor,adapterInfo.architecture,adapterInfo.device].filter(Boolean).join(" ")||"High-performance WebGPU";
+      let adapterInfo={};
+      try{ adapterInfo=adapter.info||{}; }catch{}
+      const label=[adapterInfo.vendor,adapterInfo.architecture,adapterInfo.device].filter(Boolean).join(" ")||"WebGPU adapter";
       const module=device.createShaderModule({code:SHADER,label:"HASHCATS Arc Keccak Miner"});
       const ci=await module.getCompilationInfo();
       const errs=ci.messages.filter(x=>x.type==="error");
@@ -621,10 +626,10 @@ fn main(@builtin(global_invocation_id) gid:vec3<u32>){
   el("gpuMode").onclick=async()=>{
     if(state.mining)return;
     if(state.gpu){ selectMode("gpu"); return; }
-    status("Retrying high-performance WebGPU adapter…","warn");
+    status("Retrying WebGPU with compatible adapter detection…","warn");
     const ok=await initGPU();
     if(!ok){
-      status("WebGPU is still unavailable. In Brave open brave://settings/system, enable graphics acceleration, relaunch Brave, then click GPU again.","bad");
+      status("GPU init failed. This build no longer requires a high-performance-only adapter; the exact error is shown under GPU Engine.","bad");
     }
   };
   el("cpuMode").onclick=()=>selectMode("cpu");

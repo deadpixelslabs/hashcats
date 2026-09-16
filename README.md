@@ -1,19 +1,13 @@
-# HASHCATS Miner — WebGPU Production
+# HASHCATS Miner — WebGPU compatibility build
 
-Primary engine: real WebGPU Keccak-256.
-Fallback: CPU web workers.
+This build keeps the HASHCATS Arc production frontend but changes GPU detection so it does not require a high-performance-only adapter.
 
-Contract: 0x5f53a69f8f87b7a321c8cd69957a7e622314b732
-Chain: Arc Mainnet (5042)
-Backend: https://hashcats-server.vercel.app
+Adapter order:
+1. high-performance preference
+2. browser default adapter
+3. low-power preference
 
-GitHub update:
-1. Replace the files in the existing miner repository with these files.
-2. Commit to the production branch.
-3. Vercel redeploys automatically if connected to GitHub.
+If any WebGPU adapter is available, GPU mode is enabled. CPU remains fallback only.
 
-The GPU miner searches `keccak256(abi.encodePacked(currentChallenge, miner, nonce)) <= target`.
-Every GPU candidate is checked again through `previewProof()` before any mining transaction is requested.
-
-
-GPU retry patch: the GPU button remains clickable when WebGPU is unavailable or initialization fails. It will retry adapter initialization and show the exact error.
+Production contract: `0x5f53a69f8f87b7a321c8cd69957a7e622314b732`
+Backend: `https://hashcats-server.vercel.app`
