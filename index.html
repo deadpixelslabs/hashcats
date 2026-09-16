@@ -1,941 +1,221 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HASHCATS — Mine</title>
-  <meta name="description" content="HASHCATS — 100% free mint NFT mining on ARC." />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#05070b" />
+  <meta name="description" content="HASHCATS — proof-of-work NFT mining on Arc. 4,444 cats. 100% free mint. 1 USDC successful mining fee." />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <title>HASHCATS — Mine on Arc</title>
   <style>
     :root{
-      --bg:#04050a;
-      --panel:#1b1f29;
-      --panel2:#212633;
-      --line:#2e3443;
-      --line2:#3f4658;
-      --green:#a7d65c;
-      --green2:#7ab654;
-      --cyan:#7ad9e8;
-      --cyan2:#4bb9ca;
-      --text:#e9edf8;
-      --muted:#9aa2b7;
-      --yellow:#f0d35b;
-      --danger:#ff8a7a;
+      --bg:#05070b;--panel:#1d212b;--panel2:#252a37;--panel3:#11141c;
+      --edge:#42495a;--edge2:#2d3341;--green:#a8d85b;--green2:#6fae4e;
+      --cyan:#76d9e8;--cyan2:#48a9ba;--yellow:#f3d75b;--red:#ff7b72;
+      --text:#edf1fb;--muted:#9fa8bd;--muted2:#687187;--shadow:#000;
     }
-
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      background:
-        radial-gradient(circle at 15% 0%, rgba(122,217,232,.05), transparent 20%),
-        radial-gradient(circle at 85% 10%, rgba(167,214,92,.05), transparent 18%),
-        var(--bg);
-      color:var(--text);
-      font-family: "Courier New", monospace;
-      min-height:100vh;
-      image-rendering: pixelated;
-      letter-spacing:.02em;
-    }
-    a{text-decoration:none;color:inherit}
-    .wrap{width:min(1220px, calc(100% - 28px));margin:auto}
-
-    /* pixel helpers */
-    .pixel-box{
-      border:2px solid var(--line2);
-      box-shadow:
-        inset 0 0 0 2px rgba(0,0,0,.35),
-        0 0 0 1px rgba(255,255,255,.02);
-      position:relative;
-    }
-    .pixel-box.green{
-      border-color:var(--green2);
-      box-shadow:
-        inset 0 0 0 2px rgba(0,0,0,.35),
-        0 0 0 1px rgba(167,214,92,.25);
-    }
-    .pixel-box.cyan{
-      border-color:var(--cyan2);
-      box-shadow:
-        inset 0 0 0 2px rgba(0,0,0,.35),
-        0 0 0 1px rgba(122,217,232,.28);
-    }
-    .pixel-tab{
-      display:inline-block;
-      padding:10px 16px;
-      background:var(--green);
-      color:#10150d;
-      font-weight:800;
-      text-transform:uppercase;
-      border:2px solid #7ea844;
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.15);
-    }
-    .btn{
-      display:inline-flex;align-items:center;justify-content:center;
-      padding:12px 18px;
-      min-height:46px;
-      font-weight:800;
-      text-transform:uppercase;
-      border:2px solid #6ea24f;
-      background:var(--green);
-      color:#10150d;
-      cursor:pointer;
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.15);
-    }
-    .btn.secondary{
-      background:#252b39;
-      color:#dbe7ff;
-      border-color:#54607b;
-    }
-    .btn:hover{filter:brightness(1.05)}
-
-    nav{
-      border-bottom:2px solid #2a2f3d;
-      background:#080b12;
-      position:sticky;top:0;z-index:20;
-    }
-    .nav-inner{
-      height:74px;
-      display:flex;align-items:center;justify-content:space-between;gap:18px;
-    }
-    .brand{
-      display:flex;align-items:center;gap:12px;font-size:18px;font-weight:800;
-      text-transform:uppercase;
-    }
-    .brand .icon{
-      width:28px;height:28px;border:2px solid var(--green2);
-      display:grid;place-items:center;background:#171d13;
-      font-size:16px;
-    }
-    .nav-left{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-    .nav-links{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
-    .nav-links a{
-      padding:10px 12px;color:#d9e4ff;font-size:13px;text-transform:uppercase;font-weight:800;
-    }
-    .nav-links a.active{
-      background:var(--green);color:#10150d;border:2px solid #6ea24f;
-    }
-    .nav-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-    .ticker{
-      background:#202634;padding:11px 16px;border:2px solid #49536a;
-      font-size:13px;text-transform:uppercase;color:#dce8ff;min-width:245px;text-align:center;
-    }
-    .ticker b{color:var(--cyan)}
-
-    .intro{
-      padding:34px 0 22px;
-      border-top:1px dashed #303646;
-    }
-    h1{
-      margin:0 0 14px;
-      font-size:56px;
-      line-height:.92;
-      text-transform:uppercase;
-      letter-spacing:.03em;
-    }
-    .lead{
-      max-width:680px;
-      color:#bbc5db;
-      font-size:18px;
-      line-height:1.65;
-      margin-bottom:20px;
-    }
-    .info-row{
-      display:flex;gap:12px;flex-wrap:wrap;
-      color:#b6c0d8;font-size:13px;text-transform:uppercase;
-    }
-    .chip{
-      padding:9px 12px;background:#171b25;border:2px solid #2c3342;
-    }
-    .chip b{color:var(--green)}
-
-    .main-grid{
-      display:grid;grid-template-columns:1fr;
-      gap:18px;
-      padding-bottom:28px;
-    }
-
-    .mine-panel{
-      background:var(--panel);
-      padding:0;
-    }
-    .panel-head{
-      display:flex;align-items:center;justify-content:space-between;
-      background:var(--green2);
-      color:#11170d;
-      padding:10px 14px;
-      text-transform:uppercase;
-      font-weight:800;
-      font-size:14px;
-    }
-    .panel-body{
-      padding:18px;
-      display:grid;
-      grid-template-columns:320px 1fr;
-      gap:18px;
-      background:var(--panel);
-    }
-    .art-box{
-      background:#121621;
-      border:2px solid #4f566b;
-      padding:10px;
-      min-height:320px;
-    }
-    .art-frame{
-      height:100%;
-      border:2px solid #626b81;
-      background:
-        linear-gradient(180deg,#6f5f7c 0%, #5d536b 100%);
-      display:grid;place-items:center;
-      overflow:hidden;
-    }
-
-    /* faux pixel cat */
-    .cat-svg{
-      width:100%;height:auto;max-width:270px;
-      filter: drop-shadow(0 0 0 rgba(0,0,0,0));
-      image-rendering:pixelated;
-      shape-rendering:crispEdges;
-    }
-
-    .mine-right{
-      display:flex;flex-direction:column;gap:16px;
-    }
-    .barline{
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
-      color:#dbe6ff;font-size:13px;text-transform:uppercase;font-weight:800;
-    }
-    .color-strip{
-      display:grid;grid-template-columns:repeat(40, 1fr);gap:2px;margin-top:8px;
-    }
-    .color-strip span{height:18px;background:#50607c}
-    .color-strip span:nth-child(4n){background:#a76b3b}
-    .color-strip span:nth-child(5n){background:#57a6c8}
-    .color-strip span:nth-child(3n){background:#8d5ea4}
-    .color-strip span:nth-child(7n){background:#7cb465}
-    .progress{
-      display:grid;grid-template-columns:repeat(36, 1fr);gap:2px;margin-top:8px
-    }
-    .progress span{height:17px;background:#484e5e}
-    .progress span.hit{background:var(--green)}
-    .small-text{font-size:13px;color:#c7d0e7;line-height:1.6}
-    .muted{color:var(--muted)}
-
-    .stats-grid{
-      display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
-    }
-    .stat{
-      padding:14px;border:2px solid #32394a;background:#1a1f2a;
-      min-height:86px;
-    }
-    .stat .label{
-      font-size:12px;text-transform:uppercase;color:#a4aec5;font-weight:800
-    }
-    .stat .value{
-      font-size:27px;margin-top:10px;font-weight:800;color:#fff
-    }
-    .stat .value.green{color:var(--green)}
-    .controls{
-      display:flex;justify-content:space-between;gap:18px;align-items:end;flex-wrap:wrap
-    }
-    .toggle-group{
-      display:flex;gap:8px;align-items:center;flex-wrap:wrap
-    }
-    .mini-btn{
-      min-width:82px;text-align:center;padding:12px 14px;border:2px solid #57607a;background:#444b60;
-      color:#dfe8ff;font-weight:800;text-transform:uppercase;
-    }
-    .mini-btn.active{background:var(--green);border-color:#7ba349;color:#10150d}
-    .slider-wrap{min-width:260px;flex:1}
-    input[type=range]{width:100%}
-    .cost{
-      min-width:175px;
-      font-size:16px;
-      color:var(--green);
-      font-weight:800;
-      text-transform:uppercase;
-    }
-
-    .lower-grid{
-      display:grid;grid-template-columns:1fr 1fr;gap:18px;
-    }
-    .section-head{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:12px 14px;
-      font-size:14px;
-      text-transform:uppercase;
-      font-weight:800;
-      border-bottom:2px solid var(--line2);
-    }
-    .section-head.cyan{background:var(--cyan);color:#0e171b;border-bottom-color:#4aa7b8}
-    .section-head.gray{background:#3f4252;color:#fff;border-bottom-color:#5c6276}
-    .panel-content{padding:16px;background:var(--panel)}
-    .chart{
-      height:180px;
-      display:flex;align-items:flex-end;gap:3px;
-      padding:16px 0 6px;
-    }
-    .chart span{
-      flex:1;background:#6b7e43;border:1px solid #879d5d;
-    }
-    .network-cols{
-      display:grid;grid-template-columns:1fr 1fr;gap:16px;
-    }
-    .metric-list{
-      display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;
-      padding-top:4px;
-    }
-    .metric .k{font-size:12px;text-transform:uppercase;color:#acb6cd;font-weight:800}
-    .metric .v{font-size:28px;margin-top:6px;font-weight:800}
-    .anchor{
-      margin-top:18px;padding-top:16px;border-top:2px dashed #394153
-    }
-    .code-line{
-      color:#cfd9f0;word-break:break-all;font-size:14px;line-height:1.5
-    }
-
-    .mints-panel{background:var(--panel)}
-    .mint-head{
-      display:flex;justify-content:space-between;align-items:center;
-      padding:12px 14px;font-size:14px;font-weight:800;text-transform:uppercase;
-      background:#3f4252;border-bottom:2px solid #5c6276;
-    }
-    .mint-head a{color:var(--green)}
-    .mint-grid{
-      padding:16px;
-      display:grid;grid-template-columns:repeat(10,1fr);gap:10px;
-    }
-    .mint-card{
-      background:#232838;border:2px solid #3a4253;padding:4px;
-    }
-    .mint-card .thumb{
-      width:100%;aspect-ratio:1/1;background:#5a5366;display:grid;place-items:center;overflow:hidden
-    }
-    .mint-card svg{width:100%;height:100%}
-    .mint-meta{
-      display:flex;justify-content:space-between;gap:8px;
-      font-size:11px;color:#d7def0;padding-top:4px
-    }
-    .mint-meta b{color:var(--green)}
-
-    footer{
-      padding:30px 0 44px;color:#8892a9;font-size:13px
-    }
-    .foot{
-      display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;
-      border-top:2px solid #232838;padding-top:20px
-    }
-    .foot a{color:var(--cyan)}
-
-    @media (max-width: 1080px){
-      .panel-body{grid-template-columns:1fr}
-      .lower-grid{grid-template-columns:1fr}
-      .mint-grid{grid-template-columns:repeat(5,1fr)}
-      .stats-grid{grid-template-columns:repeat(2,1fr)}
-    }
-    @media (max-width: 720px){
-      .nav-inner{height:auto;padding:12px 0}
-      h1{font-size:38px}
-      .lead{font-size:15px}
-      .ticker{min-width:unset}
-      .stats-grid{grid-template-columns:1fr}
-      .network-cols{grid-template-columns:1fr}
-      .metric-list{grid-template-columns:1fr 1fr}
-      .mint-grid{grid-template-columns:repeat(3,1fr)}
-    }
-    @media (max-width: 460px){
-      .wrap{width:min(100% - 16px, 1220px)}
-      .mint-grid{grid-template-columns:repeat(2,1fr)}
-      .metric-list{grid-template-columns:1fr}
-    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    body{margin:0;background:radial-gradient(circle at 50% -20%,#101522 0,#05070b 40%),var(--bg);color:var(--text);font-family:"Courier New",ui-monospace,monospace;image-rendering:pixelated;letter-spacing:.015em}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.035;background-image:linear-gradient(rgba(255,255,255,.35) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.35) 1px,transparent 1px);background-size:4px 4px;z-index:-1}
+    a{color:inherit;text-decoration:none} button,input{font:inherit}.wrap{width:min(1210px,calc(100% - 26px));margin:auto}
+    .pixel{border:2px solid var(--edge);box-shadow:inset 0 0 0 2px rgba(0,0,0,.42),3px 3px 0 rgba(0,0,0,.5)}
+    .pixel.green{border-color:var(--green2)}.pixel.cyan{border-color:var(--cyan2)}
+    nav{position:sticky;top:0;z-index:50;background:rgba(7,9,14,.96);border-bottom:2px dashed #343a49;backdrop-filter:blur(10px)}
+    .navin{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px 0}
+    .navleft,.navright,.brand,.navlinks{display:flex;align-items:center}.navleft{gap:18px}.brand{gap:10px;font-size:22px;font-weight:900;letter-spacing:-.04em}.brand img{width:34px;height:34px}.brand em{font-style:normal;color:var(--green)}
+    .navlinks{gap:3px}.navlinks a{font-size:12px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;padding:10px 11px;color:#d7e2fa}.navlinks a.active{background:var(--green);color:#10150c;border:2px solid #719f45}
+    .navright{gap:10px}.ticker{background:#171c26;border:2px solid #485064;box-shadow:inset 0 0 0 2px #0b0e14;padding:9px 12px;font-size:12px;color:#b8c7e7;white-space:nowrap}.ticker b{color:var(--cyan)}
+    .btn{border:2px solid #79a64a;background:var(--green);color:#11170c;text-transform:uppercase;font-weight:900;padding:11px 16px;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),2px 2px 0 #020302;min-height:44px}.btn:hover{filter:brightness(1.08)}.btn:disabled{filter:grayscale(.75);opacity:.55;cursor:not-allowed}.btn.dark{background:#252b39;border-color:#586279;color:#e3eafa}.btn.red{background:#b94c49;border-color:#e37169;color:#fff}
+    .hero{padding:34px 0 20px}.hero h1{font-size:clamp(42px,6vw,72px);line-height:.9;margin:0 0 12px;letter-spacing:-.055em;text-transform:uppercase}.hero h1 span{color:var(--green)}.hero p{max-width:780px;color:#b9c4db;line-height:1.55;font-size:15px;margin:0}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.chip{background:#171b24;border:2px solid #303746;padding:8px 10px;text-transform:uppercase;font-size:11px;color:#aeb8cc;font-weight:800}.chip b{color:var(--green)}
+    .head{height:38px;padding:0 13px;display:flex;align-items:center;justify-content:space-between;text-transform:uppercase;font-weight:900;font-size:12px;letter-spacing:.08em}.head.green{background:var(--green2);color:#0d130b}.head.cyan{background:var(--cyan);color:#0a1517}.head.gray{background:#424656}.panel{background:var(--panel);overflow:hidden}
+    .minerbody{display:grid;grid-template-columns:315px 1fr;gap:18px;padding:16px}.catstage{background:#0f1219;border:2px solid #4f5668;padding:8px;min-height:330px;display:flex;flex-direction:column}.catframe{position:relative;flex:1;min-height:280px;background:#171b25;display:grid;place-items:center;overflow:hidden;border:2px solid #616a7e}.catframe img.catart{width:100%;height:100%;object-fit:cover;image-rendering:pixelated}.catframe .placeholder{width:64%;max-width:210px;opacity:.45}.artlabel{position:absolute;left:8px;top:8px;background:#080b11e8;border:1px solid #586174;padding:5px 7px;font-size:10px;text-transform:uppercase;color:#e4ebfa}.catfoot{padding-top:8px;color:#8994aa;font-size:11px;display:flex;justify-content:space-between;gap:10px}.minearea{display:flex;flex-direction:column;gap:15px}.rowhead{display:flex;justify-content:space-between;gap:12px;font-size:12px;text-transform:uppercase;font-weight:900;color:#dce4f5}.rowhead .good{color:var(--green)}.hashstrip{display:grid;grid-template-columns:repeat(48,1fr);gap:2px;margin-top:7px}.hashstrip i{display:block;height:15px;background:#3a404f}.hashstrip i:nth-child(5n){background:#604766}.hashstrip i:nth-child(7n){background:#5d6c42}.hashstrip i:nth-child(11n){background:#386b7a}.targetstrip i.on{background:var(--green)}.hashline{font-size:12px;color:#ced8ed;word-break:break-all;margin-top:7px;min-height:29px}.muted{color:var(--muted)}
+    .stats4{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.stat{border:2px solid #333a49;background:#171b24;padding:11px;min-height:80px}.stat small{display:block;text-transform:uppercase;color:#9aa6bd;font-size:10px;font-weight:900;letter-spacing:.08em}.stat strong{display:block;margin-top:8px;font-size:21px;color:#f5f7fc}.stat strong.green{color:var(--green)}
+    .controls{display:grid;grid-template-columns:1.2fr 1fr auto;gap:14px;align-items:end;border-top:2px dashed #343b4a;padding-top:14px}.label{display:block;text-transform:uppercase;color:#aab4c9;font-size:10px;font-weight:900;margin-bottom:7px}.machine{display:flex;gap:7px}.mode{padding:10px 16px;border:2px solid #4b5469;background:#353b4a;color:#cbd5e9;font-weight:900;min-width:78px;text-align:center}.mode.active{background:var(--green);border-color:#79a64a;color:#10160d}.mode.disabled{opacity:.4}.rangebox input{width:100%;accent-color:var(--green)}.fee{font-size:13px;color:#dbe5f8}.fee b{display:block;color:var(--green);font-size:16px;margin-top:5px}.actionrow{display:flex;gap:9px;flex-wrap:wrap;margin-top:2px}.statusline{font-size:12px;padding:9px 11px;background:#0c1016;border:1px solid #303746;color:#aeb9cf;min-height:36px}.statusline.good{color:#bfff89;border-color:#53763d}.statusline.warn{color:#ffe083;border-color:#796c35}.statusline.bad{color:#ff9c92;border-color:#754440}
+    .away{margin-top:14px;padding:12px 14px;border-top:2px dashed #363d4c;background:#181c25}.awayhead{display:flex;justify-content:space-between;text-transform:uppercase;font-size:11px;font-weight:900;color:#c3cce0}.slots{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;margin-top:9px}.slot{aspect-ratio:1;background:#1c2029;border:2px solid #2c3240;overflow:hidden;position:relative}.slot img{width:100%;height:100%;object-fit:cover}.slot span{position:absolute;left:3px;bottom:2px;font-size:8px;color:#fff;text-shadow:1px 1px #000}
+    .twocol{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}.boxcontent{padding:14px;background:var(--panel)}.chart{height:160px;display:flex;align-items:flex-end;gap:3px;padding:8px 0 4px}.chart i{flex:1;background:#64783f;border-top:1px solid #91a969;min-height:3px}.explain{color:#aab5ca;font-size:12px;line-height:1.55}.networkgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}.metric{padding-bottom:9px;border-bottom:1px dashed #3a4150}.metric small{display:block;text-transform:uppercase;color:#99a4bb;font-size:10px;font-weight:900}.metric b{display:block;font-size:21px;margin-top:5px}.anchor{margin-top:12px;padding-top:12px;border-top:2px dashed #394150;font-size:11px;color:#aeb9cf}.anchor code{display:block;margin-top:5px;word-break:break-all;color:#dbe5f8}
+    section.block{margin:16px 0}.mintgrid{padding:12px;display:grid;grid-template-columns:repeat(10,1fr);gap:8px}.mint{background:#242a36;border:2px solid #394252;padding:4px}.mint img{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#12151c}.mintmeta{display:flex;justify-content:space-between;gap:4px;padding-top:4px;font-size:9px}.mintmeta b{color:var(--green)}.emptymint{aspect-ratio:1;background:#171b23;border:2px solid #2a303d;display:grid;place-items:center;color:#475064;font-size:24px}
+    .leader{width:100%;border-collapse:collapse;font-size:11px}.leader th,.leader td{text-align:left;padding:9px;border-bottom:1px solid #333a48}.leader th{color:#9faabd;text-transform:uppercase}.leader td:nth-child(1){color:var(--green);font-weight:900}.leader code{color:#d9e3f5}.foot{padding:28px 0 44px;color:#747e92;font-size:11px}.footin{border-top:2px solid #232936;padding-top:18px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.foot a{color:var(--cyan)}
+    .toast{position:fixed;right:16px;bottom:16px;z-index:80;max-width:min(420px,calc(100% - 32px));padding:12px 14px;background:#11151d;border:2px solid #515a6e;color:#e9eef8;box-shadow:4px 4px 0 #000;font-size:12px;display:none}.toast.show{display:block}.toast.good{border-color:var(--green2)}.toast.bad{border-color:#9b4c47}
+    @media(max-width:970px){.navlinks{display:none}.minerbody{grid-template-columns:1fr}.catstage{max-width:430px;width:100%;margin:auto}.twocol{grid-template-columns:1fr}.mintgrid{grid-template-columns:repeat(5,1fr)}}
+    @media(max-width:700px){.wrap{width:min(100% - 16px,1210px)}.navin{align-items:flex-start}.navright{flex-direction:column;align-items:flex-end}.ticker{font-size:9px}.brand{font-size:18px}.stats4{grid-template-columns:repeat(2,1fr)}.controls{grid-template-columns:1fr}.slots{grid-template-columns:repeat(6,1fr)}.mintgrid{grid-template-columns:repeat(3,1fr)}.hero{padding-top:23px}.hero p{font-size:13px}}
   </style>
 </head>
 <body>
-  <nav>
-    <div class="wrap nav-inner">
-      <div class="nav-left">
-        <a class="brand" href="#">
-          <span class="icon">🐱</span>
-          <span>HASHCATS</span>
-        </a>
-        <div class="nav-links">
-          <a href="#" class="active">Mine</a>
-          <a href="#collection">Collection</a>
-          <a href="#token">$HASH</a>
-          <a href="#stake">Stake</a>
-          <a href="#docs">Docs</a>
-        </div>
-      </div>
-
-      <div class="nav-right">
-        <div class="ticker"><b>64 274 053</b> / 9 329 mined</div>
-        <a class="btn" href="https://x.com/hashcats_ARC" target="_blank" rel="noopener">Connect / X</a>
+<nav>
+  <div class="wrap navin">
+    <div class="navleft">
+      <a class="brand" href="#mine"><img src="/logo.svg" alt="HASHCATS logo"><span>HASH<em>CATS</em></span></a>
+      <div class="navlinks">
+        <a class="active" href="#mine">Mine</a><a href="#collection">Collection</a><a href="#network">Network</a><a href="#leaderboard">Miners</a><a href="https://x.com/hashcats_ARC" target="_blank" rel="noopener">X</a>
       </div>
     </div>
-  </nav>
+    <div class="navright">
+      <div class="ticker"><b id="topBlock">—</b> / <span id="topMined">0</span> mined</div>
+      <button class="btn" id="connectBtn">Connect</button>
+    </div>
+  </div>
+</nav>
 
-  <main class="wrap">
-    <section class="intro">
-      <h1>MINE A CAT</h1>
-      <div class="lead">
-        HASHCATS is a <b>100% free mint</b> NFT mining project on <b>ARC</b>.
-        This preview uses a retro dashboard UI inspired by classic pixel-miner interfaces:
-        connect wallet, monitor the target, watch latest mints, and prepare for the mining layer.
-      </div>
-      <div class="info-row">
-        <div class="chip">Project: <b>Independent</b></div>
-        <div class="chip">Network: <b>ARC</b></div>
-        <div class="chip">Mint Price: <b>FREE</b></div>
-        <div class="chip">Official X: <b>@hashcats_ARC</b></div>
-      </div>
-    </section>
+<main class="wrap" id="mine">
+  <header class="hero">
+    <h1>MINE A <span>CAT</span></h1>
+    <p>Your browser searches nonces locally until one proof beats the live HASHCATS target. Nothing is submitted while searching. A valid win is verified again onchain, then the contract mints one random unused HASHCAT. Mint price is free; only a successful claim pays the fixed 1 USDC mining fee directly to treasury.</p>
+    <div class="chips"><span class="chip">Chain <b>ARC 5042</b></span><span class="chip">Supply <b>4,444</b></span><span class="chip">Mint <b>FREE</b></span><span class="chip">Win Fee <b>1 USDC</b></span><span class="chip">Status <b id="chipStatus">LIVE</b></span></div>
+  </header>
 
-    <section class="main-grid">
-      <div class="mine-panel pixel-box green">
-        <div class="panel-head">
-          <span>Miner</span>
-          <span>■ Idle</span>
+  <section class="panel pixel green">
+    <div class="head green"><span>Miner</span><span id="minerState">■ IDLE</span></div>
+    <div class="minerbody">
+      <div class="catstage">
+        <div class="catframe" id="catFrame"><img class="placeholder" src="/logo.svg" alt="HASHCATS"><span class="artlabel" id="artLabel">Awaiting first mined cat</span></div>
+        <div class="catfoot"><span id="lastCatLabel">LATEST: —</span><span id="lastTime">—</span></div>
+      </div>
+      <div class="minearea">
+        <div>
+          <div class="rowhead"><span>Last Cat Mined</span><span><span id="bestBits" style="color:var(--yellow)">—</span> / <span class="good" id="targetBits">—</span> effective bits</span></div>
+          <div class="hashstrip" id="hashStrip"></div>
+          <div class="hashline" id="lastHash">No HASHCAT has been mined yet.</div>
         </div>
-
-        <div class="panel-body">
-          <div class="art-box">
-            <div class="art-frame">
-              <svg class="cat-svg" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
-                <rect width="220" height="220" fill="#6c5c79"/>
-                <rect x="0" y="0" width="220" height="220" fill="none" stroke="#473f54" stroke-width="10"/>
-                <circle cx="110" cy="96" r="70" fill="#404657"/>
-                <polygon points="64,70 80,40 97,69" fill="#767a8a"/>
-                <polygon points="123,69 140,40 156,71" fill="#767a8a"/>
-                <polygon points="72,66 80,50 89,67" fill="#cb7d98"/>
-                <polygon points="132,67 140,50 148,68" fill="#cb7d98"/>
-                <rect x="68" y="78" width="84" height="72" rx="24" fill="#7c8190"/>
-                <ellipse cx="90" cy="106" rx="22" ry="24" fill="#98ecf0"/>
-                <ellipse cx="130" cy="106" rx="22" ry="24" fill="#98ecf0"/>
-                <rect x="89" y="82" width="2" height="48" fill="#20252e"/>
-                <rect x="129" y="82" width="2" height="48" fill="#20252e"/>
-                <polygon points="110,112 120,122 110,127 100,122" fill="#ff8fb1"/>
-                <rect x="96" y="128" width="28" height="18" fill="#191d25"/>
-                <rect x="104" y="130" width="5" height="14" fill="#ffffff"/>
-                <rect x="112" y="130" width="5" height="14" fill="#ffffff"/>
-                <line x1="69" y1="121" x2="38" y2="116" stroke="#d9dfe9" stroke-width="3"/>
-                <line x1="69" y1="129" x2="35" y2="132" stroke="#d9dfe9" stroke-width="3"/>
-                <line x1="151" y1="121" x2="182" y2="116" stroke="#d9dfe9" stroke-width="3"/>
-                <line x1="151" y1="129" x2="185" y2="132" stroke="#d9dfe9" stroke-width="3"/>
-                <rect x="18" y="160" width="58" height="38" fill="#596747"/>
-                <rect x="40" y="144" width="15" height="32" fill="#869463"/>
-                <rect x="146" y="130" width="8" height="64" fill="#7b5b3f"/>
-                <path d="M152 145 C170 140, 178 150, 180 163 C173 168,165 166,155 158 Z" fill="#f1d595"/>
-                <rect x="171" y="163" width="16" height="7" fill="#c94a3e"/>
-              </svg>
-            </div>
+        <div>
+          <div class="rowhead"><span>Target to Beat</span><span><span class="good" id="targetBits2">—</span> effective bits</span></div>
+          <div class="hashstrip targetstrip" id="targetStrip"></div>
+          <div class="hashline muted">Challenge: <span id="challenge">loading…</span></div>
+        </div>
+        <div class="stats4">
+          <div class="stat"><small>Speed</small><strong id="speed">0 H/s</strong></div>
+          <div class="stat"><small>Hashes Tried</small><strong id="hashes">0</strong></div>
+          <div class="stat"><small>Expected Wait</small><strong id="wait">—</strong></div>
+          <div class="stat"><small>Chance / Min</small><strong class="green" id="chance">—</strong></div>
+        </div>
+        <div class="controls">
+          <div>
+            <span class="label">Machine</span>
+            <div class="machine"><div class="mode active">CPU</div><div class="mode disabled" title="GPU miner is not enabled in this build">GPU</div></div>
           </div>
-
-          <div class="mine-right">
-            <div>
-              <div class="barline">
-                <span>Last Cat Mined</span>
-                <span><span style="color:var(--yellow)">39</span> / <span style="color:var(--green)">36</span> bits</span>
-              </div>
-              <div class="color-strip">
-                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-              </div>
-              <div class="small-text" style="margin-top:8px">0xe859044e94fed02e026334655f9607218604f3ba0f239223f39fdaa9c8c14b9e</div>
-            </div>
-
-            <div>
-              <div class="barline">
-                <span>Target to Beat</span>
-                <span><span style="color:var(--green)">36</span> Leading Zero Bits</span>
-              </div>
-              <div class="progress">
-                <span class="hit"></span><span class="hit"></span><span class="hit"></span><span class="hit"></span><span class="hit"></span><span class="hit"></span>
-                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-              </div>
-            </div>
-
-            <div class="small-text">
-              <div><b>MINED BY</b> 0x7c4...5294 <span class="muted">2m ago</span></div>
-              <div class="muted" style="margin-top:4px">Your miner will appear here as soon as you start.</div>
-            </div>
-
-            <div class="stats-grid">
-              <div class="stat">
-                <div class="label">Speed</div>
-                <div class="value">0 H/s</div>
-              </div>
-              <div class="stat">
-                <div class="label">Cats Seen</div>
-                <div class="value">0</div>
-              </div>
-              <div class="stat">
-                <div class="label">Expected Wait</div>
-                <div class="value">—</div>
-              </div>
-              <div class="stat">
-                <div class="label">Chance / Min</div>
-                <div class="value">—</div>
-              </div>
-            </div>
-
-            <div class="controls">
-              <div class="toggle-group">
-                <div>
-                  <div class="muted" style="font-size:12px;text-transform:uppercase;font-weight:800;margin-bottom:6px">Machine</div>
-                  <div style="display:flex;gap:8px">
-                    <div class="mini-btn active">CPU</div>
-                    <div class="mini-btn">GPU</div>
-                  </div>
-                </div>
-
-                <div class="slider-wrap">
-                  <div class="muted" style="font-size:12px;text-transform:uppercase;font-weight:800;margin-bottom:6px">Cores to Use: 4</div>
-                  <input type="range" min="1" max="16" value="4" />
-                </div>
-              </div>
-
-              <div style="display:flex;gap:14px;align-items:end;flex-wrap:wrap">
-                <div class="cost">Next Cat Costs<br>0.0000 ARC</div>
-                <button class="btn" onclick="alert('Preview only — connect wallet module will be added in production.')">Connect Wallet</button>
-              </div>
-            </div>
-          </div>
+          <div class="rangebox"><span class="label">Workers to use: <b id="workerLabel">4</b></span><input id="workers" type="range" min="1" max="16" value="4"></div>
+          <div class="fee"><span class="label">Successful mine costs</span><b>1.000000 USDC</b></div>
         </div>
+        <div class="actionrow"><button class="btn" id="startBtn">Start Mining</button><button class="btn red" id="stopBtn" disabled>Stop</button><button class="btn dark" id="approveBtn" style="display:none">Approve 1 USDC</button></div>
+        <div class="statusline" id="statusLine">Connect your wallet to begin. Mining computation stays in your browser.</div>
       </div>
-
-      <div class="lower-grid">
-        <div class="pixel-box">
-          <div class="section-head gray">
-            <span>Why It Gets Harder</span>
-            <span>One Floor = Twice The Work</span>
-          </div>
-          <div class="panel-content">
-            <div style="font-size:14px;text-transform:uppercase;font-weight:800;color:#dfe6f6">Hashes by Leading Zero Bits</div>
-            <div class="chart">
-              <span style="height:92%"></span><span style="height:88%"></span><span style="height:85%"></span><span style="height:82%"></span>
-              <span style="height:79%"></span><span style="height:75%"></span><span style="height:73%"></span><span style="height:70%"></span>
-              <span style="height:67%"></span><span style="height:64%"></span><span style="height:61%"></span><span style="height:58%"></span>
-              <span style="height:55%"></span><span style="height:52%"></span><span style="height:49%"></span><span style="height:46%"></span>
-              <span style="height:43%"></span><span style="height:40%"></span><span style="height:37%"></span><span style="height:34%"></span>
-              <span style="height:31%"></span><span style="height:28%"></span><span style="height:25%"></span><span style="height:22%"></span>
-              <span style="height:19%"></span><span style="height:16%"></span><span style="height:13%"></span><span style="height:10%"></span>
-            </div>
-            <div class="small-text">
-              The shape above is one average cat. Each new floor increases total work required.
-              Your attempts take place inside a live mining epoch and compete against the current target.
-            </div>
-            <div style="margin-top:20px" class="small-text">
-              <b>Epoch 10 · Floor 36 Bits</b><br>
-              7,047 cats until the floor rises one bit and every search doubles with it.
-            </div>
-          </div>
-        </div>
-
-        <div class="pixel-box cyan">
-          <div class="section-head cyan">
-            <span>Network</span>
-            <span>36 Bits</span>
-          </div>
-          <div class="panel-content">
-            <div class="network-cols">
-              <div>
-                <div class="metric-list">
-                  <div class="metric">
-                    <div class="k">Difficulty</div>
-                    <div class="v">36</div>
-                  </div>
-                  <div class="metric">
-                    <div class="k">Mined</div>
-                    <div class="v">9 329</div>
-                  </div>
-                  <div class="metric">
-                    <div class="k">Streak</div>
-                    <div class="v">0</div>
-                  </div>
-                  <div class="metric">
-                    <div class="k">To The Wall</div>
-                    <div class="v">7 047</div>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <div class="metric-list">
-                  <div class="metric">
-                    <div class="k">Your Streak</div>
-                    <div class="v">0</div>
-                  </div>
-                  <div class="metric">
-                    <div class="k">Since Last</div>
-                    <div class="v">2m 32s</div>
-                  </div>
-                  <div class="metric">
-                    <div class="k">Anchor</div>
-                    <div class="v" style="font-size:22px;color:var(--cyan)">#64 274 053</div>
-                  </div>
-                  <div class="metric">
-                    <div class="k">Chain</div>
-                    <div class="v" style="font-size:22px">ARC</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="anchor">
-              <div class="small-text"><b>ANCHOR</b></div>
-              <div class="code-line">0x705cde96f4710a416cc5075bf1...9c34db66bec2e032e5c38_</div>
-              <div class="small-text muted" style="margin-top:10px">
-                Hash of a recent ARC block used as mining anchor. Your address can be included in the work to discourage copycat submissions.
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="mints-panel pixel-box" id="collection">
-        <div class="mint-head">
-          <span>Latest Mints</span>
-          <a href="https://x.com/hashcats_ARC" target="_blank" rel="noopener">All Cats →</a>
-        </div>
-
-        <div class="mint-grid">
-          <!-- 16 cards -->
-          
-    <div class="mint-card">
-      <div class="thumb">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <rect width="100" height="100" fill="#6c5c79"/>
-          <circle cx="50" cy="45" r="28" fill="#7c8190"/>
-          <polygon points="30,30 38,16 46,31" fill="#7c8190"/>
-          <polygon points="54,31 62,16 70,30" fill="#7c8190"/>
-          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
-          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
-          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
-        </svg>
-      </div>
-      <div class="mint-meta"><span>#9329</span><b>39</b></div>
     </div>
-    
+    <div class="away"><div class="awayhead"><span>Cats that got away</span><span id="awayCount">0 challenge changes this session</span></div><div class="slots" id="awaySlots"></div></div>
+  </section>
 
-    <div class="mint-card">
-      <div class="thumb">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <rect width="100" height="100" fill="#55645a"/>
-          <circle cx="50" cy="45" r="28" fill="#6fc56c"/>
-          <polygon points="30,30 38,16 46,31" fill="#6fc56c"/>
-          <polygon points="54,31 62,16 70,30" fill="#6fc56c"/>
-          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
-          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
-          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
-        </svg>
-      </div>
-      <div class="mint-meta"><span>#9328</span><b>37</b></div>
-    </div>
-    
+  <div class="twocol" id="network">
+    <section class="panel pixel"><div class="head gray"><span>Why it gets harder</span><span>5 wins = retarget</span></div><div class="boxcontent"><div class="rowhead"><span>Effective work by difficulty</span><span>Target ~60 sec / network</span></div><div class="chart" id="chart"></div><p class="explain">HASHCATS retargets every 5 successful mints. If the network is finding cats too quickly, the target tightens; if it is too slow, the target loosens. Each retarget is capped at ±25%.</p><div class="statusline" id="epochLine">Epoch progress: —</div></div></section>
+    <section class="panel pixel cyan"><div class="head cyan"><span>Network</span><span>ARC MAINNET</span></div><div class="boxcontent"><div class="networkgrid"><div class="metric"><small>Difficulty</small><b id="netDifficulty">—</b></div><div class="metric"><small>Mined</small><b id="netMined">0</b></div><div class="metric"><small>Remaining</small><b id="netRemaining">4,444</b></div><div class="metric"><small>Avg / Mint</small><b id="netAvg">—</b></div><div class="metric"><small>Network H/s</small><b id="netHashrate">—</b></div><div class="metric"><small>Your USDC</small><b id="walletBalance">—</b></div></div><div class="anchor"><b>CONTRACT</b><code>0x5f53a69f8f87b7a321c8cd69957a7e622314b732</code><br><b>ANCHOR</b><code id="anchorChallenge">—</code></div></div></section>
+  </div>
 
-    <div class="mint-card">
-      <div class="thumb">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <rect width="100" height="100" fill="#686c7c"/>
-          <circle cx="50" cy="45" r="28" fill="#9ea8ba"/>
-          <polygon points="30,30 38,16 46,31" fill="#9ea8ba"/>
-          <polygon points="54,31 62,16 70,30" fill="#9ea8ba"/>
-          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
-          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
-          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
-        </svg>
-      </div>
-      <div class="mint-meta"><span>#9327</span><b>39</b></div>
-    </div>
-    
+  <section class="panel pixel block" id="collection"><div class="head gray"><span>Latest Mints</span><a href="https://x.com/hashcats_ARC" target="_blank">@hashcats_ARC ↗</a></div><div class="mintgrid" id="mintGrid"></div></section>
+  <section class="panel pixel block" id="leaderboard"><div class="head gray"><span>Miner Leaderboard</span><span id="minerCount">0 miners</span></div><div class="boxcontent"><table class="leader"><thead><tr><th>#</th><th>Miner</th><th>Cats</th><th>Last mine</th></tr></thead><tbody id="leaderBody"><tr><td colspan="4" class="muted">No miners yet.</td></tr></tbody></table></div></section>
+</main>
 
-    <div class="mint-card">
-      <div class="thumb">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <rect width="100" height="100" fill="#825f88"/>
-          <circle cx="50" cy="45" r="28" fill="#ff93c6"/>
-          <polygon points="30,30 38,16 46,31" fill="#ff93c6"/>
-          <polygon points="54,31 62,16 70,30" fill="#ff93c6"/>
-          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
-          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
-          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
-        </svg>
-      </div>
-      <div class="mint-meta"><span>#9326</span><b>37</b></div>
-    </div>
-    
+<footer class="foot"><div class="wrap footin"><span>© 2026 HASHCATS · 4,444 proof-of-work cats on Arc</span><span><a href="https://x.com/hashcats_ARC" target="_blank">Official X</a> · <a href="https://arc-scan.org/address/0x5f53a69f8f87b7a321c8cd69957a7e622314b732" target="_blank">Contract</a></span></div></footer>
+<div class="toast" id="toast"></div>
 
-    <div class="mint-card">
-      <div class="thumb">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <rect width="100" height="100" fill="#576d83"/>
-          <circle cx="50" cy="45" r="28" fill="#84b8e3"/>
-          <polygon points="30,30 38,16 46,31" fill="#84b8e3"/>
-          <polygon points="54,31 62,16 70,30" fill="#84b8e3"/>
-          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
-          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
-          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
-        </svg>
-      </div>
-      <div class="mint-meta"><span>#9325</span><b>35</b></div>
-    </div>
-    
+<script>
+(() => {
+  "use strict";
+  const API_BASE = "https://hashcats-server.vercel.app";
+  const ASSET_BASE = API_BASE;
+  const CONTRACT = "0x5f53a69f8f87b7a321c8cd69957a7e622314b732";
+  const USDC = "0x3600000000000000000000000000000000000000";
+  const FEE = 1000000n;
+  const ARC_CHAIN_HEX = "0x13b2";
+  const ARC_CHAIN_DEC = 5042;
+  const SELECTOR = { mine:"4d474898", preview:"356016e0", allowance:"dd62ed3e", approve:"095ea7b3", balanceOf:"70a08231" };
+  const el = id => document.getElementById(id);
+  const state = { account:null, stats:null, health:null, latest:[], leaderboard:[], workers:[], mining:false, miningChallenge:null, totalHashes:0, speed:0, startedAt:0, away:0, lastWorkerReport:0, found:false };
 
-    <div class="mint-card">
-      <div class="thumb">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <rect width="100" height="100" fill="#7b6b4f"/>
-          <circle cx="50" cy="45" r="28" fill="#caa77e"/>
-          <polygon points="30,30 38,16 46,31" fill="#caa77e"/>
-          <polygon points="54,31 62,16 70,30" fill="#caa77e"/>
-          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
-          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
-          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
-        </svg>
-      </div>
-      <div class="mint-meta"><span>#9324</span><b>37</b></div>
-    </div>
-    
+  function short(a){ return a ? a.slice(0,6)+"…"+a.slice(-4) : "—"; }
+  function comma(v){ try{return BigInt(v).toLocaleString("en-US")}catch{return String(v ?? "—")} }
+  function trimHash(h){ return h ? h.slice(0,18)+"…"+h.slice(-14) : "—"; }
+  function wordBigInt(v){ return BigInt(v).toString(16).padStart(64,"0"); }
+  function wordAddr(a){ return a.toLowerCase().replace(/^0x/,"").padStart(64,"0"); }
+  function fmtRate(v){ if(!isFinite(v)||v<=0)return "0 H/s"; if(v>=1e9)return (v/1e9).toFixed(2)+" GH/s"; if(v>=1e6)return (v/1e6).toFixed(2)+" MH/s"; if(v>=1e3)return (v/1e3).toFixed(1)+" kH/s"; return Math.round(v)+" H/s"; }
+  function fmtTime(sec){ if(!isFinite(sec)||sec<=0)return "—"; if(sec<60)return Math.max(1,Math.round(sec))+"s"; if(sec<3600)return (sec/60).toFixed(sec<600?1:0)+"m"; if(sec<86400)return (sec/3600).toFixed(1)+"h"; return (sec/86400).toFixed(1)+"d"; }
+  function difficultyBits(d){ const n=Number(d||0); return n>0 ? Math.log2(n) : 0; }
+  function timeAgo(ts){ const s=Math.max(0,Date.now()/1000-Number(ts||0)); if(s<60)return Math.round(s)+"s ago"; if(s<3600)return Math.floor(s/60)+"m ago"; if(s<86400)return Math.floor(s/3600)+"h ago"; return Math.floor(s/86400)+"d ago"; }
+  function toast(msg,type=""){ const t=el("toast");t.textContent=msg;t.className="toast show "+type;clearTimeout(t._timer);t._timer=setTimeout(()=>t.className="toast",4500); }
+  function status(msg,type=""){ el("statusLine").textContent=msg;el("statusLine").className="statusline "+type; }
+  function errMsg(e){ return e?.shortMessage || e?.message || e?.data?.message || String(e); }
 
-    <div class="mint-card">
-      <div class="thumb">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <rect width="100" height="100" fill="#7085aa"/>
-          <circle cx="50" cy="45" r="28" fill="#c98ad6"/>
-          <polygon points="30,30 38,16 46,31" fill="#c98ad6"/>
-          <polygon points="54,31 62,16 70,30" fill="#c98ad6"/>
-          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
-          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
-          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
-        </svg>
-      </div>
-      <div class="mint-meta"><span>#9323</span><b>35</b></div>
-    </div>
-    
+  function buildStrips(){ ["hashStrip","targetStrip"].forEach(id=>{el(id).innerHTML="";for(let i=0;i<48;i++){const s=document.createElement("i");el(id).appendChild(s)}}); el("chart").innerHTML="";for(let i=0;i<32;i++){const b=document.createElement("i");b.style.height=(96-i*2.7)+"%";el("chart").appendChild(b)}; renderAway(); }
+  function renderAway(){el("awaySlots").innerHTML="";for(let i=0;i<12;i++){const d=document.createElement("div");d.className="slot";if(i<Math.min(state.away,12)){d.innerHTML='<img src="/logo.svg" alt=""><span>STALE</span>'}el("awaySlots").appendChild(d)}el("awayCount").textContent=state.away+" challenge changes this session"}
 
-    <div class="mint-card">
-      <div class="thumb">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <rect width="100" height="100" fill="#6d6249"/>
-          <circle cx="50" cy="45" r="28" fill="#d5b24f"/>
-          <polygon points="30,30 38,16 46,31" fill="#d5b24f"/>
-          <polygon points="54,31 62,16 70,30" fill="#d5b24f"/>
-          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
-          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
-          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
-        </svg>
-      </div>
-      <div class="mint-meta"><span>#9322</span><b>36</b></div>
-    </div>
-    
+  async function api(path){ const r=await fetch(API_BASE + path,{cache:"no-store"});if(!r.ok)throw new Error("API "+r.status);return r.json(); }
+  async function refreshNetwork(){
+    try{
+      const [stats,health,latest]=await Promise.all([api("/api/stats"),api("/api/health"),api("/api/latest?limit=20")]);
+      const oldChallenge=state.stats?.currentChallenge;
+      state.stats=stats;state.health=health;state.latest=latest.items||[];
+      renderNetwork();renderLatest();
+      if(state.mining && oldChallenge && stats.currentChallenge!==state.miningChallenge){
+        state.away++;renderAway();
+        status("Network challenge changed — switching to the new target automatically.","warn");
+        restartWorkers();
+      }
+    }catch(e){ console.warn(e); }
+  }
 
-    <div class="mint-card">
-      <div class="thumb">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <rect width="100" height="100" fill="#824a7c"/>
-          <circle cx="50" cy="45" r="28" fill="#ef93d8"/>
-          <polygon points="30,30 38,16 46,31" fill="#ef93d8"/>
-          <polygon points="54,31 62,16 70,30" fill="#ef93d8"/>
-          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
-          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
-          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
-        </svg>
-      </div>
-      <div class="mint-meta"><span>#9321</span><b>40</b></div>
-    </div>
-    
+  function renderNetwork(){ const s=state.stats||{},h=state.health||{}; const bits=difficultyBits(s.currentDifficulty);
+    el("topBlock").textContent=h.latestBlock?"#"+comma(h.latestBlock):"ARC";el("topMined").textContent=comma(s.totalMined||0);
+    el("chipStatus").textContent=s.miningComplete?"COMPLETE":s.miningActivated?"LIVE":"OFFLINE";
+    el("challenge").textContent=trimHash(s.currentChallenge);el("anchorChallenge").textContent=s.currentChallenge||"—";
+    el("targetBits").textContent=bits?bits.toFixed(2):"—";el("targetBits2").textContent=bits?bits.toFixed(2):"—";
+    el("netDifficulty").textContent=s.currentDifficulty?Number(s.currentDifficulty).toExponential(3):"—";el("netMined").textContent=comma(s.totalMined||0);el("netRemaining").textContent=comma(s.remaining||4444);
+    el("netAvg").textContent=s.averageSecondsPerMint?Number(s.averageSecondsPerMint).toFixed(1)+"s":"—";el("netHashrate").textContent=s.estimatedNetworkHashrate?fmtRate(s.estimatedNetworkHashrate):"—";
+    el("epochLine").textContent="Epoch progress: "+(Number(s.totalMined||0)%5)+" / 5 wins · retarget target 300s";
+    const lit=Math.max(0,Math.min(48,Math.round(bits))); [...el("targetStrip").children].forEach((x,i)=>x.classList.toggle("on",i<lit));
+    updateProbability();
+  }
 
-    <div class="mint-card">
-      <div class="thumb">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <rect width="100" height="100" fill="#7f684e"/>
-          <circle cx="50" cy="45" r="28" fill="#af845b"/>
-          <polygon points="30,30 38,16 46,31" fill="#af845b"/>
-          <polygon points="54,31 62,16 70,30" fill="#af845b"/>
-          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
-          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
-          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
-        </svg>
-      </div>
-      <div class="mint-meta"><span>#9320</span><b>36</b></div>
-    </div>
-    
+  function renderLatest(){ const items=state.latest; const grid=el("mintGrid");grid.innerHTML="";
+    if(!items.length){for(let i=0;i<10;i++){const d=document.createElement("div");d.className="emptymint";d.textContent="?";grid.appendChild(d)}el("lastHash").textContent="No HASHCAT has been mined yet.";return}
+    const last=items[0];el("catFrame").innerHTML=`<img class="catart" src="${ASSET_BASE}/images/${last.tokenId}.png" alt="HASHCATS #${last.tokenId}"><span class="artlabel">HASHCATS #${last.tokenId}</span>`;el("lastCatLabel").textContent="LATEST: #"+last.tokenId;el("lastTime").textContent=timeAgo(last.timestamp);el("lastHash").textContent=last.proofHash;el("bestBits").textContent=difficultyBits(last.difficultyUsed).toFixed(2);
+    items.forEach(m=>{const d=document.createElement("div");d.className="mint";d.innerHTML=`<img loading="lazy" src="${ASSET_BASE}/images/${m.tokenId}.png" alt="HASHCATS #${m.tokenId}"><div class="mintmeta"><span>#${m.tokenId}</span><b>${difficultyBits(m.difficultyUsed).toFixed(1)}</b></div>`;grid.appendChild(d)});
+  }
+  function renderLeaders(){const b=el("leaderBody");const list=state.leaderboard;b.innerHTML="";el("minerCount").textContent=list.length+" miners shown";if(!list.length){b.innerHTML='<tr><td colspan="4" class="muted">No miners yet.</td></tr>';return}list.forEach(x=>{const tr=document.createElement("tr");tr.innerHTML=`<td>${x.rank}</td><td><code>${short(x.miner)}</code></td><td>${x.mined}</td><td>${x.lastTimestamp&&x.lastTimestamp!=="0"?timeAgo(x.lastTimestamp):"—"}</td>`;b.appendChild(tr)})}
+  async function refreshLeaderboard(){try{const leaders=await api("/api/leaderboard?limit=20");state.leaderboard=leaders.items||[];renderLeaders()}catch(e){console.warn(e)}}
 
-    <div class="mint-card">
-      <div class="thumb">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <rect width="100" height="100" fill="#4e6078"/>
-          <circle cx="50" cy="45" r="28" fill="#72b5e1"/>
-          <polygon points="30,30 38,16 46,31" fill="#72b5e1"/>
-          <polygon points="54,31 62,16 70,30" fill="#72b5e1"/>
-          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
-          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
-          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
-        </svg>
-      </div>
-      <div class="mint-meta"><span>#9319</span><b>35</b></div>
-    </div>
-    
+  async function ensureArc(){
+    if(!window.ethereum)throw new Error("No EVM wallet detected. Install MetaMask, Rabby, OKX Wallet, or another injected wallet.");
+    let chain=await ethereum.request({method:"eth_chainId"});if(chain.toLowerCase()===ARC_CHAIN_HEX)return;
+    try{await ethereum.request({method:"wallet_switchEthereumChain",params:[{chainId:ARC_CHAIN_HEX}]});}
+    catch(e){if(e.code!==4902)throw e;await ethereum.request({method:"wallet_addEthereumChain",params:[{chainId:ARC_CHAIN_HEX,chainName:"Arc Mainnet",nativeCurrency:{name:"USDC",symbol:"USDC",decimals:18},rpcUrls:["https://rpc.arc-scan.org"],blockExplorerUrls:["https://arc-scan.org"]}]});}
+  }
+  async function connect(){ if(!window.ethereum)throw new Error("No injected EVM wallet found.");await ensureArc();const a=await ethereum.request({method:"eth_requestAccounts"});state.account=a[0];el("connectBtn").textContent=short(state.account);status("Wallet connected. Checking 1 USDC mining allowance…","good");await refreshWallet(); }
+  async function ethCall(to,data){return ethereum.request({method:"eth_call",params:[{to,data},"latest"]});}
+  async function allowance(){const data="0x"+SELECTOR.allowance+wordAddr(state.account)+wordAddr(CONTRACT);return BigInt(await ethCall(USDC,data));}
+  async function usdcBalance(){const data="0x"+SELECTOR.balanceOf+wordAddr(state.account);return BigInt(await ethCall(USDC,data));}
+  async function refreshWallet(){ if(!state.account)return;try{const [bal,allow]=await Promise.all([usdcBalance(),allowance()]);el("walletBalance").textContent=(Number(bal)/1e6).toFixed(2);el("approveBtn").style.display=allow<FEE?"inline-flex":"none";if(allow>=FEE&&!state.mining)status("Ready. 1 USDC allowance is available only for a successful mining claim.","good");}catch(e){console.warn(e)} }
+  async function waitReceipt(hash,timeout=120000){const start=Date.now();while(Date.now()-start<timeout){const r=await ethereum.request({method:"eth_getTransactionReceipt",params:[hash]});if(r){if(r.status&&BigInt(r.status)===0n)throw new Error("Transaction reverted");return r}await new Promise(r=>setTimeout(r,900))}throw new Error("Timed out waiting for transaction receipt")}
+  async function approveFee(){if(!state.account)await connect();await ensureArc();status("Approve exactly 1 USDC for one successful HASHCATS claim…","warn");const data="0x"+SELECTOR.approve+wordAddr(CONTRACT)+wordBigInt(FEE);const tx=await ethereum.request({method:"eth_sendTransaction",params:[{from:state.account,to:USDC,data,value:"0x0"}]});toast("Approval submitted: "+short(tx));await waitReceipt(tx);await refreshWallet();toast("1 USDC mining allowance approved.","good");return true}
 
-    <div class="mint-card">
-      <div class="thumb">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <rect width="100" height="100" fill="#657a45"/>
-          <circle cx="50" cy="45" r="28" fill="#a8d36e"/>
-          <polygon points="30,30 38,16 46,31" fill="#a8d36e"/>
-          <polygon points="54,31 62,16 70,30" fill="#a8d36e"/>
-          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
-          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
-          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
-        </svg>
-      </div>
-      <div class="mint-meta"><span>#9318</span><b>35</b></div>
-    </div>
-    
+  function stopWorkers(keepStatus=false){state.workers.forEach(w=>{try{w.postMessage({type:"STOP"});w.terminate()}catch{}});state.workers=[];state.mining=false;state.miningChallenge=null;state.speed=0;el("minerState").textContent="■ IDLE";el("startBtn").disabled=false;el("stopBtn").disabled=true;if(!keepStatus)status("Mining stopped. No fee was charged.");updateProbability()}
+  function workerCount(){return Number(el("workers").value)||1}
+  function startWorkers(){
+    const s=state.stats;if(!s?.miningActivated)throw new Error("Mining is not activated");if(s.miningComplete)throw new Error("HASHCATS mining is complete");
+    stopWorkers(true);state.mining=true;state.miningChallenge=s.currentChallenge;state.startedAt=performance.now();state.totalHashes=0;state.speed=0;state.found=false;el("minerState").textContent="● MINING";el("startBtn").disabled=true;el("stopBtn").disabled=false;status("Mining locally. Keep this tab open; stale challenges switch automatically.","good");
+    const count=workerCount();for(let i=0;i<count;i++){const w=new Worker("/miner-worker.js?v=3");w.onmessage=onWorker;w.onerror=e=>status("Miner worker error: "+e.message,"bad");w.postMessage({type:"START",challenge:s.currentChallenge,miner:state.account,target:"0x"+BigInt(s.target).toString(16).padStart(64,"0"),batchSize:1024});state.workers.push(w)}
+  }
+  function restartWorkers(){if(!state.mining||!state.account)return;const keep=state.totalHashes;startWorkers();state.totalHashes=keep;state.startedAt=performance.now();}
+  function onWorker(ev){const m=ev.data||{};if(m.type==="HASHES"){state.totalHashes+=Number(m.count||0);const instantaneous=(Number(m.count||0)/(Number(m.ms||1)/1000));const n=Math.max(1,state.workers.length);state.speed=state.speed?state.speed*.72+instantaneous*n*.28:instantaneous*n;renderMining()}else if(m.type==="FOUND"){state.totalHashes+=Number(m.hashes||0);handleFound(m).catch(e=>{status("Candidate handling failed: "+errMsg(e),"bad");toast(errMsg(e),"bad")})}else if(m.type==="ERROR"){status("Worker error: "+m.message,"bad")}}
+  function renderMining(){el("speed").textContent=fmtRate(state.speed);el("hashes").textContent=comma(Math.floor(state.totalHashes));updateProbability()}
+  function updateProbability(){const diff=Number(state.stats?.currentDifficulty||0),rate=Number(state.speed||0);if(!diff||!rate){el("wait").textContent="—";el("chance").textContent="—";return}el("wait").textContent=fmtTime(diff/rate);const p=1-Math.exp(-(rate*60)/diff);el("chance").textContent=(p*100).toFixed(p<.001?4:p<.01?3:2)+"%"}
 
-    <div class="mint-card">
-      <div class="thumb">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <rect width="100" height="100" fill="#6a4f43"/>
-          <circle cx="50" cy="45" r="28" fill="#ff8b57"/>
-          <polygon points="30,30 38,16 46,31" fill="#ff8b57"/>
-          <polygon points="54,31 62,16 70,30" fill="#ff8b57"/>
-          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
-          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
-          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
-        </svg>
-      </div>
-      <div class="mint-meta"><span>#9317</span><b>36</b></div>
-    </div>
-    
+  async function verifyNonce(nonce){const data="0x"+SELECTOR.preview+wordAddr(state.account)+wordBigInt(nonce);const r=(await ethCall(CONTRACT,data)).replace(/^0x/,"").padStart(128,"0");return BigInt("0x"+r.slice(64,128))!==0n}
+  async function handleFound(m){if(state.found)return;state.found=true;stopWorkers(true);el("minerState").textContent="◆ FOUND";status("Candidate found! Verifying against the live contract before submitting…","warn");toast("Winning candidate found locally.","good");const valid=await verifyNonce(m.nonce);if(!valid){state.found=false;state.away++;renderAway();await refreshNetwork();status("Candidate became stale before submission. Resuming on the new challenge.","warn");startWorkers();return}const allow=await allowance();if(allow<FEE){state.found=false;status("Winning proof is valid, but the 1 USDC allowance is missing. Approve and restart immediately.","bad");el("approveBtn").style.display="inline-flex";return}
+    status("Proof verified. Confirm the mining transaction in your wallet. 1 USDC is charged only if this proof still wins onchain.","warn");const data="0x"+SELECTOR.mine+wordBigInt(m.nonce);try{const tx=await ethereum.request({method:"eth_sendTransaction",params:[{from:state.account,to:CONTRACT,data,value:"0x0"}]});toast("Mining transaction submitted: "+short(tx));await waitReceipt(tx);status("HASHCAT mined successfully! Refreshing collection…","good");toast("HASHCAT MINED!", "good");await new Promise(r=>setTimeout(r,1200));await refreshNetwork();await refreshWallet();state.found=false;}catch(e){state.found=false;status("Mine was not accepted (usually a stale race). No successful mining fee was charged. "+errMsg(e),"bad");await refreshNetwork();await refreshWallet();}}
+  async function start(){try{if(!state.account)await connect();await ensureArc();await refreshNetwork();const a=await allowance();if(a<FEE){await approveFee()}startWorkers()}catch(e){status(errMsg(e),"bad");toast(errMsg(e),"bad")}}
 
-    <div class="mint-card">
-      <div class="thumb">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <rect width="100" height="100" fill="#5c6070"/>
-          <circle cx="50" cy="45" r="28" fill="#9ca9d0"/>
-          <polygon points="30,30 38,16 46,31" fill="#9ca9d0"/>
-          <polygon points="54,31 62,16 70,30" fill="#9ca9d0"/>
-          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
-          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
-          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
-        </svg>
-      </div>
-      <div class="mint-meta"><span>#9316</span><b>38</b></div>
-    </div>
-    
-
-    <div class="mint-card">
-      <div class="thumb">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <rect width="100" height="100" fill="#4f6554"/>
-          <circle cx="50" cy="45" r="28" fill="#8ec18f"/>
-          <polygon points="30,30 38,16 46,31" fill="#8ec18f"/>
-          <polygon points="54,31 62,16 70,30" fill="#8ec18f"/>
-          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
-          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
-          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
-        </svg>
-      </div>
-      <div class="mint-meta"><span>#9315</span><b>35</b></div>
-    </div>
-    
-
-    <div class="mint-card">
-      <div class="thumb">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <rect width="100" height="100" fill="#7a5b64"/>
-          <circle cx="50" cy="45" r="28" fill="#df8fa1"/>
-          <polygon points="30,30 38,16 46,31" fill="#df8fa1"/>
-          <polygon points="54,31 62,16 70,30" fill="#df8fa1"/>
-          <ellipse cx="40" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <ellipse cx="60" cy="44" rx="8" ry="10" fill="#98ecf0"/>
-          <polygon points="50,52 55,57 50,60 45,57" fill="#ff91ad"/>
-          <rect x="41" y="60" width="18" height="9" fill="#1e2431"/>
-          <line x1="30" y1="56" x2="14" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <line x1="70" y1="56" x2="86" y2="53" stroke="#dbe1ee" stroke-width="2"/>
-          <rect x="17" y="72" width="66" height="18" fill="#44506a"/>
-        </svg>
-      </div>
-      <div class="mint-meta"><span>#9314</span><b>34</b></div>
-    </div>
-    
-        </div>
-      </div>
-    </section>
-
-    <footer>
-      <div class="foot">
-        <span>© 2026 HASHCATS · Independent ARC project · 100% Free Mint</span>
-        <span>
-          Official X:
-          <a href="https://x.com/hashcats_ARC" target="_blank" rel="noopener">@hashcats_ARC</a>
-        </span>
-      </div>
-    </footer>
-  </main>
+  el("connectBtn").onclick=()=>connect().catch(e=>{status(errMsg(e),"bad");toast(errMsg(e),"bad")});el("startBtn").onclick=start;el("stopBtn").onclick=()=>stopWorkers();el("approveBtn").onclick=()=>approveFee().catch(e=>toast(errMsg(e),"bad"));
+  el("workers").max=Math.max(1,Math.min(16,navigator.hardwareConcurrency||8));el("workers").value=Math.max(1,Math.min(Number(el("workers").max),Math.max(2,(navigator.hardwareConcurrency||6)-1)));el("workerLabel").textContent=el("workers").value;el("workers").oninput=()=>{el("workerLabel").textContent=el("workers").value;if(state.mining){status("Worker count changed. Stop/start mining to apply it.","warn")}};
+  if(window.ethereum){ethereum.on?.("accountsChanged",a=>{stopWorkers(true);state.account=a?.[0]||null;el("connectBtn").textContent=state.account?short(state.account):"Connect";refreshWallet()});ethereum.on?.("chainChanged",()=>{stopWorkers(true);location.reload()})}
+  buildStrips();refreshNetwork();refreshLeaderboard();setInterval(refreshNetwork,5000);setInterval(refreshLeaderboard,30000);setInterval(()=>{if(state.latest.length){el("lastTime").textContent=timeAgo(state.latest[0].timestamp)}},10000);
+})();
+</script>
 </body>
 </html>

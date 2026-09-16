@@ -1,0 +1,41 @@
+HASHCATS MINER FRONTEND — SEPARATE PROJECT
+==========================================
+
+IMPORTANT
+- This is a SEPARATE Vercel project from hashcats-server.
+- Do NOT copy this folder into HASHCATS_SERVER.
+- Backend/API remains: https://hashcats-server.vercel.app
+- The miner frontend calls that backend over CORS.
+
+PRODUCTION CONTRACT
+0x5f53a69f8f87b7a321c8cd69957a7e622314b732
+
+DEPLOY
+1. Extract this ZIP to a NEW folder, e.g. HASHCATS_MINER_FRONTEND.
+2. Open PowerShell inside that NEW folder.
+3. Run:
+
+   npx.cmd vercel@latest deploy --prod --archive=tgz
+
+4. When Vercel asks "Which project?", choose:
+
+   Create a new project
+
+5. Suggested project name:
+
+   hashcats-miner
+
+6. Directory: ./
+7. Modify settings: No
+
+After deployment Vercel will give a separate miner URL such as:
+https://hashcats-miner.vercel.app
+
+Both / and /mine work.
+
+ARCHITECTURE
+Miner frontend (separate URL)
+  -> https://hashcats-server.vercel.app/api/*
+  -> Arc contract 0x5f53...b732 through user's wallet
+
+Server/backend URL remains private infrastructure-facing and does not need to be the public mining page.
