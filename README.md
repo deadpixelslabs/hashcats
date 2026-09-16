@@ -14,3 +14,6 @@ GitHub update:
 
 The GPU miner searches `keccak256(abi.encodePacked(currentChallenge, miner, nonce)) <= target`.
 Every GPU candidate is checked again through `previewProof()` before any mining transaction is requested.
+
+
+GPU retry patch: the GPU button remains clickable when WebGPU is unavailable or initialization fails. It will retry adapter initialization and show the exact error.
