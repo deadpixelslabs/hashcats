@@ -111,14 +111,14 @@
 
   <div class="twocol" id="network">
     <section class="panel pixel"><div class="head gray"><span>Why it gets harder</span><span>5 wins = retarget</span></div><div class="boxcontent"><div class="rowhead"><span>Effective work by difficulty</span><span>Target ~60 sec / network</span></div><div class="chart" id="chart"></div><p class="explain">HASHCATS retargets every 5 successful mints. If the network is finding cats too quickly, the target tightens; if it is too slow, the target loosens. Each retarget is capped at ±25%.</p><div class="statusline" id="epochLine">Epoch progress: —</div></div></section>
-    <section class="panel pixel cyan"><div class="head cyan"><span>Network</span><span>ARC MAINNET</span></div><div class="boxcontent"><div class="networkgrid"><div class="metric"><small>Difficulty</small><b id="netDifficulty">—</b></div><div class="metric"><small>Mined</small><b id="netMined">0</b></div><div class="metric"><small>Remaining</small><b id="netRemaining">4,444</b></div><div class="metric"><small>Avg / Mint</small><b id="netAvg">—</b></div><div class="metric"><small>Network H/s</small><b id="netHashrate">—</b></div><div class="metric"><small>Your USDC</small><b id="walletBalance">—</b></div></div><div class="anchor"><b>CONTRACT</b><code>0x579Af47A456ddeA2c2b0A26D0A6BfF0070014229</code><br><b>ANCHOR</b><code id="anchorChallenge">—</code></div></div></section>
+    <section class="panel pixel cyan"><div class="head cyan"><span>Network</span><span>ARC MAINNET</span></div><div class="boxcontent"><div class="networkgrid"><div class="metric"><small>Difficulty</small><b id="netDifficulty">—</b></div><div class="metric"><small>Mined</small><b id="netMined">0</b></div><div class="metric"><small>Remaining</small><b id="netRemaining">4,444</b></div><div class="metric"><small>Avg / Mint</small><b id="netAvg">—</b></div><div class="metric"><small>Network H/s</small><b id="netHashrate">—</b></div><div class="metric"><small>Your USDC</small><b id="walletBalance">—</b></div></div><div class="anchor"><b>CONTRACT</b><code>0x5f53a69f8f87b7a321c8cd69957a7e622314b732</code><br><b>ANCHOR</b><code id="anchorChallenge">—</code></div></div></section>
   </div>
 
   <section class="panel pixel block" id="collection"><div class="head gray"><span>Latest Mints</span><a href="https://x.com/hashcats_ARC" target="_blank">@hashcats_ARC ↗</a></div><div class="mintgrid" id="mintGrid"></div></section>
   <section class="panel pixel block" id="leaderboard"><div class="head gray"><span>Miner Leaderboard</span><span id="minerCount">0 miners</span></div><div class="boxcontent"><table class="leader"><thead><tr><th>#</th><th>Miner</th><th>Cats</th><th>Last mine</th></tr></thead><tbody id="leaderBody"><tr><td colspan="4" class="muted">No miners yet.</td></tr></tbody></table></div></section>
 </main>
 
-<footer class="foot"><div class="wrap footin"><span>© 2026 HASHCATS · 4,444 proof-of-work cats on Arc</span><span><a href="https://x.com/hashcats_ARC" target="_blank">Official X</a> · <a href="https://arc-scan.org/address/0x579Af47A456ddeA2c2b0A26D0A6BfF0070014229" target="_blank">Contract</a></span></div></footer>
+<footer class="foot"><div class="wrap footin"><span>© 2026 HASHCATS · 4,444 proof-of-work cats on Arc</span><span><a href="https://x.com/hashcats_ARC" target="_blank">Official X</a> · <a href="https://arc-scan.org/address/0x5f53a69f8f87b7a321c8cd69957a7e622314b732" target="_blank">Contract</a></span></div></footer>
 <div class="winnerOverlay" id="winnerOverlay" role="dialog" aria-modal="true" aria-labelledby="winnerTitle">
   <div class="winnerBox">
     <div class="winnerHead"><span id="winnerHeadText">◆ HASHCAT PROOF FOUND</span><span id="winnerBadge">VERIFYING</span></div>
@@ -139,7 +139,7 @@
   "use strict";
   const API_BASE = "https://hashcats-server.vercel.app";
   const ASSET_BASE = API_BASE;
-  const CONTRACT = "0x579Af47A456ddeA2c2b0A26D0A6BfF0070014229";
+  const CONTRACT = "0x5f53a69f8f87b7a321c8cd69957a7e622314b732";
   const USDC = "0x3600000000000000000000000000000000000000";
   const FEE = 1000000n;
   const ARC_CHAIN_HEX = "0x13b2";
